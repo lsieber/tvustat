@@ -1,0 +1,13 @@
+{
+	"autoload" : {
+		"psr-4" : {
+			"tvustat\\tvustat\\" : "src",
+			"conn\\" : "src/conn"
+		}
+	},
+	"name" : "tvustat\\tvustat",
+	"description" : "This is a Project which aims to extend the existing Swiss Athletics Database for STV Clubs",
+	"require" : {
+		"php" : ">=7.2"
+	}
+}
