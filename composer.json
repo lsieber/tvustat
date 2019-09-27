@@ -1,8 +1,20 @@
 {
 	"autoload" : {
 		"psr-4" : {
-			"tvustat\\tvustat\\" : "src",
-			"conn\\" : "src/conn"
+			"tvustat\\" : [
+				"src",
+				"src/conn",
+				"src/elmt",
+				"src/utils"
+			],
+			"config\\" : [
+				"config",
+				"config/db"
+			],
+			"test\\" : [
+				"tests",
+				"tests/elmt"
+			]
 		}
 	},
 	"name" : "tvustat\\tvustat",

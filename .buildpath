@@ -1,12 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-	<buildpathentry excluding="conn/" kind="src" path="src">
+	<buildpathentry excluding="db/" kind="src" path="config">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="config/db">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
 	<buildpathentry kind="src" path="src/conn">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="src/elmt">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry excluding="conn/|elmt/|utils/" kind="src" path="src">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="src/utils">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry excluding="elmt/" kind="src" path="tests">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="tests/elmt">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>

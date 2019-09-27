@@ -1,12 +1,20 @@
 <?php
-
 require_once '../vendor/autoload.php';
 
-$connection = new \conn\connection();
+$connection = new tvustat\ConnectionPreloaded();
 
-$conn = $connection->getConn();
+test\GenderTest::run();
+test\TeamTypeTest::run();
+test\DisziplinTypeTest::run();
+test\SortingTest::run();
 
-echo "Hello World";
+
+$date =  DateTime::createFromFormat('d/m/Y', '21/04/1993');
+
+$person = new tvustat\Person("Lukas", "Sieber", $date, $connection->getGender(1), $connection);
+
+tvustat\AddElement::person($connection, $person);
+
 echo "Hello World";
 
 ?>

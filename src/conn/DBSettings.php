@@ -1,6 +1,7 @@
 <?php
 
-// namespace db\connection;
+namespace tvustat;
+
 class DBSettings
 {
 

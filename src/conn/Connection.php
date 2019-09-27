@@ -1,7 +1,9 @@
 <?php
-namespace conn;
+namespace tvustat;
 
-class connection
+use config\ConnectionParameters;
+
+class Connection
 {
 
     protected $conn;
@@ -26,7 +28,12 @@ class connection
         }
     }
 
-    protected function executeSqlToArray(string $sql)
+    /**
+     * 
+     * @param string $sql
+     * @return mixed
+     */
+    public function executeSqlToArray(string $sql)
     {
         $result = $this->conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
