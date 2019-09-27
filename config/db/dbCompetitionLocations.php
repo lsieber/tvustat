@@ -1,7 +1,9 @@
 <?php
 namespace config;
 
-class dbCompetitionNames extends dbTableDescription
+use tvustat\CompetitionLocation;
+
+class dbCompetitionLocations extends dbTableDescription
 {
 
     public const DBNAME = "competitionlocations";
@@ -9,21 +11,26 @@ class dbCompetitionNames extends dbTableDescription
     public const ID = "competitionLocationID";
 
     public const VILLAGE = "village";
-    
+
     public const FACILITY = "facility";
-    
+
     public const VALUES = array(
-        0 => self::ID,
-        1 => self::VILLAGE,
-        2 => self::FACILITY
+        self::ID => 0,
+        self::VILLAGE => 1,
+        self::FACILITY => 2
     );
+
+    public static function getIDString()
+    {
+        return self::ID;
+    }
 
     /**
      *
      * {@inheritdoc}
      * @see \config\dbTableDescription::getCollumNames()
      */
-    public function getCollumNames()
+    public static function getCollumNames()
     {
         return self::VALUES;
     }
@@ -33,11 +40,22 @@ class dbCompetitionNames extends dbTableDescription
      * {@inheritdoc}
      * @see \config\dbTableDescription::getTableName()
      */
-    public function getTableName()
+    public static function getTableName()
     {
         return self::DBNAME;
     }
-    public static function classToCollumns($value)
-    {}
 
+    /**
+     *
+     * @param CompetitionLocation $competitionLocation
+     * @return array
+     */
+    public static function classToCollumns($competitionLocation)
+    {
+        return array(
+            0 => $competitionLocation->getId(),
+            1 => $competitionLocation->getVillage(),
+            2 => $competitionLocation->getFacility()
+        );
+    }
 }

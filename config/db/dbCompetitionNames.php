@@ -1,6 +1,8 @@
 <?php
 namespace config;
 
+use tvustat\CompetitionName;
+
 class dbCompetitionNames extends dbTableDescription
 {
 
@@ -11,16 +13,21 @@ class dbCompetitionNames extends dbTableDescription
     public const NAME = "competitionName";
 
     public const VALUES = array(
-        0 => self::ID,
-        1 => self::NAME
+        self::ID => 0,
+        self::NAME => 1
     );
 
+    public static function getIDString()
+    {
+        return self::ID;
+    }
+    
     /**
      *
      * {@inheritdoc}
      * @see \config\dbTableDescription::getCollumNames()
      */
-    public function getCollumNames()
+    public static function getCollumNames()
     {
         return self::VALUES;
     }
@@ -30,11 +37,21 @@ class dbCompetitionNames extends dbTableDescription
      * {@inheritdoc}
      * @see \config\dbTableDescription::getTableName()
      */
-    public function getTableName()
+    public static function getTableName()
     {
         return self::DBNAME;
     }
-    public static function classToCollumns($value)
-    {}
 
+    /**
+     *
+     * @param CompetitionName $competitionName
+     * @return array
+     */
+    public static function classToCollumns($competitionName)
+    {
+        return array(
+            0 => $competitionName->getId(),
+            1 => $competitionName->getCompetitionName()
+        );
+    }
 }

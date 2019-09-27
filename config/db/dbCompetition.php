@@ -1,8 +1,10 @@
 <?php
 namespace config;
 
-use tvustat\DBTableEntry;
 use tvustat\Competition;
+use tvustat\CompetitionLocation;
+use tvustat\CompetitionName;
+use tvustat\ConnectionPreloaded;
 
 class dbCompetition extends dbTableDescription
 {
@@ -17,11 +19,22 @@ class dbCompetition extends dbTableDescription
 
     public const DATE = "competitionDate";
 
+    public static function getIDString()
+    {
+        return self::ID;
+    }
+
+    // public const VALUES = array(
+    // self::ID => 0,
+    // 1 => self::NAMEID,
+    // 2 => self::LOCATIONID,
+    // 3 => self::DATE
+    // );
     public const VALUES = array(
-        0 => self::ID,
-        1 => self::NAMEID,
-        2 => self::LOCATIONID,
-        3 => self::DATE
+        self::ID => 0,
+        self::NAMEID => 1,
+        self::LOCATIONID => 2,
+        self::DATE => 3
     );
 
     /**
@@ -29,7 +42,7 @@ class dbCompetition extends dbTableDescription
      * {@inheritdoc}
      * @see \config\dbTableDescription::getCollumNames()
      */
-    public function getCollumNames()
+    public static function getCollumNames()
     {
         return self::VALUES;
     }
@@ -39,23 +52,31 @@ class dbCompetition extends dbTableDescription
      * {@inheritdoc}
      * @see \config\dbTableDescription::getTableName()
      */
-    public function getTableName()
+    public static function getTableName()
     {
         return self::DBNAME;
     }
-    
+
     /**
-     * 
-     * @param DBTableEntry $dbTableEntry
+     *
+     * @param Competition $competition
      */
-    public static function classToCollumns(Competition $competition)
+    public static function classToCollumns($competition)
     {
         return array(
-          0 => $competition->getId(),
-          1 => $competition->getNameID(),
-          2 => $competition->getLocationID(),
-          3 => $competition->getDate()
+            0 => $competition->getId(),
+            1 => $competition->getName()->getId(),
+            2 => $competition->getLocation()->getId(),
+            3 => $competition->getFormatedDateForDB()
         );
     }
 
+    public static function competitionFromAsocArray($r, ConnectionPreloaded $conn)
+    {
+        return new Competition( //
+        new CompetitionName($r[dbCompetitionNames::NAME], $r[self::NAMEID]), //
+        new CompetitionLocation($r[dbCompetitionLocations::VILLAGE], $r[dbCompetitionLocations::FACILITY], $r[self::LOCATIONID]), //
+        $r[self::DATE], //
+        $r[self::ID]); //
+    }
 }

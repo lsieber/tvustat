@@ -2,6 +2,8 @@
 namespace config;
 
 use tvustat\Athlete;
+use tvustat\ConnectionPreloaded;
+use tvustat\Person;
 
 class dbAthletes extends dbTableDescription
 {
@@ -22,14 +24,19 @@ class dbAthletes extends dbTableDescription
 
     public const lICENCE = "licenceNumber";
 
+    public static function getIDString()
+    {
+        return self::ID;
+    }
+
     public const VALUES = array(
-        0 => self::ID,
-        1 => self::FIRSTNAME,
-        2 => self::LASTNAME,
-        3 => self::GENDERID,
-        4 => self::TEAMTYPEID,
-        5 => self::DATE,
-        6 => self::lICENCE
+        self::ID => 0,
+        self::FIRSTNAME => 1,
+        self::LASTNAME => 2,
+        self::GENDERID => 3,
+        self::TEAMTYPEID => 4,
+        self::DATE => 5,
+        self::lICENCE => 6
     );
 
     /**
@@ -53,7 +60,7 @@ class dbAthletes extends dbTableDescription
     }
 
     /**
-     * 
+     *
      * @param Athlete $athlete
      * @return array
      */
@@ -68,5 +75,16 @@ class dbAthletes extends dbTableDescription
             5 => $athlete->getDateForDB(),
             6 => NULL
         );
+    }
+
+    public static function personFromAsocArray($r, ConnectionPreloaded $conn)
+    {
+        return new Person( //
+        $r[self::FIRSTNAME], //
+        $r[self::LASTNAME], //
+        new \DateTime($r[self::DATE]), //
+        $conn->getGender($r[self::GENDERID]), //
+        $conn, //
+        $r[self::ID]);
     }
 }

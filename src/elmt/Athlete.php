@@ -124,7 +124,7 @@ class Athlete extends DBTableEntry
      */
     public function getDateForDB()
     {
-        return $this->date->format('Y-m-d');
+        return DateFormatUtils::formatDateForDB($this->date);
     }
 }
 

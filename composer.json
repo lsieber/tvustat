@@ -5,6 +5,7 @@
 				"src",
 				"src/conn",
 				"src/elmt",
+				"src/inp",
 				"src/utils"
 			],
 			"config\\" : [

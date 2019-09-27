@@ -7,15 +7,15 @@ class Competition extends DBTableEntry
     // Mandatory Fields
     /**
      *
-     * @var int
+     * @var CompetitionName
      */
-    private $nameID;
+    private $name;
 
     /**
      *
-     * @var int
+     * @var CompetitionLocation
      */
-    private $locatoinID;
+    private $location;
 
     /**
      *
@@ -23,11 +23,11 @@ class Competition extends DBTableEntry
      */
     private $date;
 
-    public function __construct(int $nameID, int $locatoinID, \DateTime $date, string $id = NULL)
+    public function __construct(CompetitionName $name, CompetitionLocation $location, \DateTime $date, string $id = NULL)
     {
-        $this->nameID = $nameID;
+        $this->name = $name;
         $this->date = $date;
-        $this->locatoinID = $locatoinID;
+        $this->location = $location;
         if ($id != NULL)
             $this->setId($id);
     }
@@ -45,30 +45,39 @@ class Competition extends DBTableEntry
      *
      * @return string
      */
-    public function getFormatedDate()
+    public function getFormatedDateForBL()
     {
         return DateFormatUtils::formatDateForBL($this->date);
     }
-
+    
+    
+    /**
+     *
+     * @return string
+     */
+    public function getFormatedDateForDB()
+    {
+        return DateFormatUtils::formatDateForDB($this->date);
+    }
     // *********************
     // GETTERS AND SETTERS
     // *********************
     /**
      *
-     * @return string
+     * @return CompetitionName
      */
-    public function getNameID()
+    public function getName()
     {
-        return $this->nameID;
+        return $this->name;
     }
 
     /**
      *
-     * @return string
+     * @return CompetitionLocation
      */
-    public function getLocationID()
+    public function getLocation()
     {
-        return $this->locatoinID;
+        return $this->location;
     }
 
     /**
@@ -88,41 +97,5 @@ class Competition extends DBTableEntry
     {
         return $this->dateFormat;
     }
-
-    // /**
-    // *
-    // * @param string $name
-    // */
-    // public function setName($name)
-    // {
-    // $this->name = $name;
-    // }
-
-    // /**
-    // *
-    // * @param string $place
-    // */
-    // public function setPlace($place)
-    // {
-    // $this->place = $place;
-    // }
-
-    // /**
-    // *
-    // * @param mixed $date
-    // */
-    // public function setDate($date)
-    // {
-    // $this->date = $date;
-    // }
-
-    // /**
-    // *
-    // * @param string $dateFormat
-    // */
-    // public function setDateFormat($dateFormat)
-    // {
-    // $this->dateFormat = $dateFormat;
-    // }
 }
 

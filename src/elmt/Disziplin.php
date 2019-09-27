@@ -1,8 +1,6 @@
 <?php
 namespace tvustat;
 
-use function Redis\strlen;
-
 class Disziplin extends DBTableEntry
 {
 
@@ -44,6 +42,12 @@ class Disziplin extends DBTableEntry
 
     /**
      *
+     * @var TeamType
+     */
+    private $teamType;
+
+    /**
+     *
      * @var float
      */
     private $minValue;
@@ -59,9 +63,8 @@ class Disziplin extends DBTableEntry
     // private $pointsSLV2010IDWoman;
 
     // private $pointsSLV2010IDMan;
-//     private $associatedCombinedEventIds;
-
-    public function __construct(string $name, Sorting $sorting, float $orderNumber, bool $isTime, bool $isDecimal, DisziplinType $disziplinType, float $minValue, float $maxValue, int $id = NULL)
+    // private $associatedCombinedEventIds;
+    public function __construct(string $name, Sorting $sorting, float $orderNumber, bool $isTime, bool $isDecimal, DisziplinType $disziplinType, TeamType $teamType, float $minValue, float $maxValue, int $id = NULL)
     {
         $this->name = $name;
         $this->sorting = $sorting;
@@ -69,10 +72,11 @@ class Disziplin extends DBTableEntry
         $this->isTime = $isTime;
         $this->isDecimal = $isDecimal;
         $this->disziplinType = $disziplinType;
+        $this->teamType = $teamType;
         $this->minValue = $minValue;
         $this->maxValue = $maxValue;
         // $this->sql_val_kat = $sql_val_kat;
-//         $this->laufsort = ($laufsort == NULL) ? (int) strlen($name) : $laufsort;
+        // $this->laufsort = ($laufsort == NULL) ? (int) strlen($name) : $laufsort;
         if ($id != NULL)
             $this->setId($id);
     }
@@ -82,6 +86,7 @@ class Disziplin extends DBTableEntry
     // ********************
 
     /**
+     *
      * @return string
      */
     public function getName()
@@ -90,6 +95,7 @@ class Disziplin extends DBTableEntry
     }
 
     /**
+     *
      * @return \tvustat\Sorting
      */
     public function getSorting()
@@ -98,6 +104,7 @@ class Disziplin extends DBTableEntry
     }
 
     /**
+     *
      * @return number
      */
     public function getOrderNumber()
@@ -106,6 +113,7 @@ class Disziplin extends DBTableEntry
     }
 
     /**
+     *
      * @return boolean
      */
     public function isTime()
@@ -114,6 +122,7 @@ class Disziplin extends DBTableEntry
     }
 
     /**
+     *
      * @return boolean
      */
     public function isDecimal()
@@ -122,6 +131,7 @@ class Disziplin extends DBTableEntry
     }
 
     /**
+     *
      * @return \tvustat\DisziplinType
      */
     public function getDisziplinType()
@@ -130,6 +140,16 @@ class Disziplin extends DBTableEntry
     }
 
     /**
+     *
+     * @return \tvustat\TeamType
+     */
+    public function getTeamType()
+    {
+        return $this->teamType;
+    }
+    
+    /**
+     *
      * @return number
      */
     public function getMinValue()
@@ -138,12 +158,12 @@ class Disziplin extends DBTableEntry
     }
 
     /**
+     *
      * @return number
      */
     public function getMaxValue()
     {
         return $this->maxValue;
     }
-
 }
 

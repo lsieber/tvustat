@@ -2,59 +2,83 @@
 namespace tvustat;
 
 use config\dbAthletes;
+use config\dbCompetition;
+use config\dbCompetitionLocations;
+use config\dbCompetitionNames;
+use config\dbConfig;
 use config\dbTableDescription;
 
-class AddElement
+class AddElement extends DbHandler
 {
+
+    private $check;
+
+    function __construct(ConnectionPreloaded $conn, dbConfig $config)
+    {
+        parent::__construct($conn, $config);
+        $this->check = new CheckExistance($conn, $config);
+    }
 
     /**
      *
-     * @param ConnectionPreloaded $conn
      * @param Athlete $athlete
      * @return string
      */
-    public static function person(ConnectionPreloaded $conn, Athlete $athlete)
+    public function person(Athlete $athlete)
     {
+        if (! PersonUtils::checkAthleteReadyForInsertion($athlete))
+            return "Person " . $athlete->getName() . " needs more details for the DB";
+        return ($this->check->athlete($athlete)) ? "Value Already exists" : $this->addElement($athlete, $this->getTable(dbAthletes::class));
+    }
 
-        // TODO create function
-        if (! self::checkAthleteReadyForInsertion($athlete)) {
-            echo "Person needs more details for the DB";
-            return $athlete->getName();
+    /**
+     * 
+     * @param Competition $competition
+     * @return string
+     */
+    public function competition(Competition $competition)
+    {
+        if (! CompetitionUtils::checkCompetitionReadyForInsertion($competition)) {
+            return "Competition needs more details to insert into the db";
         }
-//         $sql_check_existance = "SELECT ID FROM " . dbAthletes::DBNAME . " WHERE " . dbAthletes::FIRSTNAME . "='" . $athlete->getFirstName() . "' AND " . dbAthletes::LASTNAME . "='" . $athlete->getLastName() . "' AND " . dbAthletes::DATE . "=" . $athlete->getDateForDB();
-        // $result_check = $conn->getConn()->query($sql_check_existance);
-        // if ($result_check->fetch_all(MYSQLI_ASSOC) == NULL) {
-        return self::AddElement($conn, $athlete, new dbAthletes());
-        // }
+        if (! $this->check->competitionLocation($competition->getLocation())) {
+            return "The Competition Location does Not Exist in the Database";
+        }
 
-        return "No Insertion Possible";
+        if (! $this->check->competitionName($competition->getName())) {
+            return "The Competition Name does Not Exist in the Database";
+        }
+        return ($this->check->competition($competition)) ? "Value Already exists" : $this->addElement($competition, $this->getTable(dbCompetition::class));
     }
 
-    private static function checkAthleteReadyForInsertion(Athlete $athlete)
+    public function competitionLocation(CompetitionLocation $location)
     {
-        return ($athlete->getFirstName() != NULL && //
-        $athlete->getGender() != NULL && //
-        $athlete->getTeamType() != NULL);
+        if (! CompetitionUtils::checkLocationReadyForInsertion($location)) {
+            return "Competition needs more details to insert into the db";
+        }
+        return ($this->check->competitionLocation($location)) ? "Value Already exists" : $this->addElement($location, $this->getTable(dbCompetitionLocations::class));
     }
 
-    private static function AddElement(ConnectionPreloaded $conn, DBTableEntry $element, dbTableDescription $desc)
+    public function competitionName(CompetitionName $name)
     {
-        $v = $desc::classToCollumns($element);
-        $table = $desc::getTableName();
-        $sql = "INSERT INTO " . $table . " VALUES ('Null";
+        if (! CompetitionUtils::checkNameReadyForInsertion($name)) {
+            return "Competition needs more details to insert into the db";
+        }
+        return ($this->check->competitionName($name)) ? "Value Already exists" : $this->addElement($name, $this->getTable(dbCompetitionNames::class));
+    }
 
+    private function addElement(DBTableEntry $element, dbTableDescription $desc)
+    {
+        $v = $desc->classToCollumns($element);
+
+        $sql = "INSERT INTO " . $desc->getTableName() . " VALUES ('Null";
         for ($i = 1; $i < sizeof($v); $i ++) {
             $sql .= "','" . $v[$i];
         }
         $sql .= "')";
-        echo $sql;
-        $result = $conn->getConn()->query($sql);
-        $new_id = $conn->getConn()->insert_id;
-        if ($result == 1) {
-            echo "Eingabe erfolgreich " . $v[1] . " wurde hinzugefügt";
-        } else {
-            echo "Eingabe nicht gelungen: ";
-        }
-        return $v[1] . ", New ID: " . $new_id;
+
+        $result = $this->conn->getConn()->query($sql);
+        $new_id = $this->conn->getConn()->insert_id;
+        return ($result == 1) ? "Eingabe erfolgreich " . $v[1] . " wurde hinzugefügt, New ID: " . $new_id : "Eingabe von " . $v[1] . "nicht gelungen";
     }
 }

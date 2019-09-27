@@ -3,29 +3,49 @@ namespace tvustat;
 
 use config\dbAthletes;
 use config\dbTableDescription;
-class GetByID
+use config\dbDisziplin;
+
+class GetByID extends DbHandler
 {
 
     const select = "SELECT * FROM ";
 
-    public function __construct()
-    {}
-
-    static function person(ConnectionPreloaded $conn, int $id)
+    public function athlete(int $id)
     {
-        $r = self::getQuerryResult(dbAthletes::class, $conn, $id);
-        return new Person($r[dbAthletes::FIRSTNAME], $r[dbAthletes::LASTNAME], new \DateTime($r[dbAthletes::DATE]), $conn->getGender($r[dbAthletes::GENDERID]));
+        $r = self::getQuerryResult($this->getTable(dbAthletes::class), $id);
+        return ($r == NULL) ? NULL : $this->personFromAsocArray($r);
     }
+
+
     
-    private static function getQuerryResult(dbTableDescription $desc, ConnectionPreloaded $conn, int $id){
-        $colums = $desc::getCollumNames();
-        $table = $desc::getTableName();
-        
-        $sql = self::select . $table . " WHERE " . $colums[0] . "=" . $id;
-        
-        return $conn.executeSqlToArray($sql);
-        
+
+    
+    private function copetitionFromAsocArray($r)
+    {
+        return new Competition( //
+            $r[dbAthletes::FIRSTNAME], //
+            $r[dbAthletes::LASTNAME], //
+            new \DateTime($r[dbAthletes::DATE]), //
+            $this->conn->getGender($r[dbAthletes::GENDERID]), //
+            $this->conn);
     }
-    
+
+    private function getQuerryResult(dbTableDescription $desc, int $id)
+    {
+        $idString = $desc->getIDString();
+        $table = $desc->getTableName();
+
+        $sql = self::select . $table . " WHERE " . $idString . "=" . $id;
+
+        $r = $this->conn->executeSqlToArray($sql);
+
+        if (sizeof($r) != 1) {
+            if (sizeof($r) > 1) {
+                echo "Multiple Elements hit";
+            }
+            return NUll;
+        }
+        return $r[0];
+    }
 }
 

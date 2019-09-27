@@ -15,6 +15,11 @@ abstract class dbTableDescription
     abstract static function getTableName();
     
     /**
+     * @return string
+     */
+    abstract static function getIDString();
+    
+    /**
      * @param mixed
      * @return array
      */
