@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      <script src="../js/input/import.js"></script>
+      
+</head>
+
+<body>
+      <div class="container">
+            <div class="row">
+                  <a class="btn btn-primary" href="#" onclick="alertHey()">Test Function</a>
+            </div>
+      </div>
+      <div class="container">
+            <h1>Import Files From CSV</h1>
+            <p>Here We want to import files from the Swiss Athletics Web Page and import the data into the Database</p>
+            <div class="row">
+                  <div class="col-sm-12">
+                        <div class="input-group">
+                              <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                              </div>
+                              <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                          aria-describedby="inputGroupFileAddon01">
+                                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            <div class="row">
+                  <div class="col-sm-3">
+                        <a class="btn btn-primary" href="#" onclick="insertAllDisziplins()">Write Disziplins</a>
+                  </div>
+                  <div class="col-sm-3">
+                        <a class="btn btn-primary" href="#">Write Competitions</a>
+                  </div>
+                  <div class="col-sm-3">
+                        <a class="btn btn-primary" href="#">Write Athletes</a>
+                  </div>
+            </div>
+            <!--          <div class="row">
+                  <div class="col-sm-12">
+                        <div class="modal">
+                              <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                          <div class="modal-header">
+                                                <h5 class="modal-title">Disziplin Input</h5> <button type="button"
+                                                      class="close" data-dismiss="modal"> <span>×</span> </button>
+                                          </div>
+                                          <div class="modal-body">
+                                                <form class="">
+                                                      <div class="form-group"> <label>Disziplin</label> <input
+                                                                  type="disziplin" class="form-control"
+                                                                  placeholder="Enter Disziplin Name"> </div>
+                                                      <div class="form-group"> <label>Password</label> <input
+                                                                  type="password" class="form-control"
+                                                                  placeholder="Password"> </div> <button type="submit"
+                                                            class="btn btn-primary">Submit</button>
+                                                </form>
+                                          </div>
+                                          <div class="modal-footer"> <button type="button" class="btn btn-primary">Save
+                                                      changes</button> <button type="button" class="btn btn-secondary"
+                                                      data-dismiss="modal">Close</button> </div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>-->
+            <div class="row">
+                  <div class="col-md-12 text-center">
+                        <a class="btn btn-primary" href="#">Write Data</a>
+                  </div>
+            </div>
+      </div>
+</body>
+
+</html>

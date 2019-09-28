@@ -27,10 +27,8 @@ class DBMaintainer
     }
 
     /**
-     * ADDING FUNCTIONALITIES 
+     * ADDING FUNCTIONALITIES
      */
-    
-    
     public function addAthlete(Athlete $athlete)
     {
         return $this->add->person($athlete);
@@ -51,11 +49,10 @@ class DBMaintainer
         return $this->add->competitionLocation($competitionLocation);
     }
 
-    
     /**
      * CHECKING FUNCTIONALITIES
      */
-    
+
     /**
      *
      * @param Athlete $athlete
@@ -65,13 +62,36 @@ class DBMaintainer
     {
         return $this->check->athlete($athlete);
     }
-    
+
     /**
-     * GET BY ID 
+     *
+     * @param Disziplin $disziplin
+     * @return boolean
      */
-    
-    public function getPerson(int $id) {
+    public function checkDisziplinExists(Disziplin $disziplin)
+    {
+        return $this->check->disziplin($disziplin);
+    }
+
+    /**
+     * GET BY ID
+     */
+    public function getPerson(int $id)
+    {
         return $this->getById->athlete($id);
+    }
+
+    /**
+     * GETTERS
+     */
+
+    /**
+     *
+     * @return \tvustat\ConnectionPreloaded
+     */
+    public function getConn()
+    {
+        return $this->conn;
     }
 }
 

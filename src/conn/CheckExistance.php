@@ -26,7 +26,7 @@ class CheckExistance extends DbHandler
     }
 
     /**
-     * 
+     *
      * @param CompetitionLocation $competitionLocation
      * @return boolean
      */
@@ -39,7 +39,7 @@ class CheckExistance extends DbHandler
     }
 
     /**
-     * 
+     *
      * @param CompetitionName $competitionName
      * @return boolean
      */
@@ -51,7 +51,7 @@ class CheckExistance extends DbHandler
     }
 
     /**
-     * 
+     *
      * @param Competition $competition
      * @return boolean
      */
@@ -65,7 +65,7 @@ class CheckExistance extends DbHandler
     }
 
     /**
-     * 
+     *
      * @param Disziplin $disziplin
      * @return boolean
      */
@@ -75,15 +75,43 @@ class CheckExistance extends DbHandler
             dbDisziplin::NAME
         ));
     }
+    /**
+     *
+     * @param Disziplin $disziplin
+     * @return boolean
+     */
+    public function loadDisziplin(Disziplin $disziplin)
+    {
+        $r = $this->load($this->getTable(dbDisziplin::class), $disziplin, array(
+            dbDisziplin::NAME
+        ));
+        return ($r != NULL) ? dbDisziplin::disziplinFromAsocArray($r[0], $this->conn): NULL;
+    }
 
     /**
-     * 
+     *
      * @param dbTableDescription $desc
      * @param DBTableEntry $element
      * @param array $identifiers
      * @return boolean
      */
     private function check(dbTableDescription $desc, DBTableEntry $element, array $identifiers)
+    {
+        $r = $this->load($desc, $element, $identifiers);
+        if ($r == NULL) {
+            return FALSE; 
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param dbTableDescription $desc
+     * @param DBTableEntry $element
+     * @param array $identifiers
+     * @return boolean
+     */
+    private function load(dbTableDescription $desc, DBTableEntry $element, array $identifiers)
     {
         $k = $desc->getCollumNames();
         $v = $desc->classToCollumns($element);
@@ -101,6 +129,6 @@ class CheckExistance extends DbHandler
         }
 
         $result = $this->conn->getConn()->query($sql);
-        return ($result->fetch_all(MYSQLI_ASSOC) != NULL);
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }

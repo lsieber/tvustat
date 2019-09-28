@@ -4,27 +4,46 @@ namespace tvustat;
 class SwissAthleticsExportLoader extends PerformanceLoader
 {
 
+    private $disziplins = array();
+
     const FILEPATH = "../data/bltest.csv";
 
-    public function __construct()
-    {}
+    private $dbMaintainer;
+
+    public function __construct(DBMaintainer $dbMaintainer)
+    {
+        $this->dbMaintainer = $dbMaintainer;
+    }
 
     public function readFile(string $filePath)
     {
-        $row = 1;
+        $prevLine = NULL;
         if (($handle = fopen($filePath, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
-                $num = count($data);
-//                 echo "<p> $num fields in line $row: <br /></p>\n";
-                $row++;
-                for ($c=0; $c < $num; $c++) {
-                    echo $data[$c] . "<br />\n";
+                if ($data[0] == "Nr") {
+                    $this->getDisziplin($prevLine[0]);
                 }
+                $prevLine = $data;
             }
             fclose($handle);
         }
     }
 
+    private function getDisziplin($disziplinName)
+    {
+        $disziplinNameOnly = new DisziplinNameOnly($disziplinName, $this->dbMaintainer->getConn());
+        if ($this->dbMaintainer->checkDisziplinExists($disziplinNameOnly)) {
+            echo "Disziplin Exists" . $disziplinName;
+            return $this->dbMaintainer->loadDisziplin($disziplinNameOnly);
+        } else {
+            echo "Disziplin does Not Exist" . $disziplinName;
+        }
+    }
+
+    private function askUser($disziplinName) {
+        
+    }
+    
     public function getData()
     {}
 }
