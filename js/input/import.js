@@ -1,83 +1,39 @@
 /**
  * 
  */
-function alertHey(){
-  alert("HeyDs");
-}
+import { DisziplinInputForm } from "./DisziplinInputForm.js"
+import { Gender } from "../elmt/Gender.js";
+import { loadData } from "./BasicDefinitions.js"
+import { insertDisziplinsFromFile } from "./DataLoader.js";
 
-function loadDefaultFile() {
-  loadFile('../data/bltest.csv');
+function onload() {
+  loadData('./BasicDefinitions.php');
+  modifyDisziplinModal();
 }
+window.onload = onload
 
-function loadFile(filePath) {
-  jQuery.get(filePath, function (data) {
-    alert(data);
-  });
-}
-
-function getCustomFileName() {
-  var input = document.getElementById('inputGroupFile01');
-  if (!input) {
-    alert("Um, couldn't find the imgfile element.");
+function printElements() {
+  var genders=[];
+  var defs = JSON.parse(window.sessionStorage.defs);
+  for (var key in defs.genders) {
+    var g = defs.genders[key];
+    genders[g.id] = new Gender(g.id, g.name, g.shortName);
   }
-  else if (!input.files) {
-    alert("This browser doesn't seem to support the `files` property of file inputs.");
-  }
-  else if (!input.files[0]) {
-    alert("Please select a file before clicking 'Load'");
-  }
-  var file = input.files[0];
-  var reader = new FileReader();
-  var text;
-  reader.readAsText(file);
 
-  return reader;
 }
+window.printElements = printElements;
 
 function insertAllDisziplins() {
-  var reader = getCustomFileName();
+  insertDisziplinsFromFile();
+}
+window.insertAllDisziplins = insertAllDisziplins
 
-  reader.onload = function (e) {
-    var text = reader.result;
-    var array = parse(text);
 
-    var previousElement = null;
-    for (let index = 0; index < array.length; index++) {
-      const element = array[index];
-      if (element[0] == "Nr") {
-        checkDisziplin(previousElement[0]);
-      }
-      previousElement = element;
-    }
+function modifyDisziplinModal() {
+  var disForm = new DisziplinInputForm();
+  document.getElementById("disziplin-form-modal").innerHTML = disForm.create();
+  for (const key in disForm.getDefaultCheckedIds) {
+    document.getElementById(key+disForm.getDefaultCheckedIds.key).checked = true;
   }
-
-
 }
 
-function checkDisziplin(disziplinName) {
-  $.post('existing_entries.php', { type: "disziplinExists", disziplin: disziplinName },
-    function (data) {
-      var a = JSON.parse(data);
-      if (a.disziplinExists == "false") {
-        createNewDisziplinInput(a.disziplinName);
-      }
-    });
-}
-
-function createNewDisziplinInput(disziplinName) {
-  alert(disziplinName);
-}
-
-
-
-
-function parse(text) {
-
-  var array = [];
-  var lines = text.split("\n");
-  for (let index = 0; index < lines.length; index++) {
-    array[index] = lines[index].split(";");
-  }
-
-  return array;
-}
