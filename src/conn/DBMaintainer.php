@@ -34,6 +34,13 @@ class DBMaintainer
         return $this->add->person($athlete);
     }
 
+ 
+    public function addDisziplin(Disziplin $disziplin)
+    {
+        return $this->add->disziplin($disziplin);
+    }
+    
+    
     public function addCompetition(Competition $competition)
     {
         return $this->add->competition($competition);

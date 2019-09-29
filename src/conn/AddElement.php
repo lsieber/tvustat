@@ -7,6 +7,7 @@ use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbConfig;
 use config\dbTableDescription;
+use config\dbDisziplin;
 
 class AddElement extends DbHandler
 {
@@ -33,6 +34,18 @@ class AddElement extends DbHandler
 
     /**
      * 
+     * @param Disziplin $disziplin
+     * @return string
+     */
+    public function disziplin(Disziplin $disziplin)
+    {
+        if (! DisziplinUtils::checkDisziplinReadyForInsertion($disziplin))
+            return "Disziplin " . $disziplin->getName() . " needs more details for the DB";
+        return ($this->check->disziplin($disziplin)) ? "Value Already exists" : $this->addElement($disziplin, $this->getTable(dbDisziplin::class));
+    }
+
+    /**
+     *
      * @param Competition $competition
      * @return string
      */
@@ -77,6 +90,7 @@ class AddElement extends DbHandler
         }
         $sql .= "')";
 
+//         echo $sql;
         $result = $this->conn->getConn()->query($sql);
         $new_id = $this->conn->getConn()->insert_id;
         return ($result == 1) ? "Eingabe erfolgreich " . $v[1] . " wurde hinzugefügt, New ID: " . $new_id : "Eingabe von " . $v[1] . "nicht gelungen";

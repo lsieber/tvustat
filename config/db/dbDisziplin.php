@@ -19,11 +19,15 @@ class dbDisziplin extends dbTableDescription
 
     public const DECIMAL = "decimalPlaces";
 
-    public const DISZIPLINTYPE = "disziplinType";
+    public const DISZIPLINTYPE = "disziplinTypeID";
 
     public const TEAMTYPEID = "teamTypeID";
 
     public const ORDER = "orderNumber";
+
+    public const MINVAL = "minVal";
+
+    public const MAXVAL = "maxVal";
 
     public const SWISSATHLETICS = "swissAthleticsID";
 
@@ -52,7 +56,9 @@ class dbDisziplin extends dbTableDescription
         self::DISZIPLINTYPE => 5,
         self::TEAMTYPEID => 6,
         self::ORDER => 7,
-        self::SWISSATHLETICS => 8
+        self::MINVAL => 8,
+        self::MAXVAL => 9,
+        self::SWISSATHLETICS => 10
     );
 
     /**
@@ -89,9 +95,11 @@ class dbDisziplin extends dbTableDescription
             3 => $disziplin->isTime(),
             4 => $disziplin->isDecimal(),
             5 => $disziplin->getDisziplinType()->getId(),
-            6 => $disziplin->getTeamType(),
+            6 => $disziplin->getTeamType()->getId(),
             7 => $disziplin->getOrderNumber(),
-            8 => NULL
+            8 => $disziplin->getMinValue(),
+            9 => $disziplin->getMaxValue(),
+            10 => NULL
         );
     }
 
@@ -105,8 +113,8 @@ class dbDisziplin extends dbTableDescription
         $r[self::DECIMAL], //
         $conn->getDisziplinType(self::DISZIPLINTYPE), //
         $conn->getTeamType(self::TEAMTYPEID), //
-        NULL, // miN vALUE
-        NULL, // Max Value TODO
+        $r[self::MINVAL], // miN vALUE
+        $r[self::MAXVAL], // Max Value TODO
         $r[self::ID]);
     }
 }

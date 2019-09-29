@@ -25,7 +25,7 @@ export function selectAllValues(name) {
 }
 
 export function getSelectedRadioButton(name) {
-	var object = selectedRadioButtonObject(name);
+	var object = getSelectedRadioButtonObject(name);
 	if (object != null) {
 		return object.value;
 	}
@@ -34,18 +34,21 @@ export function getSelectedRadioButton(name) {
 
 export function getSelectedRadioButtonObject(name) {
 	var radioButton = document.getElementsByName(name);
-	for (i = 0; i < radioButton.length; i++) {
+
+	for (var i = 0; i < radioButton.length; i++) {
+
 		if (radioButton[i].checked) {
 			return radioButton[i];
 		}
 	}
+
 	return null;
 }
 
 export function getSelectedCheckboxes(name) {
 	var ids = [];
 	var checkboxes = document.getElementsByName(name);
-	for (i = 0; i < checkboxes.length; i++) {
+	for (var i = 0; i < checkboxes.length; i++) {
 		if (checkboxes[i].checked) {
 			ids.push(checkboxes[i].id);
 		}

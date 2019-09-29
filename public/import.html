@@ -9,7 +9,12 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
       <script type=module src="../js/input/import.js"></script>
-
+      <script>
+            function clearSession() {
+                  sessionStorage.clear();
+                  onload();
+            }
+      </script>
 </head>
 
 <body onload="onload()">
@@ -17,6 +22,7 @@
             <div class="row">
                   <a class="btn btn-primary" href="#" onclick="loadBasicData()">Test Function</a>
                   <a class="btn btn-primary" href="#" onclick="printElements()">Print Elements</a>
+                  <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
 
             </div>
       </div>
@@ -37,6 +43,10 @@
                         </div>
                   </div>
             </div>
+            <div class="jumbotron" id="disziplinInputsResult" >
+        
+            </div>
+
             <div class="row">
                   <div class="col-sm-3">
                         <a class="btn btn-primary" href="#" onclick="insertAllDisziplins()">Write Disziplins</a>
@@ -48,12 +58,22 @@
                         <a class="btn btn-primary" href="#">Write Athletes</a>
                   </div>
             </div>
+            <div class="row">
+                  <div id="disziplinInputs" class="col-sm-3">
+                  </div>
+                  <div class="col-sm-3">
+                  </div>
+                  <div class="col-sm-3">
+                  </div>
+            </div>
+
 
             <div class="jumbotron">
-                  <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                  <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()" data-toggle="modal"
                         data-target="#disziplinInput">Insert
                         Disziplin</button>
-
+                  <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()">Update
+                        Modal</button>
             </div>
       </div>
       <div class="row">
@@ -75,7 +95,7 @@
                                                       type="submit" class="btn btn-primary">Save</button>
                                           </form>
                                     </div>
-                                    <div class="modal-footer"> <button type="button" class="btn btn-primary">Save
+                                    <div class="modal-footer"> <button type="button" class="btn btn-primary" id="saveAndCloseDisziplin" onclick="disziplinToDB()">Save
                                                 and Close</button> <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">Close</button> </div>
                               </div>

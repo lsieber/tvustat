@@ -9,7 +9,7 @@ export function insertDisziplinsFromFile() {
         var previousElement = null;
         for (let index = 0; index < array.length; index++) {
             const element = array[index];
-            if (element[0] == "Nr") {
+            if (element[0] === "Nr") {
                 checkDisziplin(previousElement[0]);
             }
             previousElement = element;
@@ -41,9 +41,45 @@ function checkDisziplin(disziplinName) {
         function (data) {
             var a = JSON.parse(data);
             if (a.disziplinExists == "false") {
-                createNewDisziplinInput(a.disziplinName);
+                addNotDisziplinToSession(a.disziplinName);
             }
         });
+}
+
+const disziplinStorageName = "notDis";
+
+function addNotDisziplinToSession(disziplin) {
+    if (window.sessionStorage.getItem(disziplinStorageName) === null) {
+        var notDis = [disziplin];
+        window.sessionStorage.setItem(disziplinStorageName, JSON.stringify(notDis));
+    } else {
+        if (!checkDisziplinAlreadyInRegister(disziplin)) {
+            var notExistingDisziplins = getNotRegisteredDisziplins();
+            notExistingDisziplins.push(disziplin);
+            window.sessionStorage.setItem(disziplinStorageName, JSON.stringify(notExistingDisziplins));
+        }
+    }
+}
+function checkDisziplinAlreadyInRegister(disziplin) {
+    var notExistingDisziplins = getNotRegisteredDisziplins();
+    for (const key in notExistingDisziplins) {
+        const element = notExistingDisziplins[key];
+        if (element == disziplin) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function getNotRegisteredDisziplins() {
+    return JSON.parse(window.sessionStorage.getItem(disziplinStorageName));
+}
+
+export function removeNotRegisteredDisziplinById(id) {
+    var notExistingDisziplins = getNotRegisteredDisziplins();
+    notExistingDisziplins.splice(id, 1);
+    window.sessionStorage.removeItem(disziplinStorageName);
+    window.sessionStorage.setItem(disziplinStorageName, JSON.stringify(notExistingDisziplins));
 }
 
 function parse(text) {
@@ -56,6 +92,7 @@ function parse(text) {
     return array;
 }
 
-function createNewDisziplinInput(disziplinName) {
-    alert(disziplinName);
-}
+// function createNewDisziplinInput(disziplinName) {
+
+//     alert(disziplinName);
+// }

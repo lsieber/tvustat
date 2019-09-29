@@ -20,13 +20,14 @@ export class InputForm {
 
         var o = '<div class="form-group"><label>' + label + '</label>';
         for (const key in options) {
-            o = o + this.getOneRadio(name, name + key, options[key]);
+            o = o + this.getOneRadio(name, name + key, key, options[key]);
         }
-        return o+"</di>";
+        o = o + "</di>";
+        return o;
     }
 
-    getOneRadio(name, id, radioLabel) {
-        return '<input type="radio" id="' + id + '" name="'+name+'"><label for="' + id + '">' + radioLabel + '</label>';
+    getOneRadio(name, id, value, radioLabel) {
+        return '<input type="radio" id="' + id + '" value="' + value + '" name="' + name + '"><label for="' + id + '">' + radioLabel + '</label>';
     }
 
 }
