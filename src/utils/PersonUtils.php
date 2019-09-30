@@ -6,7 +6,7 @@ class PersonUtils
 
     public static function checkAthleteReadyForInsertion(Athlete $athlete)
     {
-        return ($athlete->getFirstName() != NULL && //
+        return ($athlete->getFullName() != NULL && //
         $athlete->getGender() != NULL && //
         $athlete->getTeamType() != NULL);
     }

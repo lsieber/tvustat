@@ -36,5 +36,6 @@ export function parse(text) {
     for (let index = 0; index < lines.length; index++) {
         array[index] = lines[index].split(";");
     }
+    // return array.slice(0,-1); // Remove the last line as it is empty
     return array;
 }

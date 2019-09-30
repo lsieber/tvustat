@@ -2,6 +2,8 @@
 namespace tvustat;
 
 use config\dbConfig;
+use config\dbCompetitionLocations;
+use config\dbCompetitionNames;
 
 class DBMaintainer
 {
@@ -99,6 +101,14 @@ class DBMaintainer
     public function getConn()
     {
         return $this->conn;
+    }
+    
+    public function getAllCompetitionLocations() {
+        return $this->conn->executeSqlToArray("SELECT * From " . dbCompetitionLocations::DBNAME);
+    }
+    
+    public function getAllCompetitionNames() {
+        return $this->conn->executeSqlToArray("SELECT * From " . dbCompetitionNames::DBNAME);
     }
 }
 

@@ -7,10 +7,11 @@ export class FileReaderDisziplin extends FileReaderInternal {
      * 
      * @param {string} fileFieldId 
      */
-    constructor(fileFieldId, disziplinTableId, disziplinStorageName) {
+    constructor(fileFieldId, disziplinTableId, disziplinStorageName, disziplinModalId) {
         super(fileFieldId);
         this.disziplinTableId = disziplinTableId;
         this.store = disziplinStorageName;
+        this.disziplinModalId = disziplinModalId;
     }
 
     loadData() {
@@ -30,7 +31,7 @@ export class FileReaderDisziplin extends FileReaderInternal {
                                 addValueToStorage("disStore", a.disziplinName);
                             }
                         });
-                } 
+                }
                 prevEl = element;
             }
         }
@@ -46,14 +47,14 @@ export class FileReaderDisziplin extends FileReaderInternal {
         document.getElementById(this.disziplinTableId).innerHTML = string + '</tbody> </table>';
     }
 
-    openModalWithDisziplin(id, disziplinModalId) {
+    openModalWithDisziplin(id) {
         // First the Disziplin Name has to be added to the modal
         this.addDisziplinToFrom(getValuesFromStorage(this.store)[id]);
         // Second: Open the modal
-        $("#" + disziplinModalId).modal(); // Open Modal
+        $("#" + this.disziplinModalId).modal(); // Open Modal
         // Make Sure To Call the Remove function after the insertation
         // TODO should be done in the insert Method
-        removeDisziplinFromList(id);
+        this.removeDisziplinFromList(id);
     }
 
     removeDisziplinFromList(id) {

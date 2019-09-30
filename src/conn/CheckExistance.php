@@ -19,18 +19,25 @@ class CheckExistance extends DbHandler
     public function athlete(Athlete $athlete)
     {
         return $this->check($this->getTable(dbAthletes::class), $athlete, array(
-            dbAthletes::FULLNAME,
+            dbAthletes::FULLNAME
             // dbAthletes::DATE
         ));
     }
 
     /**
+     * If the entered competitionName has an ID it is checked if this id exists.
+     * If no ID exist it is checked if the combination of lcation and facility exists in the Db
      *
      * @param CompetitionLocation $competitionLocation
      * @return boolean
      */
     public function competitionLocation(CompetitionLocation $competitionLocation)
     {
+        if ($competitionLocation->getId() != NULL) {
+            return $this->check($this->getTable(dbCompetitionLocations::class), $competitionLocation, array(
+                dbCompetitionLocations::ID
+            ));
+        }
         return $this->check($this->getTable(dbCompetitionLocations::class), $competitionLocation, array(
             dbCompetitionLocations::VILLAGE,
             dbCompetitionLocations::FACILITY
@@ -38,12 +45,19 @@ class CheckExistance extends DbHandler
     }
 
     /**
+     * If the entered competitionName has an ID it is checked if this id exists.
+     * If no ID exist it is checked if the name exists in the Db
      *
      * @param CompetitionName $competitionName
      * @return boolean
      */
     public function competitionName(CompetitionName $competitionName)
     {
+        if ($competitionName->getId() != NULL) {
+            return $this->check($this->getTable(dbCompetitionNames::class), $competitionName, array(
+                dbCompetitionNames::ID
+            ));
+        }
         return $this->check($this->getTable(dbCompetitionNames::class), $competitionName, array(
             dbCompetitionNames::NAME
         ));
@@ -74,6 +88,7 @@ class CheckExistance extends DbHandler
             dbDisziplin::NAME
         ));
     }
+
     /**
      *
      * @param Disziplin $disziplin
@@ -84,7 +99,7 @@ class CheckExistance extends DbHandler
         $r = $this->load($this->getTable(dbDisziplin::class), $disziplin, array(
             dbDisziplin::NAME
         ));
-        return ($r != NULL) ? dbDisziplin::disziplinFromAsocArray($r[0], $this->conn): NULL;
+        return ($r != NULL) ? dbDisziplin::disziplinFromAsocArray($r[0], $this->conn) : NULL;
     }
 
     /**
@@ -98,7 +113,7 @@ class CheckExistance extends DbHandler
     {
         $r = $this->load($desc, $element, $identifiers);
         if ($r == NULL) {
-            return FALSE; 
+            return FALSE;
         }
         return true;
     }
@@ -126,7 +141,6 @@ class CheckExistance extends DbHandler
             $sql .= $i . "='" . $v[$k[$i]] . "'";
             $isFirst = FALSE;
         }
-
         $result = $this->conn->getConn()->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }

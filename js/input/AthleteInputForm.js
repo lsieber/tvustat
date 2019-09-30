@@ -57,8 +57,9 @@ export class AthleteInputForm extends InputForm {
         return this.getSimpleRadio("Athlete is", this.teamTypeIdentifier, this.teamTypeOptions);
     }
 
-    selectValues() {
+    selectDefault() {
         document.getElementById("teamType1").checked = true;
+        document.getElementById("gender1").checked = true;
     }
 
     getId() {
@@ -69,14 +70,14 @@ export class AthleteInputForm extends InputForm {
         this.id = id;
     }
 
-    athleteToDB(resultFieldId) {
-        var fullName = document.getElementById(this.disziplinIdentifier);
-        var date = document.getElementById(this.orderNumberIdentifier);
-        var licenceNumber = document.getElementById(this.minValIndentifier);
-        var genderID = getSelectedRadioButton(this.sortingIdentifier);
+    athleteToDB() {
+        var fullName = document.getElementById(this.nameIdentifier);
+        var date = document.getElementById(this.dateIdentifier);
+        var licenceNumber = document.getElementById(this.licenceIndentifier);
+        var genderID = getSelectedRadioButton(this.genderIdentifier);
         var teamTypeID = getSelectedRadioButton(this.teamTypeIdentifier);
 
-        if (fullName.value == "" || date.value == "" ) //  
+        if (fullName.value == "" || date.value == "" || genderID == null || teamTypeID == null ) //  
         {
             alert("Bitte Fülle alle Felder Korrekt aus");
             return false;
@@ -88,13 +89,13 @@ export class AthleteInputForm extends InputForm {
                 "date": date.value,
                 "licenceNumber": licenceNumber.value,
                 "genderID": genderID,
-                "teamTypeID": teamType
+                "teamTypeID": teamTypeID
             }, function (data) {
-                var r = JSON.parse(data);
-                $("#" + resultFieldId).html("<p>" + r.message + "</p>");
-                alert(r, success);
-                return (r.success === "true");
-            });
+                alert(data);
+                // var r = JSON.parse(data);
+                $("#" + window.modalResultId).html("<p>" + data.message + "</p>");
+                // return (r.success === "true");
+            }, "json");
         }
     }
 

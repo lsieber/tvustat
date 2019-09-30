@@ -16,8 +16,15 @@
             }
 
             function test() {
-                  alert("someText" == "false");
-                  alert(false === "false");
+
+
+
+
+
+                  var a = JSON.stringify({ "athleteExists": "false", "fullName": "Timo Fahrenbruch", "date": "23.02.2003" });
+                  alert(a);
+                  var b = JSON.parse(a);
+                  alert(b.fullName);
             }
       </script>
 </head>
@@ -77,8 +84,9 @@
                   <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()" data-toggle="modal"
                         data-target="#disziplinModal">Insert
                         Disziplin</button>
-                  <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()">Update
-                        Modal</button>
+                  <button type="button" class="btn btn-info btn-lg" onclick="updateCompetitionInput()"
+                        data-toggle="modal" data-target="#competitionModal">Insert Competition
+                  </button>
                   <button type="button" class="btn btn-info btn-lg" onclick="updateAthleteInput()" data-toggle="modal"
                         data-target="#athleteModal">Insert
                         Athlete</button>
@@ -133,9 +141,78 @@
                                     </div>
                                     <div class="modal-footer">
                                           <button class="btn btn-primary" onclick="insertAthlete()">Save</button>
+                                          <button class="btn btn-primary"
+                                                onclick="insertAthlete(),openNextAthlete()">Save an Next</button>
                                           <button type="button" class="btn btn-primary" id="saveAndCloseAthlete"
                                                 onclick="insertAthlete(),closeAthleteModal('#athleteInput')">Save
-                                                and Close</button> 
+                                                and Close</button>
+                                          <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
+      <div class="row">
+            <div class="col-sm-12">
+                  <div id="competitionModal" class="modal">
+                        <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                    <div class="modal-header">
+                                          <h3 class="modal-title">Competition Input</h3> <button type="button"
+                                                class="close" data-dismiss="modal"> <span>×</span> </button>
+                                    </div>
+                                    <div class="modal-body">
+                                          <form id="competitionForm" class="">
+                                                <div class="form-group"> <label>CompetitionName</label>
+
+                                                      <input type="text" list="competitonNames" id="newCompetitionName" oninput="fillDisabledNames()"
+                                                            class="form-control" placeholder="Enter Competition Name" />
+                                                      <datalist id="competitonNames">
+
+                                                      </datalist>
+
+                                                      <a class="btn btn-secondary" href="#" onclick="insertCompetitionName()">Add This Competition Name </a>
+
+                                                      <input type="text" id="CompetitionNameDisabled"
+                                                            class="form-control" placeholder="Enter Competition Name"
+                                                            disabled>
+                                                      <input type="text" id="CompetitionNameID" class="form-control"
+                                                            placeholder="CompetitionID" disabled>
+
+                                                </div>
+                                                <div class="form-group"> <label>CompetitionName</label>
+                                                      <input type="text" id="CompetitionName" oninput=""
+                                                            class="form-control" placeholder="Enter Competition Name">
+                                                      <input class="form-control dropdown-toggle" id="myInput"
+                                                            type="text" data-toggle="dropdown">
+                                                      placeholder="Enter Competition Name..">
+                                                      <div class="dropdown">
+                                                            <button class="btn btn-primary dropdown-toggle"
+                                                                  type="button" data-toggle="dropdown">Dropdown Example
+                                                                  <span class="caret"></span></button>
+                                                            <ul class="dropdown-menu">
+                                                                  <li><a href="#">HTML</a></li>
+                                                                  <li><a href="#">CSS</a></li>
+                                                                  <li><a href="#">JavaScript</a></li>
+                                                                  <li><a href="#">jQuery</a></li>
+                                                                  <li><a href="#">Bootstrap</a></li>
+                                                                  <li><a href="#">Angular</a></li>
+                                                            </ul>
+                                                      </div>
+                                                </div>
+                                                <div class="form-group"> <label>Password</label> <input type="password"
+                                                            class="form-control" placeholder="Password"> </div>
+                                          </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                          <button class="btn btn-primary" onclick="insertAthlete()">Save</button>
+                                          <button class="btn btn-primary"
+                                                onclick="insertAthlete(),openNextAthlete()">Save an Next</button>
+                                          <button type="button" class="btn btn-primary" id="saveAndCloseAthlete"
+                                                onclick="insertAthlete(),closeAthleteModal('#athleteInput')">Save
+                                                and Close</button>
                                           <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">Close</button>
                                     </div>

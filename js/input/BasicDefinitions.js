@@ -1,3 +1,5 @@
+import { addValueToStorage, addValueToArrayStorage } from "./SessionStorageHandler.js";
+
 export function loadBasicData(phpFile){
     $.post(phpFile, {}, function(data) {
         window.sessionStorage.defs = data;
@@ -5,29 +7,16 @@ export function loadBasicData(phpFile){
 }
 
 
+export function loadCompetitionNames(phpFile, storageName){
+    $.post(phpFile, {type:"allCompetitionNames"}, function(data) {
+        for (const key in data) {
+            addValueToArrayStorage(storageName,key, data[key]);
+        }
+    }, "json");
+}
 
-
-// import {Gender} from "../elmt/Gender.js";
-
-// export class BasicDefinitions{
-//     constructor(){
-//         this.phpFile = './BasicDefinitions.php'; 
-//         this.genders = [];
-//         this.loadData();
-//     }
-
-//     loadData(){
-//         $.post(this.phpFile, {}, function(data) {
-
-//             this.json = JSON.parse(data);
-//             window.sessionStorage.user = JSON.stringify(this.json);
-//             // alert(data);
-//             // var gen = this.json.genders;
-//             // for(var key in gen) {
-//             //     var g = gen[key];
-//             //     this.genders[g.id] = new Gender(g.id, g.name, g.shortName);
-//             // }
-//             alert("saved to")
-//         });
-//     }
-// }
+export function loadCompetitionLocations(phpFile, storageName){
+    $.post(phpFile, {type:"allCompetitionLocations"}, function(data) {
+        window.sessionStorage.compLoc = data;
+    }, "json");
+}

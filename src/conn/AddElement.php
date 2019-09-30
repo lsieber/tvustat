@@ -49,7 +49,7 @@ class AddElement extends DbHandler
      * @param Competition $competition
      * @return string
      */
-    public function competition(Competition $competition)
+    public function competition(CompetitionOnlyIds $competition)
     {
         if (! CompetitionUtils::checkCompetitionReadyForInsertion($competition)) {
             return new QuerryOutcome("Competition needs more details to insert into the db", false);
