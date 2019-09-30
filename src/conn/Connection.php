@@ -1,16 +1,21 @@
 <?php
-namespace conn;
+namespace tvustat;
 
-class connection
+use config\ConnectionParameters;
+
+class Connection
 {
 
+    /**
+     * 
+     * @var \mysqli
+     */
     protected $conn;
     
     public function __construct()
     {
         // Create connection
-        $connection = new \mysqli(ConnectionParameters::SERVERNAME, ConnectionParameters::USERNAME, ConnectionParameters::PASSWORD, ConnectionParameters::DATABASE);
-        $this->conn = $connection;
+        $this->conn = new \mysqli(ConnectionParameters::SERVERNAME, ConnectionParameters::USERNAME, ConnectionParameters::PASSWORD, ConnectionParameters::DATABASE);
         // Check connection
         if ($this->conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
@@ -26,7 +31,12 @@ class connection
         }
     }
 
-    protected function executeSqlToArray(string $sql)
+    /**
+     * 
+     * @param string $sql
+     * @return mixed
+     */
+    public function executeSqlToArray(string $sql)
     {
         $result = $this->conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
@@ -34,20 +44,20 @@ class connection
 
     /**
      *
-     * @return mixed
+     * @return \mysqli
      */
     public function getConn()
     {
         return $this->conn;
     }
 
-    /**
-     *
-     * @param mixed $conn
-     */
-    public function setConn($conn)
-    {
-        $this->conn = $conn;
-    }
+//     /**
+//      *
+//      * @param mixed $conn
+//      */
+//     public function setConn($conn)
+//     {
+//         $this->conn = $conn;
+//     }
 }
 ?>

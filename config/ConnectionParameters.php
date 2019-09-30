@@ -1,6 +1,6 @@
 <?php
 
-namespace conn;
+namespace config;
 class ConnectionParameters
 {
 

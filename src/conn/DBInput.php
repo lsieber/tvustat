@@ -1,6 +1,8 @@
 <?php
 
-class DBInput extends Connection
+namespace tvustat;
+
+class DBInput extends ConnectionPreloaded
 {
 
     function setPersonInDB(Person $person)
@@ -65,7 +67,7 @@ class DBInput extends Connection
      * @param int $competitionId
      * @param int $disziplinId
      * @param int $personId
-     * @return mysqli_result|boolean
+//      * @return \mysqli_result|boolean
      */
     function setPerformance(int $competitionId, int $disziplinId, int $personId, $performance)
     {

@@ -1,26 +1,31 @@
 <?php
+namespace tvustat;
 
-class DBDelete extends Connection
+use config\dbCompetition;
+use config\dbDisziplin;
+use config\dbAthletes;
+
+class DBDelete extends DbHandler
 {
 
-    public function performance($id)
-    {
-        $this->deleteIdFromTable(DBSettings::BL, $id);
-    }
+//     public function performance($id)
+//     {
+//         $this->deleteIdFromTable(, $id);
+//     }
 
-    public function wettkampf($id)
+    public function competition($id)
     {
-        $this->deleteIdFromTable(DBSettings::COMP, $id);
+        $this->deleteIdFromTable(dbCompetition::ID, $id);
     }
 
     public function disziplin($id)
     {
-        $this->deleteIdFromTable(DBSettings::DIS, $id);
+        $this->deleteIdFromTable(dbDisziplin::ID, $id);
     }
 
-    public function person($id)
+    public function athlete($id)
     {
-        $this->deleteIdFromTable(DBSettings::PERS, $id);
+        $this->deleteIdFromTable(dbAthletes::ID, $id);
     }
 
     private function deleteIdFromTable(string $table, $id)

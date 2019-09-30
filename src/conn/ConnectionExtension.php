@@ -1,6 +1,9 @@
 <?php
+namespace tvustat;
 
-class ConnectionExtension extends Connection
+use config\DefaultSettings;
+
+class ConnectionExtension extends ConnectionPreloaded
 {
 
     const PERFORMANCEIDALIAS = "PerfId";
@@ -84,7 +87,7 @@ class ConnectionExtension extends Connection
 
     private static function getCompetition($competitionDB, string $idString)
     {
-        return new Competition($competitionDB["WKname"], $competitionDB["Ort"], new DateTime($competitionDB["Datum"]), $competitionDB[$idString], DefaultSettings::DATEFORMAT);
+        return new Competition($competitionDB["WKname"], $competitionDB["Ort"], new \DateTime($competitionDB["Datum"]), $competitionDB[$idString], DefaultSettings::DATEFORMAT);
     }
 }
 

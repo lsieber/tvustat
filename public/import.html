@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="inc/style.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      <script type=module src="../js/input/import.js"></script>
+      <script>
+            function clearSession() {
+                  sessionStorage.clear();
+                  onload();
+            }
+
+            function test() {
+                  alert("someText" == "false");
+                  alert(false === "false");
+            }
+      </script>
+</head>
+
+<body onload="onload()">
+      <div class="container">
+            <div class="row">
+                  <a class="btn btn-primary" href="#" onclick="test()">Test Function</a>
+                  <a class="btn btn-primary" href="#" onclick="displayDisziplinStorage()">Print Elements</a>
+                  <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
+
+            </div>
+      </div>
+      <div class="container">
+            <h1>Import Files From CSV</h1>
+            <p>Here We want to import files from the Swiss Athletics Web Page and import the data into the Database</p>
+            <div class="row">
+                  <div class="col-sm-12">
+                        <div class="input-group">
+                              <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                              </div>
+                              <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputGroupFile01"
+                                          aria-describedby="inputGroupFileAddon01">
+                                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            <div class="jumbotron" id="modalResult">
+
+            </div>
+
+            <div class="row">
+                  <div class="col-sm-3">
+                        <a class="btn btn-primary" href="#" onclick="readDisziplins()">Write Disziplins</a>
+                  </div>
+                  <div class="col-sm-3">
+                        <a class="btn btn-primary" href="#">Write Competitions</a>
+                  </div>
+                  <div class="col-sm-3">
+                        <a class="btn btn-primary" href="#" onclick="readAthletes()">Write Athletes</a>
+                  </div>
+            </div>
+            <div class="row">
+                  <div id="disziplinInputs" class="col-sm-3">
+                  </div>
+                  <div id="competitionInputs" class="col-sm-3">
+                  </div>
+                  <div id="athleteInputs" class="col-sm-3">
+                  </div>
+            </div>
+
+
+            <div class="jumbotron">
+                  <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()" data-toggle="modal"
+                        data-target="#disziplinModal">Insert
+                        Disziplin</button>
+                  <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()">Update
+                        Modal</button>
+                  <button type="button" class="btn btn-info btn-lg" onclick="updateAthleteInput()" data-toggle="modal"
+                        data-target="#athleteModal">Insert
+                        Athlete</button>
+            </div>
+      </div>
+      <div class="row">
+            <div class="col-sm-12">
+                  <div id="disziplinModal" class="modal">
+                        <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                    <div class="modal-header">
+                                          <h3 class="modal-title">Disziplin Input</h3> <button type="button"
+                                                class="close" data-dismiss="modal"> <span>×</span> </button>
+                                    </div>
+                                    <div class="modal-body">
+                                          <form id="disziplinForm" class="">
+                                                <div class="form-group"> <label>Disziplin</label> <input
+                                                            type="disziplin" class="form-control"
+                                                            placeholder="Enter Disziplin Name"> </div>
+                                                <div class="form-group"> <label>Password</label> <input type="password"
+                                                            class="form-control" placeholder="Password"> </div>
+                                          </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div> <button class="btn btn-primary" onclick="insertDisziplin()">Save</button>
+                                    <button type="button" class="btn btn-primary" id="saveAndCloseDisziplin"
+                                          onclick="insertDisziplin(),closeModal('#disziplinInput')">Save
+                                          and Close</button> <button type="button" class="btn btn-secondary"
+                                          data-dismiss="modal">Close</button>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
+      <div class="row">
+            <div class="col-sm-12">
+                  <div id="athleteModal" class="modal">
+                        <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                    <div class="modal-header">
+                                          <h3 class="modal-title">Athlete Input</h3> <button type="button" class="close"
+                                                data-dismiss="modal"> <span>×</span> </button>
+                                    </div>
+                                    <div class="modal-body">
+                                          <form id="athleteForm" class="">
+                                                <div class="form-group"> <label>Athlete</label> <input type="athlete"
+                                                            class="form-control" placeholder="Enter Athlete Name">
+                                                </div>
+                                                <div class="form-group"> <label>Password</label> <input type="password"
+                                                            class="form-control" placeholder="Password"> </div>
+                                          </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                          <button class="btn btn-primary" onclick="insertAthlete()">Save</button>
+                                          <button type="button" class="btn btn-primary" id="saveAndCloseAthlete"
+                                                onclick="insertAthlete(),closeAthleteModal('#athleteInput')">Save
+                                                and Close</button> 
+                                          <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
+      </div>
+      <div class="row">
+            <div class="col-md-12 text-center">
+                  <a class="btn btn-primary" href="#">Write Data</a>
+            </div>
+      </div>
+      </div>
+</body>
+
+</html>

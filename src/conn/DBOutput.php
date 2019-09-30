@@ -1,4 +1,5 @@
 <?php
+namespace tvustat;
 
 class DBOutput extends ConnectionExtension
 {
@@ -122,22 +123,22 @@ class DBOutput extends ConnectionExtension
         return self::getPersonsFromTable($array_result);
     }
 
-    public function getPersonsForKat(Category $category, int $year)
-    {
-        $sql = $category->getSQLforPerson($year);
-        $array_result = $this->executeSqlToArray($sql);
-        $persons = self::getPersonsFromTable($array_result);
+//     public function getPersonsForKat(Category $category, int $year)
+//     {
+//         $sql = $category->getSQLforPerson($year);
+//         $array_result = $this->executeSqlToArray($sql);
+//         $persons = self::getPersonsFromTable($array_result);
 
-        if (AgeCategories::isActiveCategory($category->getAgeCategory())) {
-            foreach (AgeCategories::getActiveCategories() as $activeCategory) {
-                $category->setAgeCategory($activeCategory);
-                $persons = $this->addTeamsOfCategoryToPersons($category, $persons, $year);
-            }
-        } else {
-            $persons = $this->addTeamsOfCategoryToPersons($category, $persons, $year);
-        }
-        return $persons;
-    }
+//         if (AgeCategories::isActiveCategory($category->getAgeCategory())) {
+//             foreach (AgeCategories::getActiveCategories() as $activeCategory) {
+//                 $category->setAgeCategory($activeCategory);
+//                 $persons = $this->addTeamsOfCategoryToPersons($category, $persons, $year);
+//             }
+//         } else {
+//             $persons = $this->addTeamsOfCategoryToPersons($category, $persons, $year);
+//         }
+//         return $persons;
+//     }
 
     private function addTeamsOfCategoryToPersons(Category $category, $persons, int $year)
     {
@@ -149,41 +150,41 @@ class DBOutput extends ConnectionExtension
         return $persons;
     }
 
-    // Point Calculator
-    function pointCalculator(array $disziplinIds, array $performances, string $personId)
-    {
-        $laufArray = array();
-        $pointsArray = array();
-        $punkteSLVIds = array();
+//     // Point Calculator
+//     function pointCalculator(array $disziplinIds, array $performances, string $personId)
+//     {
+//         $laufArray = array();
+//         $pointsArray = array();
+//         $punkteSLVIds = array();
 
-        if (sizeof($disziplinIds) != sizeof($performances)) {
-            echo "Number of disziplins and performances is not equal";
-        }
+//         if (sizeof($disziplinIds) != sizeof($performances)) {
+//             echo "Number of disziplins and performances is not equal";
+//         }
 
-        $person = $this->getPersonByID($personId);
-        foreach ($disziplinIds as $index => $disziplinId) {
-            $disziplin = $this->getDisziplinById($disziplinId);
-            $punkteslv2010_id = ($person->getGender()->getNumericalValue() == 1) ? $disziplin->getPointsSLV2010IDWoman() : $disziplin->getPointsSLV2010IDMan();
+//         $person = $this->getPersonByID($personId);
+//         foreach ($disziplinIds as $index => $disziplinId) {
+//             $disziplin = $this->getDisziplinById($disziplinId);
+//             $punkteslv2010_id = ($person->getGender()->getNumericalValue() == 1) ? $disziplin->getPointsSLV2010IDWoman() : $disziplin->getPointsSLV2010IDMan();
 
-            if ($punkteslv2010_id != "" && $punkteslv2010_id != 0 && $performances[$index] != "") {
-                $sqlPointsById = "SELECT * FROM punkteslv2010 WHERE Id=" . $punkteslv2010_id;
-                $result_parameter = $this->executeSqlToArray($sqlPointsById);
-                $points = StaticFunctions::calculatePoints($result_parameter[0]["parameter_a"], $result_parameter[0]["parameter_b"], $result_parameter[0]["parameter_c"], $result_parameter[0]["LaufFormel"], floatval(TimeUtils::time2seconds($performances[$index])));
+//             if ($punkteslv2010_id != "" && $punkteslv2010_id != 0 && $performances[$index] != "") {
+//                 $sqlPointsById = "SELECT * FROM punkteslv2010 WHERE Id=" . $punkteslv2010_id;
+//                 $result_parameter = $this->executeSqlToArray($sqlPointsById);
+//                 $points = StaticFunctions::calculatePoints($result_parameter[0]["parameter_a"], $result_parameter[0]["parameter_b"], $result_parameter[0]["parameter_c"], $result_parameter[0]["LaufFormel"], floatval(TimeUtils::time2seconds($performances[$index])));
 
-                $punkteSLVIds[$index] = $punkteslv2010_id;
-                $pointsArray[$index] = $points;
-            } else {
-                $pointsArray[$index] = 0;
-            }
-            $laufArray[$index] = $disziplin->getLauf();
-        }
-        // Return Value for the Java Script to parse
-        echo implode(",", $disziplinIds);
-        echo "//";
-        echo implode(",", $laufArray);
-        echo "//";
-        echo implode(",", $pointsArray);
-        echo "//";
-        echo implode(",", $punkteSLVIds);
-    }
+//                 $punkteSLVIds[$index] = $punkteslv2010_id;
+//                 $pointsArray[$index] = $points;
+//             } else {
+//                 $pointsArray[$index] = 0;
+//             }
+//             $laufArray[$index] = $disziplin->getLauf();
+//         }
+//         // Return Value for the Java Script to parse
+//         echo implode(",", $disziplinIds);
+//         echo "//";
+//         echo implode(",", $laufArray);
+//         echo "//";
+//         echo implode(",", $pointsArray);
+//         echo "//";
+//         echo implode(",", $punkteSLVIds);
+//     }
 }
