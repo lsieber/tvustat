@@ -2,11 +2,14 @@
 use config\dbDisziplin;
 use tvustat\DBMaintainer;
 use tvustat\Disziplin;
-use tvustat\DisziplinUtils;
+use tvustat\QuerryOutcome;
+use tvustat\Athlete;
+use config\dbAthletes;
 
 require_once '../vendor/autoload.php';
 
 $insert_disziplin = ($_POST['type'] == 'disziplin') ? TRUE : FALSE;
+$insert_athlete = ($_POST['type'] == 'athlete') ? TRUE : FALSE;
 
 $db = new DBMaintainer();
 $c = $db->getConn();
@@ -30,6 +33,24 @@ if ($insert_disziplin) {
     floatval($_POST[dbDisziplin::MINVAL]), //
     floatval($_POST[dbDisziplin::MAXVAL])); //
 
-    echo $db->addDisziplin($disziplin);
+    /**
+     * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
+     */
+    echo json_decode($db->addDisziplin($disziplin)->getJSONArray());
 }
-?>
+
+if ($insert_athlete) {
+
+    $athlete = new Athlete( //
+    $_POST[dbAthletes::FULLNAME], //
+    new DateTime($_POST[dbAthletes::DATE]), //
+    $c->getGender(intval($_POST[dbAthletes::GENDERID])), //
+    $c->getTeamType(intval($_POST[dbDisziplin::TEAMTYPEID]))); //
+   
+    /**
+     * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
+     */
+    echo json_decode($db->addAthlete($athlete)->getJSONArray());
+}
+
+?>§

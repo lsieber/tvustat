@@ -1,6 +1,5 @@
-export function loadData(phpFile){
+export function loadBasicData(phpFile){
     $.post(phpFile, {}, function(data) {
-        window.sessionStorage.user = JSON.stringify(JSON.parse(data));
         window.sessionStorage.defs = data;
     });
 }

@@ -23,7 +23,7 @@ class GetByID extends DbHandler
     private function copetitionFromAsocArray($r)
     {
         return new Competition( //
-            $r[dbAthletes::FIRSTNAME], //
+            $r[dbAthletes::FULLNAME], //
             $r[dbAthletes::LASTNAME], //
             new \DateTime($r[dbAthletes::DATE]), //
             $this->conn->getGender($r[dbAthletes::GENDERID]), //

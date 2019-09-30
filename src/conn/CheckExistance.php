@@ -19,8 +19,7 @@ class CheckExistance extends DbHandler
     public function athlete(Athlete $athlete)
     {
         return $this->check($this->getTable(dbAthletes::class), $athlete, array(
-            dbAthletes::FIRSTNAME,
-            dbAthletes::LASTNAME
+            dbAthletes::FULLNAME,
             // dbAthletes::DATE
         ));
     }

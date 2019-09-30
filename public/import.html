@@ -14,14 +14,19 @@
                   sessionStorage.clear();
                   onload();
             }
+
+            function test() {
+                  alert("someText" == "false");
+                  alert(false === "false");
+            }
       </script>
 </head>
 
 <body onload="onload()">
       <div class="container">
             <div class="row">
-                  <a class="btn btn-primary" href="#" onclick="loadBasicData()">Test Function</a>
-                  <a class="btn btn-primary" href="#" onclick="printElements()">Print Elements</a>
+                  <a class="btn btn-primary" href="#" onclick="test()">Test Function</a>
+                  <a class="btn btn-primary" href="#" onclick="displayDisziplinStorage()">Print Elements</a>
                   <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
 
             </div>
@@ -43,42 +48,45 @@
                         </div>
                   </div>
             </div>
-            <div class="jumbotron" id="disziplinInputsResult" >
-        
+            <div class="jumbotron" id="modalResult">
+
             </div>
 
             <div class="row">
                   <div class="col-sm-3">
-                        <a class="btn btn-primary" href="#" onclick="insertAllDisziplins()">Write Disziplins</a>
+                        <a class="btn btn-primary" href="#" onclick="readDisziplins()">Write Disziplins</a>
                   </div>
                   <div class="col-sm-3">
                         <a class="btn btn-primary" href="#">Write Competitions</a>
                   </div>
                   <div class="col-sm-3">
-                        <a class="btn btn-primary" href="#">Write Athletes</a>
+                        <a class="btn btn-primary" href="#" onclick="readAthletes()">Write Athletes</a>
                   </div>
             </div>
             <div class="row">
                   <div id="disziplinInputs" class="col-sm-3">
                   </div>
-                  <div class="col-sm-3">
+                  <div id="competitionInputs" class="col-sm-3">
                   </div>
-                  <div class="col-sm-3">
+                  <div id="athleteInputs" class="col-sm-3">
                   </div>
             </div>
 
 
             <div class="jumbotron">
                   <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()" data-toggle="modal"
-                        data-target="#disziplinInput">Insert
+                        data-target="#disziplinModal">Insert
                         Disziplin</button>
                   <button type="button" class="btn btn-info btn-lg" onclick="updateDisziplinInput()">Update
                         Modal</button>
+                  <button type="button" class="btn btn-info btn-lg" onclick="updateAthleteInput()" data-toggle="modal"
+                        data-target="#athleteModal">Insert
+                        Athlete</button>
             </div>
       </div>
       <div class="row">
             <div class="col-sm-12">
-                  <div id="disziplinInput" class="modal">
+                  <div id="disziplinModal" class="modal">
                         <div class="modal-dialog" role="document">
                               <div class="modal-content">
                                     <div class="modal-header">
@@ -86,22 +94,56 @@
                                                 class="close" data-dismiss="modal"> <span>×</span> </button>
                                     </div>
                                     <div class="modal-body">
-                                          <form id="disziplin-form-modal" class="">
+                                          <form id="disziplinForm" class="">
                                                 <div class="form-group"> <label>Disziplin</label> <input
                                                             type="disziplin" class="form-control"
                                                             placeholder="Enter Disziplin Name"> </div>
                                                 <div class="form-group"> <label>Password</label> <input type="password"
-                                                            class="form-control" placeholder="Password"> </div> <button
-                                                      type="submit" class="btn btn-primary">Save</button>
+                                                            class="form-control" placeholder="Password"> </div>
                                           </form>
                                     </div>
-                                    <div class="modal-footer"> <button type="button" class="btn btn-primary" id="saveAndCloseDisziplin" onclick="disziplinToDB()">Save
-                                                and Close</button> <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button> </div>
+                                    <div class="modal-footer">
+                                    </div> <button class="btn btn-primary" onclick="insertDisziplin()">Save</button>
+                                    <button type="button" class="btn btn-primary" id="saveAndCloseDisziplin"
+                                          onclick="insertDisziplin(),closeModal('#disziplinInput')">Save
+                                          and Close</button> <button type="button" class="btn btn-secondary"
+                                          data-dismiss="modal">Close</button>
                               </div>
                         </div>
                   </div>
             </div>
+      </div>
+      <div class="row">
+            <div class="col-sm-12">
+                  <div id="athleteModal" class="modal">
+                        <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                    <div class="modal-header">
+                                          <h3 class="modal-title">Athlete Input</h3> <button type="button" class="close"
+                                                data-dismiss="modal"> <span>×</span> </button>
+                                    </div>
+                                    <div class="modal-body">
+                                          <form id="athleteForm" class="">
+                                                <div class="form-group"> <label>Athlete</label> <input type="athlete"
+                                                            class="form-control" placeholder="Enter Athlete Name">
+                                                </div>
+                                                <div class="form-group"> <label>Password</label> <input type="password"
+                                                            class="form-control" placeholder="Password"> </div>
+                                          </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                          <button class="btn btn-primary" onclick="insertAthlete()">Save</button>
+                                          <button type="button" class="btn btn-primary" id="saveAndCloseAthlete"
+                                                onclick="insertAthlete(),closeAthleteModal('#athleteInput')">Save
+                                                and Close</button> 
+                                          <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
       </div>
       <div class="row">
             <div class="col-md-12 text-center">

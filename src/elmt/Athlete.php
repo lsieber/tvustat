@@ -8,13 +8,7 @@ class Athlete extends DBTableEntry
      *
      * @var string
      */
-    protected $firstName;
-
-    /**
-     *
-     * @var string
-     */
-    protected $lastName;
+    protected $fullName;
 
     /**
      *
@@ -34,10 +28,9 @@ class Athlete extends DBTableEntry
      */
     protected $date;
 
-    public function __construct(string $firstName, string $lastName, \DateTime $date, Gender $gender, TeamType $teamType, int $id = null)
+    public function __construct(string $fullName, \DateTime $date, Gender $gender, TeamType $teamType, int $id = null)
     {
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
+        $this->fullName = $fullName;
         $this->name = $this->getFullName();
         $this->date = $date;
         $this->gender = $gender;
@@ -52,25 +45,7 @@ class Athlete extends DBTableEntry
      */
     public function getFullName()
     {
-        return $this->firstName . " " . $this->lastName;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
+        return $this->fullName;
     }
 
     /**

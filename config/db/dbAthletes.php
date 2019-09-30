@@ -3,7 +3,6 @@ namespace config;
 
 use tvustat\Athlete;
 use tvustat\ConnectionPreloaded;
-use tvustat\Person;
 
 class dbAthletes extends dbTableDescription
 {
@@ -12,9 +11,7 @@ class dbAthletes extends dbTableDescription
 
     public const ID = "athleteID";
 
-    public const FIRSTNAME = "firstName";
-
-    public const LASTNAME = "lastName";
+    public const FULLNAME = "fullName";
 
     public const GENDERID = "genderID";
 
@@ -31,12 +28,11 @@ class dbAthletes extends dbTableDescription
 
     public const VALUES = array(
         self::ID => 0,
-        self::FIRSTNAME => 1,
-        self::LASTNAME => 2,
-        self::GENDERID => 3,
-        self::TEAMTYPEID => 4,
-        self::DATE => 5,
-        self::lICENCE => 6
+        self::FULLNAME => 1,
+        self::GENDERID => 2,
+        self::TEAMTYPEID => 3,
+        self::DATE => 4,
+        self::lICENCE => 5
     );
 
     /**
@@ -68,20 +64,18 @@ class dbAthletes extends dbTableDescription
     {
         return array(
             0 => $athlete->getId(),
-            1 => $athlete->getFirstName(),
-            2 => $athlete->getLastName(),
-            3 => $athlete->getGender()->getId(),
-            4 => $athlete->getTeamType()->getId(),
-            5 => $athlete->getDateForDB(),
-            6 => NULL
+            1 => $athlete->getFullName(),
+            2 => $athlete->getGender()->getId(),
+            3 => $athlete->getTeamType()->getId(),
+            4 => $athlete->getDateForDB(),
+            5 => NULL
         );
     }
 
     public static function personFromAsocArray($r, ConnectionPreloaded $conn)
     {
-        return new Person( //
-        $r[self::FIRSTNAME], //
-        $r[self::LASTNAME], //
+        return new Athlete( //
+        $r[self::FULLNAME], //
         new \DateTime($r[self::DATE]), //
         $conn->getGender($r[self::GENDERID]), //
         $conn, //

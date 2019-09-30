@@ -1,8 +1,11 @@
 import { InputForm } from "./InputForm.js";
+import { getSelectedRadioButton } from "./Selection.js";
+
+
 
 export class DisziplinInputForm extends InputForm {
-    constructor() {
-        super()
+    constructor(formId) {
+        super(formId);
 
         this.id = -1;
         this.disziplinIdentifier = "disziplin";
@@ -18,7 +21,6 @@ export class DisziplinInputForm extends InputForm {
         this.maxVal = this.textField("Maximal Value", 'type="number" value="1000" id="' + this.maxValIndentifier + '" class="form-control" placeholder="Enter Maximal Value"');
 
         this.sortingIdentifier = "sorting";
-        this.sortOptions = { 1: "ascending", 2: "descending" };
 
         this.isTimeIdentifier = "time";
         this.timeOptions = { true: "Time", false: "Distance" };
@@ -28,17 +30,35 @@ export class DisziplinInputForm extends InputForm {
         this.isDecimal = this.getSimpleRadio("DecimalMeasures", this.decimalIdentifier, this.decimalOptions);
 
         this.disziplinTypeIdentifier = "disziplinType";
-        this.disziplinTypeOptions = { 1: "Track", 2: "Field", 3: "Multiple" };
 
-        this.teamTypeOptions = { 1: "INI", 2: "Zäme" };
         this.teamTypeIdentifier = "teamType";
 
     }
 
-    create() {
-        // alert(this.disziplinName + " ....... " + this.disziplin);
+    updateModal() {
+        this.updateBasicDefintion();
+        document.getElementById(this.formId).innerHTML = this.createHTML();
+    }
 
+    createHTML() {
         return this.getDisziplin() + this.orderNumber + this.minVal + this.maxVal + this.getSorting() + this.getIsTime() + this.isDecimal + this.getDisziplinType() + this.getTeamType();
+    }
+
+    selectDisziplinBased(disziplinName) {
+        var c = disziplinName.substring(1, 0);
+        if (c >= '0' && c <= '9') {
+            // if it is a number
+            document.getElementById("timetrue").checked = true;
+            document.getElementById("sorting1").checked = true;
+            document.getElementById("disziplinType1").checked = true;
+        } else {
+            // it isn't
+            document.getElementById("timefalse").checked = true;
+            document.getElementById("sorting2").checked = true;
+            document.getElementById("disziplinType2").checked = true;
+        }
+        document.getElementById("decimal2").checked = true;
+        document.getElementById("teamType1").checked = true;
     }
 
     getId() {
@@ -73,39 +93,41 @@ export class DisziplinInputForm extends InputForm {
         return this.getSimpleRadio("Athlete is", this.teamTypeIdentifier, this.teamTypeOptions);
     }
 
+    disziplinToDB(resultFieldId) {
+        var name = document.getElementById(this.disziplinIdentifier);
+        var orderNum = document.getElementById(this.orderNumberIdentifier);
+        var min = document.getElementById(this.minValIndentifier);
+        var max = document.getElementById(this.maxValIndentifier);
+        var sortingId = getSelectedRadioButton(this.sortingIdentifier);
+        var isTime = getSelectedRadioButton(this.isTimeIdentifier);
+        var decimal = getSelectedRadioButton(this.decimalIdentifier);
+        var disziplinType = getSelectedRadioButton(this.disziplinTypeIdentifier);
+        var teamType = getSelectedRadioButton(this.teamTypeIdentifier);
 
-
-    setSortOptions(sortOptions) {
-        this.sortOptions = sortOptions;
-    }
-
-    setDisziplinTypeOptions(disziplinTypeOptions) {
-        this.disziplinTypeOptions = disziplinTypeOptions;
-    }
-
-    setTeamTypeOptions(teamTypeOptions) {
-        this.teamTypeOptions = teamTypeOptions;
-    }
-
-    updateFromSession() {
-        var def = JSON.parse(window.sessionStorage.defs);
-        var s = {};
-        for (const key in def.sortings) {
-            s[key] = def.sortings[key].direction;
+        if (name.value == "" || orderNum.value == "" || min.value == "" || max.value == "" || max.value < 0 || min.value >= max.value) //  
+        {
+            alert("Bitte Fülle alle Felder Korrekt aus");
+            return false;
+        } else {
+            // insert into db
+            $.post('insertToDB.php', {
+                type: "disziplin",
+                "disziplinName": name.value,
+                "orderNumber": orderNum.value,
+                "minVal": min.value,
+                "maxVal": max.value,
+                "sortingID": sortingId,
+                "isTime": isTime,
+                "decimalPlaces": decimal,
+                "disziplinTypeID": disziplinType,
+                "teamTypeID": teamType
+            }, function (data) {
+                var r = JSON.parse(data);
+                $("#"+resultFieldId).html("<p>" + r.message + "</p>");
+                alert(r,success);
+                return (r.success === "true"); 
+            });
         }
-        this.setSortOptions(s);
-
-        var d = {};
-        for (const key in def.disziplinTypes) {
-            d[key] = def.disziplinTypes[key].type;
-        }
-        this.setDisziplinTypeOptions(d);
-
-        var t = {};
-        for (const key in def.teamTypes) {
-            t[key] = def.teamTypes[key].type;
-        }
-        this.setTeamTypeOptions(t);
     }
 
 }
