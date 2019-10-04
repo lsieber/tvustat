@@ -2,6 +2,7 @@
 namespace config;
 
 use tvustat\CompetitionName;
+use tvustat\ConnectionPreloaded;
 
 class dbCompetitionNames extends dbTableDescription
 {
@@ -53,5 +54,12 @@ class dbCompetitionNames extends dbTableDescription
             0 => $competitionName->getId(),
             1 => $competitionName->getCompetitionName()
         );
+    }
+
+    public static function competitionNameFromAsocArray($r, ConnectionPreloaded $conn)
+    {
+        return new CompetitionName( //
+            $r[self::NAME], //
+            $r[self::ID]);
     }
 }

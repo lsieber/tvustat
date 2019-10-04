@@ -8,6 +8,7 @@ use config\dbCompetitionNames;
 use config\dbConfig;
 use config\dbTableDescription;
 use config\dbDisziplin;
+use config\dbPerformance;
 
 class AddElement extends DbHandler
 {
@@ -18,6 +19,17 @@ class AddElement extends DbHandler
     {
         parent::__construct($conn, $config);
         $this->check = new CheckExistance($conn, $config);
+    }
+
+    public function performanceWithIdsOnly($arrayAssociative)
+    {
+        $values = array();
+        $arrayAssociative[dbPerformance::LASTCHANGE] = DateFormatUtils::nowForDB();
+        $collumns = dbPerformance::getCollumNames();
+        foreach ($collumns as $key => $dbPosition) {
+            $values[$dbPosition] = isset($arrayAssociative[$key]) ?  $arrayAssociative[$key]: NULL;
+        }
+        return $this->addValues($values, $this->getTable(dbPerformance::class));
     }
 
     /**
@@ -49,7 +61,7 @@ class AddElement extends DbHandler
      * @param Competition $competition
      * @return string
      */
-    public function competition(CompetitionOnlyIds $competition)
+    public function competition(Competition $competition)
     {
         if (! CompetitionUtils::checkCompetitionReadyForInsertion($competition)) {
             return new QuerryOutcome("Competition needs more details to insert into the db", false);
@@ -69,24 +81,45 @@ class AddElement extends DbHandler
         if (! CompetitionUtils::checkLocationReadyForInsertion($location)) {
             return new QuerryOutcome("Competition needs more details to insert into the db", false);
         }
-        return ($this->check->competitionLocation($location)) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($location, $this->getTable(dbCompetitionLocations::class));
+        $querry = ($this->check->competitionLocation($location)) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($location, $this->getTable(dbCompetitionLocations::class));
+        $querry->putCustomValue(dbCompetitionLocations::VILLAGE, $location->getVillage());
+        $querry->putCustomValue(dbCompetitionLocations::FACILITY, $location->getFacility());
+        return $querry;
     }
 
+    /**
+     *
+     * @param CompetitionName $name
+     * @return \tvustat\QuerryOutcome
+     */
     public function competitionName(CompetitionName $name)
     {
         if (! CompetitionUtils::checkNameReadyForInsertion($name)) {
             return new QuerryOutcome("Competition needs more details to insert into the db", false);
         }
-        return ($this->check->competitionName($name)) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($name, $this->getTable(dbCompetitionNames::class));
+        $querry = ($this->check->competitionName($name)) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($name, $this->getTable(dbCompetitionNames::class));
+        $querry->putCustomValue(dbCompetitionNames::NAME, $name->getCompetitionName());
+        return $querry;
     }
 
+    /**
+     *
+     * @param DBTableEntry $element
+     * @param dbTableDescription $desc
+     * @return \tvustat\QuerryOutcome
+     */
     private function addElement(DBTableEntry $element, dbTableDescription $desc)
     {
         $v = $desc->classToCollumns($element);
 
+        return $this->addValues($v);
+    }
+
+    private function addValues(array $values, dbTableDescription $desc)
+    {
         $sql = "INSERT INTO " . $desc->getTableName() . " VALUES ('Null";
-        for ($i = 1; $i < sizeof($v); $i ++) {
-            $sql .= "','" . $v[$i];
+        for ($i = 1; $i < sizeof($values); $i ++) {
+            $sql .= "','" . $values[$i];
         }
         $sql .= "')";
 
@@ -94,7 +127,12 @@ class AddElement extends DbHandler
         $result = $this->conn->getConn()->query($sql);
         $new_id = $this->conn->getConn()->insert_id;
         $success = ($result == 1);
-        $message =  $success? "Eingabe erfolgreich " . $v[1] . " wurde hinzugefügt, New ID: " . $new_id : "Eingabe von " . $v[1] . "nicht gelungen";
-        return new QuerryOutcome($message, $success);
+        $message = ($success) ? "Eingabe erfolgreich " /*. $v[1] . " wurde hinzugefügt and the new ID is " . $new_id */: "Eingabe von " . $values[1] . " nicht gelungen";
+        $querry = new QuerryOutcome($message, $success);
+        $querry->putCustomValue($desc->getIDString(), $new_id);
+
+        $querry->putCustomValue("sql", $sql);
+
+        return $querry;
     }
 }

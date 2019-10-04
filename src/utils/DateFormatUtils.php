@@ -25,12 +25,25 @@ class DateFormatUtils
     {
         return $date->format('Y-m-d');
     }
+    
+    /**
+     * 
+     * @param string $dateString
+     * @return \DateTime
+     */
+    static  function DateTimeFromDB(string $dateString) {
+        return \DateTime::createFromFormat("Y-m-d", $dateString);
+    }
 
     /**
      */
     static function formatDateaAsYear(\DateTime $date)
     {
         return $date->format('Y');
+    }
+    
+    static function nowForDB() {
+        return (new \DateTime())->format('Y-m-d h:m:s');
     }
 }
 

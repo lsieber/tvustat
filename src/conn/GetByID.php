@@ -13,22 +13,25 @@ class GetByID extends DbHandler
     public function athlete(int $id)
     {
         $r = self::getQuerryResult($this->getTable(dbAthletes::class), $id);
-        return ($r == NULL) ? NULL : $this->personFromAsocArray($r);
+        return ($r == NULL) ? NULL : dbAthletes::athleteFromAsocArray($r, $this->conn);
     }
 
-
-    
-
-    
-    private function copetitionFromAsocArray($r)
+    public function disziplin(int $id)
     {
-        return new Competition( //
-            $r[dbAthletes::FULLNAME], //
-            $r[dbAthletes::LASTNAME], //
-            new \DateTime($r[dbAthletes::DATE]), //
-            $this->conn->getGender($r[dbAthletes::GENDERID]), //
-            $this->conn);
+        $r = self::getQuerryResult($this->getTable(dbDisziplin::class), $id);
+        return ($r == NULL) ? NULL : dbDisziplin::disziplinFromAsocArray($r, $this->conn);
     }
+
+    
+//     private function copetitionFromAsocArray($r)
+//     {
+//         return new Competition( //
+//             $r[dbAthletes::FULLNAME], //
+//             $r[dbAthletes::LASTNAME], //
+//             new \DateTime($r[dbAthletes::DATE]), //
+//             $this->conn->getGender($r[dbAthletes::GENDERID]), //
+//             $this->conn);
+//     }
 
     private function getQuerryResult(dbTableDescription $desc, int $id)
     {

@@ -72,13 +72,13 @@ class dbAthletes extends dbTableDescription
         );
     }
 
-    public static function personFromAsocArray($r, ConnectionPreloaded $conn)
+    public static function athleteFromAsocArray($r, ConnectionPreloaded $conn)
     {
         return new Athlete( //
         $r[self::FULLNAME], //
         new \DateTime($r[self::DATE]), //
         $conn->getGender($r[self::GENDERID]), //
-        $conn, //
+        $conn->getTeamType($r[self::TEAMTYPEID]), //
         $r[self::ID]);
     }
 }

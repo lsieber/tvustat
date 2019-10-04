@@ -6,6 +6,8 @@
 				"src/conn",
 				"src/elmt",
 				"src/inp",
+				"src/outp",
+				"src/outp/bl",
 				"src/utils"
 			],
 			"config\\" : [

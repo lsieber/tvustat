@@ -1,7 +1,8 @@
 
 export function addValueToArrayStorage(storageName, id, array) {
     if (window.sessionStorage.getItem(storageName) === null) {
-        var values = {id:array};
+        var values = {};
+        values[id] = array;
         addValuesToStorage(storageName, values);
     } else {
         var values = getValuesFromStorage(storageName);

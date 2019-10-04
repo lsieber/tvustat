@@ -107,12 +107,12 @@ class dbDisziplin extends dbTableDescription
     {
         return new Disziplin( //
         $r[self::NAME], //
-        $r[self::SORTINGID], //
+        $conn->getSorting($r[self::SORTINGID]), //
         $r[self::ORDER], //
         $r[self::ISTIME], //
         $r[self::DECIMAL], //
-        $conn->getDisziplinType(self::DISZIPLINTYPE), //
-        $conn->getTeamType(self::TEAMTYPEID), //
+        $conn->getDisziplinType($r[self::DISZIPLINTYPE]), //
+        $conn->getTeamType($r[self::TEAMTYPEID]), //
         $r[self::MINVAL], // miN vALUE
         $r[self::MAXVAL], // Max Value TODO
         $r[self::ID]);

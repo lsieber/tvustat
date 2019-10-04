@@ -4,11 +4,12 @@ namespace tvustat;
 final class CompetitionOnlyIds extends Competition
 {
 
-    public function __construct(int $nameID, int $locationID, \DateTime $date, string $id = NULL)
+    public static function create(int $nameID, int $locationID, \DateTime $date, string $id = NULL)
     {
-        $location = new CompetitionLocation("", "", $locationID);
-        $name = new CompetitionName("", $nameID);
-        parent::__construct($name, $location, $date, $id = NULL);
+        echo $nameID  . ", ". $locationID . ", ".DateFormatUtils::formatDateForBL($date);
+        $location = new CompetitionLocation("NV", "NV", $locationID);
+        $name = new CompetitionName("NV", $nameID);
+        return new Competition($name, $location, $date, $id = NULL);
     }
 }
 

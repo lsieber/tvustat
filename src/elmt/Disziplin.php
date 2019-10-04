@@ -103,6 +103,7 @@ class Disziplin extends DBTableEntry
         return $this->sorting;
     }
 
+
     /**
      *
      * @return number

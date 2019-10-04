@@ -11,15 +11,14 @@ class HtmlGenerator
         return self::thead(self::bestListHeaders());
     }
 
-//     public static function htmlOfDisziplinBestListForTableBestList(DisziplinBestList $disziplinBestList)
-//     {
-//         $disziplinBestListHtml = "<tr><td colspan=" . self::numberBestListElements() . "><b>" . $disziplinBestList->getDisziplin()->getName() . "</b></td></tr>";
-//         foreach ($disziplinBestList->getTopList() as $performance) {
-
-//             $disziplinBestListHtml .= self::htmlOfPerformanceForTableBestList($performance);
-//         }
-//         return $disziplinBestListHtml;
-//     }
+    public static function htmlOfDisziplinBestListForTableBestList(DisziplinBestList $disziplinBestList)
+    {
+        $disziplinBestListHtml = "<tr><td colspan=" . self::numberBestListElements() . "><b>" . $disziplinBestList->getDisziplin()->getName() . "</b></td></tr>";
+        foreach ($disziplinBestList->getTopList() as $performance) {
+            $disziplinBestListHtml .= self::htmlOfPerformanceForTableBestList($performance);
+        }
+        return $disziplinBestListHtml;
+    }
 
     private static function htmlOfPerformanceForTableBestList(Performance $performance)
     {
@@ -38,11 +37,11 @@ class HtmlGenerator
         return self::tr(self::recordElements($performance));
     }
     
-//     public static function htmlOfDisziplinBestListForRecordTable(DisziplinBestList $disziplinBestList)
-//     {
-//         $firstPerformance = array_values($disziplinBestList->getTopList())[0];
-//         return self::htmlOfPerformanceForRecords($firstPerformance);
-//     }
+    public static function htmlOfDisziplinBestListForRecordTable(DisziplinBestList $disziplinBestList)
+    {
+        $firstPerformance = array_values($disziplinBestList->getTopList())[0];
+        return self::htmlOfPerformanceForRecords($firstPerformance);
+    }
 
     private static function tr(array $elements)
     {

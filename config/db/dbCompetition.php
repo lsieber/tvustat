@@ -5,6 +5,7 @@ use tvustat\Competition;
 use tvustat\CompetitionLocation;
 use tvustat\CompetitionName;
 use tvustat\ConnectionPreloaded;
+use tvustat\DateFormatUtils;
 
 class dbCompetition extends dbTableDescription
 {
@@ -76,7 +77,7 @@ class dbCompetition extends dbTableDescription
         return new Competition( //
         new CompetitionName($r[dbCompetitionNames::NAME], $r[self::NAMEID]), //
         new CompetitionLocation($r[dbCompetitionLocations::VILLAGE], $r[dbCompetitionLocations::FACILITY], $r[self::LOCATIONID]), //
-        $r[self::DATE], //
+        DateFormatUtils::DateTimeFromDB($r[self::DATE]), //
         $r[self::ID]); //
     }
 }

@@ -1,9 +1,12 @@
 <?php
 namespace tvustat;
 
+use config\dbAgeCategory;
 use config\dbConfig;
 use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
+use config\dbCompetition;
+use config\dbCategory;
 
 class DBMaintainer
 {
@@ -58,6 +61,9 @@ class DBMaintainer
         return $this->add->competitionLocation($competitionLocation);
     }
 
+    public function addPerformanceWithIdsOnly(array $associativeArray){
+        return $this->add->performanceWithIdsOnly($associativeArray);
+    }
     /**
      * CHECKING FUNCTIONALITIES
      */
@@ -83,13 +89,56 @@ class DBMaintainer
     }
 
     /**
+     *
+     * @param Competition $competition
+     * @return boolean
+     */
+    public function checkCompetitionExists(Competition $competition)
+    {
+        return $this->check->competition($competition);
+    }
+    
+    /**
+     * 
+     * @param int $athleteId
+     * @return NULL|boolean
+     */
+    public function checkAthleteIDExists(int $athleteId){
+        return $this->check->checkAthleteIDExists($athleteId);
+    }
+    
+    /**
+     * 
+     * @param int $competitionId
+     * @return NULL|boolean
+     */
+    public function checkCompetitionIDExists(int $competitionId){
+        return $this->check->checkCompetitionIDExists($competitionId);
+    }
+    
+    /**
+     * 
+     * @param int $disziplinId
+     * @return NULL|boolean
+     */
+    public function checkDisziplinIDExists(int $disziplinId){
+        return $this->check->checkDisziplinIDExists($disziplinId);
+    }
+    
+    /**
      * GET BY ID
      */
-    public function getPerson(int $id)
+    public function getAthlete(int $id)
     {
         return $this->getById->athlete($id);
     }
 
+    public function getDisziplin(int $id)
+    {
+        return $this->getById->disziplin($id);
+    }
+    
+    
     /**
      * GETTERS
      */
@@ -103,12 +152,26 @@ class DBMaintainer
         return $this->conn;
     }
     
+    public function getAllCompetitions() {
+        $sql = "SELECT * From " . dbCompetition::DBNAME;
+        $sql .= " INNER JOIN ".dbCompetitionLocations::DBNAME." ON ".dbCompetition::DBNAME.".".dbCompetition::LOCATIONID." = ".dbCompetitionLocations::DBNAME.".".dbCompetitionLocations::ID;
+        $sql .= " INNER JOIN ".dbCompetitionNames::DBNAME." ON ".dbCompetition::DBNAME.".".dbCompetition::NAMEID." = ".dbCompetitionNames::DBNAME.".".dbCompetitionNames::ID;
+        return $this->conn->executeSqlToArray($sql);
+    }
+    
     public function getAllCompetitionLocations() {
         return $this->conn->executeSqlToArray("SELECT * From " . dbCompetitionLocations::DBNAME);
     }
     
     public function getAllCompetitionNames() {
         return $this->conn->executeSqlToArray("SELECT * From " . dbCompetitionNames::DBNAME);
+    }
+    
+    public function getAllAgeCategories() {
+        return $this->conn->executeSqlToArray("SELECT * From " . dbAgeCategory::DBNAME);
+    }
+    public function getAllCategories() {
+        return $this->conn->executeSqlToArray("SELECT * From " . dbCategory::DBNAME);
     }
 }
 

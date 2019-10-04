@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="inc/style.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      <script type=module src="../js/input/performanceInput.js"></script>
+      <script>
+            function clearSession() {
+                  sessionStorage.clear();
+                  onload();
+            }
+            function test() {
+                  var data = { a:
+                        {
+                              a1:"text1",
+                              a2:"text2",
+                              a3:"text3",
+                              a4:"text4"
+                        },
+                        b:{
+                              b1:"text5",
+                              b2:"text6",
+                              b3:"text7",
+                              b4:"text8"
+                        },
+                        c:{
+                              c1:"text9",
+                              c2:"text10",
+                              c3:"text11",
+                              c4:"text12"
+                        }
+                  };
+
+                  var first = "b";
+                  var second = "b2";
+                  alert(data[first][second]);
+
+
+            }
+      </script>
+</head>
+
+<body onload="onload()">
+      <div class="container">
+            <div class="row">
+                  <a class="btn btn-primary" href="#" onclick="test()">Test Function</a>
+                  <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
+            </div>
+      </div>
+      <div class="container">
+            <h1>Competition Input</h1>
+            <p>Here We want to import files from the Swiss Athletics Web Page and import the data into the Database</p>
+            <div class="row">
+                  <div class="col-sm-12">
+                        <div class="input-group">
+                              <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputFile"
+                                          aria-describedby="inputFileDescription">
+                                    <label class="custom-file-label" for="inputFile">Choose file</label>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            <div class="jumbotron" id="modalResult">
+            </div>
+            <div class="row">
+                  <div class="col-sm-3">
+                        <h2>Competition</h2>
+                        <div id="competitionList">
+
+
+                        </div>
+                  </div>
+                  <div class="col-sm-2">
+                        <h2>Category</h2>
+                        <div id="categoryList">
+
+
+                  </div>
+                  <div class="col-sm-2">
+                        <h2>Disziplin</h2>
+
+
+                  </div>
+                  <div class="col-sm-3">
+                        <h2>Athlete</h2>
+
+                  </div>
+                  <div class="col-sm-2">
+                        <h2>Performance</h2>
+
+                  </div>
+            </div>
+      </div>
+</body>
+
+</html>

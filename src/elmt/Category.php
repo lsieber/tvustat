@@ -12,7 +12,7 @@ class Category extends DBTableEntry
 
     private $gender;
 
-    public function __construct(AgeCategory $ageCategory, Gender $gender, string $name, string $oldname, int $id)
+    public function __construct(AgeCategory $ageCategory, Gender $gender, string $name, string $oldname, int $id = NULL)
     {
         $this->ageCategory = $ageCategory;
         $this->gender = $gender;
@@ -79,6 +79,13 @@ class Category extends DBTableEntry
     public function getGender()
     {
         return $this->gender;
+    }
+    
+    /**
+     * 
+     */
+    public function getName() {
+        return $this->name;
     }
 }
 

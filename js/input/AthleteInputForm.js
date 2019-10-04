@@ -1,5 +1,6 @@
 import { InputForm } from "./InputForm.js";
 import { getSelectedRadioButton } from "./Selection.js";
+import { removeValueById } from "./SessionStorageHandler.js";
 
 
 
@@ -91,9 +92,7 @@ export class AthleteInputForm extends InputForm {
                 "genderID": genderID,
                 "teamTypeID": teamTypeID
             }, function (data) {
-                alert(data);
                 // var r = JSON.parse(data);
-                $("#" + window.modalResultId).html("<p>" + data.message + "</p>");
                 // return (r.success === "true");
             }, "json");
         }

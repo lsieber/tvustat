@@ -11,6 +11,18 @@ use config\dbTableDescription;
 class CheckExistance extends DbHandler
 {
 
+    public function checkAthleteIDExists(int $athleteId){
+        return $this->checkValues($this->getTable(dbAthletes::class), array($athleteId), array(dbAthletes::ID));
+    }
+    
+    public function checkCompetitionIDExists(int $competitionId){
+        return $this->checkValues($this->getTable(dbCompetition::class), array($competitionId), array(dbCompetition::ID));
+    }
+    
+    public function checkDisziplinIDExists(int $disziplinId){
+        return $this->checkValues($this->getTable(dbDisziplin::class), array($disziplinId), array(dbDisziplin::ID));
+    }
+    
     /**
      *
      * @param Athlete $athlete
@@ -70,7 +82,24 @@ class CheckExistance extends DbHandler
      */
     public function competition(Competition $competition)
     {
-        return $this->check($this->getTable(dbCompetition::class), $competition, array(
+        if ($competition->getId() != NULL) {
+            return $this->check($this->getTable(dbCompetition::class), $competition, array(
+                dbCompetition::ID
+            ));
+        }
+        if (! $this->competitionName($competition->getName())) {
+            return false;
+        }
+
+        $competitionName = ($competition->getName()->getId() == NULL) ? $this->loadCompetitionName($competition->getName()) : $competition->getName();
+
+        if (! $this->competitionLocation($competition->getLocation())) {
+            return false;
+        }
+        $competitionLocation = ($competition->getLocation()->getId() == NULL) ? $this->loadCompetitionLocation($competition->getLocation()) : $competition->getLocation();
+        $updatedCompetition = new Competition($competitionName, $competitionLocation, $competition->getDate());
+
+        return $this->check($this->getTable(dbCompetition::class), $updatedCompetition, array(
             dbCompetition::DATE,
             dbCompetition::LOCATIONID,
             dbCompetition::NAMEID
@@ -92,7 +121,7 @@ class CheckExistance extends DbHandler
     /**
      *
      * @param Disziplin $disziplin
-     * @return boolean
+     * @return Disziplin
      */
     public function loadDisziplin(Disziplin $disziplin)
     {
@@ -104,6 +133,32 @@ class CheckExistance extends DbHandler
 
     /**
      *
+     * @param CompetitionName $compName
+     * @return CompetitionName
+     */
+    public function loadCompetitionName(CompetitionName $compName)
+    {
+        $r = $this->load($this->getTable(dbCompetitionNames::class), $compName, array(
+            dbCompetitionNames::NAME
+        ));
+        return ($r != NULL) ? dbCompetitionNames::competitionNameFromAsocArray($r[0], $this->conn) : NULL;
+    }
+
+    /**
+     *
+     * @param CompetitionLocation $compLoc
+     * @return CompetitionLocation
+     */
+    public function loadCompetitionLocation(CompetitionLocation $compLoc)
+    {
+        $r = $this->load($this->getTable(dbCompetitionLocations::class), $compLoc, array(
+            dbCompetitionLocations::VILLAGE
+        ));
+        return ($r != NULL) ? dbCompetitionLocations::competitionLocationFromAsocArray($r[0], $this->conn) : NULL;
+    }
+
+    /**
+     *
      * @param dbTableDescription $desc
      * @param DBTableEntry $element
      * @param array $identifiers
@@ -111,11 +166,38 @@ class CheckExistance extends DbHandler
      */
     private function check(dbTableDescription $desc, DBTableEntry $element, array $identifiers)
     {
-        $r = $this->load($desc, $element, $identifiers);
-        if ($r == NULL) {
+        $values = $desc->classToCollumns($element);
+        return $this->checkValues($desc, $values, $identifiers);
+
+    }
+    
+    private function checkValues(dbTableDescription $desc, array $values, array $identifiers)
+    {
+        
+        if(sizeof($values) != sizeof($identifiers)){
+            echo "ERROR!!! THE size of the given $values does not match the number of identifiers!!";
+            return NULL;
+        }
+        
+        $k = $desc->getCollumNames();
+        $table = $desc->getTableName();
+        
+        $sql = "SELECT COUNT(1) FROM " . $table . " WHERE ";
+        
+        $isFirst = TRUE;
+        foreach ($identifiers as $i) {
+            if (! $isFirst) {
+                $sql .= " AND ";
+            }
+            $sql .= $i . "='" . $values[$k[$i]] . "'";
+            $isFirst = FALSE;
+        }
+        $result = $this->conn->getConn()->query($sql);
+        $r = $result->fetch_all(MYSQLI_ASSOC);
+        if ($r[0]["COUNT(1)"] == 0) {
             return FALSE;
         }
-        return true;
+        return TRUE;
     }
 
     /**
@@ -141,6 +223,7 @@ class CheckExistance extends DbHandler
             $sql .= $i . "='" . $v[$k[$i]] . "'";
             $isFirst = FALSE;
         }
+
         $result = $this->conn->getConn()->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }

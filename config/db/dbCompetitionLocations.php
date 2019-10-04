@@ -2,6 +2,7 @@
 namespace config;
 
 use tvustat\CompetitionLocation;
+use tvustat\ConnectionPreloaded;
 
 class dbCompetitionLocations extends dbTableDescription
 {
@@ -57,5 +58,13 @@ class dbCompetitionLocations extends dbTableDescription
             1 => $competitionLocation->getVillage(),
             2 => $competitionLocation->getFacility()
         );
+    }
+    
+    public static function competitionLocationFromAsocArray($r, ConnectionPreloaded $conn)
+    {
+        return new CompetitionLocation( //
+            $r[self::VILLAGE], //
+            $r[self::FACILITY], //
+            $r[self::ID]);
     }
 }

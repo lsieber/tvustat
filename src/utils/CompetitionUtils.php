@@ -15,8 +15,9 @@ class CompetitionUtils
 
     public static function checkLocationReadyForInsertion(CompetitionLocation $competitionLocation)
     {
-        return ($competitionLocation->getFacility() != NULL && //
-        $competitionLocation->getVillage() != NULL);
+        return (/*$competitionLocation->getFacility() != NULL && //*/
+        $competitionLocation->getVillage() != NULL // for now we only consider the Village
+            );
     }
 
     public static function checkNameReadyForInsertion(CompetitionName $competitionName)

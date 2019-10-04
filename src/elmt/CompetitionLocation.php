@@ -41,4 +41,6 @@ class CompetitionLocation extends DBTableEntry
     {
         return $this->facility;
     }
+
+
 }

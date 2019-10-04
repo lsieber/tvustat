@@ -13,7 +13,8 @@ class dbConfig
             new dbCompetition(),
             new dbCompetitionNames(),
             new dbCompetitionLocations(),
-            new dbDisziplin()
+            new dbDisziplin(),
+            new dbPerformance()
         ));
     }
 

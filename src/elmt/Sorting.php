@@ -37,6 +37,10 @@ class Sorting extends DBTableEntry
     {
         return $this->sortingDirectionSQL;
     }
+    
+    public function sortASC(){
+        return $this->sortingDirectionSQL == "ASC";
+    }
 
 //     /**
 //      * @param string $sortingDirection

@@ -3,13 +3,25 @@ use tvustat\DBMaintainer;
 use tvustat\DisziplinNameOnly;
 use tvustat\AthleteNameOnly;
 use tvustat\DateFormatUtils;
+use config\dbCompetition;
+use tvustat\Competition;
+use tvustat\CompetitionLocation;
+use tvustat\CompetitionName;
+use config\dbCompetitionLocations;
+use config\dbCompetitionNames;
 
 require_once '../vendor/autoload.php';
 
 $disziplin_exists = ($_POST['type'] == 'disziplinExists') ? TRUE : FALSE;
 $athlete_exists = ($_POST['type'] == 'athleteExists') ? TRUE : FALSE;
+$competition_exists = ($_POST['type'] == 'competitionExists') ? TRUE : FALSE;
+
+$allCompetitions = ($_POST['type'] == 'allCompetitions') ? TRUE : FALSE;
 $allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
 $allCompetitionLocations = ($_POST['type'] == 'allCompetitionLocations') ? TRUE : FALSE;
+$allAgeCategories = ($_POST['type'] == 'allAgeCategories') ? TRUE : FALSE;
+$allCategories = ($_POST['type'] == 'allCategories') ? TRUE : FALSE;
+
 
 $db = new DBMaintainer();
 
@@ -27,14 +39,36 @@ if ($athlete_exists) {
     $date = DateTime::createFromFormat("d.m.Y", $_POST["date"]);
     $athleteExists = $db->checkAthleteExists(new AthleteNameOnly($_POST["fullName"], $db->getConn()));
     $converted_res = ($athleteExists) ? 'true' : 'false';
-    
+
     $result = array(
         "athleteExists" => $converted_res,
         "fullName" => $_POST["fullName"],
         "date" => DateFormatUtils::formatDateForDB($date)
-//         "date" => $_POST["date"]
+        // "date" => $_POST["date"]
     );
     echo json_encode($result);
+}
+
+if ($competition_exists) {
+    $date = DateTime::createFromFormat("d.m.Y", $_POST[dbCompetition::DATE]);
+    $name = new CompetitionName($_POST[dbCompetitionNames::NAME]);
+    $location = new CompetitionLocation($_POST[dbCompetitionLocations::VILLAGE], "");
+    $competiton = new Competition($name, $location, $date);
+
+    $competitionExists = $db->checkCompetitionExists($competiton);
+    $converted_res = ($competitionExists) ? 'true' : 'false';
+
+    $result = array(
+        "competitionExists" => $converted_res,
+        dbCompetitionNames::NAME => $name->getCompetitionName(),
+        dbCompetition::DATE => DateFormatUtils::formatDateForDB($date),
+        dbCompetitionLocations::VILLAGE => $location->getVillage()
+        // "date" => $_POST["date"]
+    );
+    echo json_encode($result);
+}
+if ($allCompetitions) {
+    echo json_encode($db->getAllCompetitions());
 }
 
 if ($allCompetitionNames) {
@@ -42,5 +76,9 @@ if ($allCompetitionNames) {
 }
 if ($allCompetitionLocations) {
     echo json_encode($db->getAllCompetitionLocations());
+}
+
+if ($allAgeCategories) {
+    echo json_encode($db->getAllAgeCategories());
 }
 ?>

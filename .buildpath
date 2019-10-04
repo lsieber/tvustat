@@ -26,7 +26,17 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry excluding="conn/|elmt/|inp/|utils/" kind="src" path="src">
+	<buildpathentry excluding="bl/" kind="src" path="src/outp">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="src/outp/bl">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry excluding="conn/|elmt/|inp/|outp/|utils/" kind="src" path="src">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>

@@ -19,10 +19,10 @@ trait BestListColumnDefinition
     {
         return array( //
             $performance->getFormatedPerformance(),
-            $performance->getPerson()->getFullName(),
-            $performance->getPerson()->getBorn(),
-            $performance->getCompetition()->getPlace(),
-            $performance->getCompetition()->getFormatedDate()
+            $performance->getAthlete()->getFullName(),
+            DateFormatUtils::formatDateForBL($performance->getAthlete()->getDate()),
+            $performance->getCompetition()->getLocation()->getVillage(),
+            DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate())
         );
     }
 
