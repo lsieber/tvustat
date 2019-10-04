@@ -7,22 +7,38 @@ use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbDisziplin;
 use config\dbTableDescription;
+use config\dbPerformance;
 
 class CheckExistance extends DbHandler
 {
 
-    public function checkAthleteIDExists(int $athleteId){
-        return $this->checkValues($this->getTable(dbAthletes::class), array($athleteId), array(dbAthletes::ID));
+    public function checkAthleteIDExists(int $athleteId)
+    {
+        return $this->checkValues($this->getTable(dbAthletes::class), array(
+            $athleteId
+        ), array(
+            dbAthletes::ID
+        ));
     }
-    
-    public function checkCompetitionIDExists(int $competitionId){
-        return $this->checkValues($this->getTable(dbCompetition::class), array($competitionId), array(dbCompetition::ID));
+
+    public function checkCompetitionIDExists(int $competitionId)
+    {
+        return $this->checkValues($this->getTable(dbCompetition::class), array(
+            $competitionId
+        ), array(
+            dbCompetition::ID
+        ));
     }
-    
-    public function checkDisziplinIDExists(int $disziplinId){
-        return $this->checkValues($this->getTable(dbDisziplin::class), array($disziplinId), array(dbDisziplin::ID));
+
+    public function checkDisziplinIDExists(int $disziplinId)
+    {
+        return $this->checkValues($this->getTable(dbDisziplin::class), array(
+            $disziplinId
+        ), array(
+            dbDisziplin::ID
+        ));
     }
-    
+
     /**
      *
      * @param Athlete $athlete
@@ -34,6 +50,23 @@ class CheckExistance extends DbHandler
             dbAthletes::FULLNAME
             // dbAthletes::DATE
         ));
+    }
+
+    public function performanceByIds(array $post)
+    {
+        $identifiers = array(
+            dbPerformance::ATHLETEID,
+            dbPerformance::DISZIPLINID,
+            dbPerformance::COMPETITOINID,
+            dbPerformance::PERFORMANCE,
+            dbPerformance::WIND,
+            dbPerformance::PLACE);
+        $values = array();
+        foreach ($identifiers as $id) {
+            $values[dbPerformance::getCollumNames()[$id]] = $post[$id];
+        }
+        $values[dbPerformance::getCollumNames()[dbPerformance::WIND]] = floatval($post[dbPerformance::WIND]); // THIS is required to make sure we have a value for inseretation where the wind is ""
+        return $this->checkValues($this->getTable(dbPerformance::class), $values, $identifiers);
     }
 
     /**
@@ -168,22 +201,16 @@ class CheckExistance extends DbHandler
     {
         $values = $desc->classToCollumns($element);
         return $this->checkValues($desc, $values, $identifiers);
-
     }
-    
+
     private function checkValues(dbTableDescription $desc, array $values, array $identifiers)
     {
-        
-        if(sizeof($values) != sizeof($identifiers)){
-            echo "ERROR!!! THE size of the given $values does not match the number of identifiers!!";
-            return NULL;
-        }
-        
+
         $k = $desc->getCollumNames();
         $table = $desc->getTableName();
-        
+
         $sql = "SELECT COUNT(1) FROM " . $table . " WHERE ";
-        
+
         $isFirst = TRUE;
         foreach ($identifiers as $i) {
             if (! $isFirst) {
@@ -192,6 +219,7 @@ class CheckExistance extends DbHandler
             $sql .= $i . "='" . $values[$k[$i]] . "'";
             $isFirst = FALSE;
         }
+        
         $result = $this->conn->getConn()->query($sql);
         $r = $result->fetch_all(MYSQLI_ASSOC);
         if ($r[0]["COUNT(1)"] == 0) {

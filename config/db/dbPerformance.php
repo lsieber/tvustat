@@ -89,7 +89,9 @@ class dbPerformance extends dbTableDescription
         $r[self::PERFORMANCE], //
         $r[self::WIND], //
         $r[self::PLACE], //
-        $r[self::ID]) //
-        ;
+        $r[self::ID]); //
+        
     }
+
+
 }

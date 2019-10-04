@@ -5,8 +5,8 @@ import { removeValueById } from "./SessionStorageHandler.js";
 
 
 export class AthleteInputForm extends InputForm {
-    constructor(formId) {
-        super(formId);
+    constructor() {
+        super(window.athleteFormId);
 
         this.id = -1;
 
@@ -17,7 +17,7 @@ export class AthleteInputForm extends InputForm {
         this.licence = this.textField("Licence Number", 'type="number" id="' + this.licenceIndentifier + '" class="form-control" placeholder="Enter licence Number"');
 
         this.dateIdentifier = "date";
-        this.birthDate = null;
+        this.birthDate = "1999-02-03";
 
         this.genderIdentifier = "gender";
 

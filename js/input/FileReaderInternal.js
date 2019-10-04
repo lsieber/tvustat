@@ -1,13 +1,9 @@
 
 export class FileReaderInternal {
 
-    //'inputGroupFile01'
-    constructor(fileFieldId){
-        this.fileFieldId = fileFieldId;
-    }
 
     getReaderFromFile() {
-        var input = document.getElementById(this.fileFieldId);
+        var input = document.getElementById(window.inputFileFieldId);
         if (!input) {
             alert("Um, couldn't find the imgfile element.");
         }

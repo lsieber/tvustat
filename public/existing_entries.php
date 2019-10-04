@@ -21,7 +21,8 @@ $allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
 $allCompetitionLocations = ($_POST['type'] == 'allCompetitionLocations') ? TRUE : FALSE;
 $allAgeCategories = ($_POST['type'] == 'allAgeCategories') ? TRUE : FALSE;
 $allCategories = ($_POST['type'] == 'allCategories') ? TRUE : FALSE;
-
+$allDisziplins = ($_POST['type'] == 'allDisziplins') ? TRUE : FALSE;
+$allAthletes = ($_POST['type'] == 'allAthletes') ? TRUE : FALSE;
 
 $db = new DBMaintainer();
 
@@ -80,5 +81,16 @@ if ($allCompetitionLocations) {
 
 if ($allAgeCategories) {
     echo json_encode($db->getAllAgeCategories());
+}
+if ($allCategories) {
+    echo json_encode($db->getAllCategories());
+}
+
+if ($allDisziplins) {
+    echo json_encode($db->getAllDisziplins());
+}
+
+if ($allAthletes) {
+    echo json_encode($db->getAllAthletes());
 }
 ?>

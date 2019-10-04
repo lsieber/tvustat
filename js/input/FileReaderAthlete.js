@@ -1,25 +1,13 @@
 import { FileReaderInternal, parse } from "./FileReaderInternal.js";
-import { addValueToArrayStorage, removeValueById, getValuesFromStorage } from "./SessionStorageHandler.js";
+import { addValueToArrayStorage, getValuesFromStorage, getAthlete, addValueToStorage, getStorageLength } from "./SessionStorageHandler.js";
 
 export class FileReaderAthlete extends FileReaderInternal {
-
-    /**
-     * 
-     * @param {string} fileFieldId 
-     */
-    constructor(fileFieldId, athleteTableId, athleteStorageName, athleteModalId) {
-        super(fileFieldId);
-        this.athleteTableId = athleteTableId;
-        this.store = athleteStorageName;
-        this.athleteModalId = athleteModalId;
-
-        this.dateId = "date";
-    }
 
     loadData() {
 
         var reader = this.getReaderFromFile();
         reader.onload = function (e) {
+            var html = '<table><tbody>'; // 
             var text = reader.result;
             var array = parse(text);
             var nameIndex = -1; // this throws an exeption if not changed before usage
@@ -38,73 +26,56 @@ export class FileReaderAthlete extends FileReaderInternal {
                     }
                 } else {
                     if (nameIndex != -1) {
+
                         var fullName = element[nameIndex];
                         var date = element[dateIndex];
                         if (fullName != "") {
-                            // existing_entries JSON.stringify(
-                            $.post('existing_entries.php', { type: "athleteExists", fullName: fullName, date: date },
-                                function (a) {
-                                    // var a = JSON.parse(data);
-                                    // alert(a.athleteExists);
-                                    if (a.athleteExists == "false") {
-                                        addValueToArrayStorage("athStore", a.fullName.hashCode(), a);
+                            var newAthlete = { fullName: fullName, date: date, inserted: false };
+                            var athlete = getAthlete(newAthlete);
+                            if (athlete == null) {
+                                var storeIndex = getStorageLength(window.athleteStore);
+                                newAthlete.storeID = storeIndex;
+                                addValueToArrayStorage(window.athleteStore, storeIndex, newAthlete)
+                                html += "<tr onclick='openModalWithAthlete(" + storeIndex + ")'><td>" + storeIndex + " </td><td>" + newAthlete.fullName + " </td><td>" + newAthlete.date + " </td></tr> ";
+                            } else {
+                                if ("inserted" in athlete) {
+                                    if (athlete["inserted"] == false) {
+                                        html += "<tr onclick='openModalWithAthlete(" + athlete.storeID + ")'><td>" + athlete.storeID + " </td><td>" + athlete.fullName + " </td><td>" + athlete.date + " </td></tr> ";
                                     }
-                                }, "json");
+                                }
+                            }
                         }
+
                     }
                 }
 
             }
+            document.getElementById(window.athleteTableId).innerHTML = html + '</tbody> </table>';
         }
     }
 
 
-    createAthleteTable() {
-        var notExistingAthletes = getValuesFromStorage(this.store);
-        var string = '<table class="table table-condensed"><tbody>';
-        for (const hash in notExistingAthletes) {
-            var athlete = notExistingAthletes[hash];
-            var newS = "<tr onclick='openModalWithAthlete(" + hash+ ")'><td>" + hash + " </td><td>" + athlete.fullName + " </td><td>" + athlete.date + " </td></tr> ";
-            string = string + newS;
-        }
-        document.getElementById(this.athleteTableId).innerHTML = string + '</tbody> </table>';
-    }
-
-    openModalWithAthlete(hash) {
+    openModalWithAthlete(storeID) {
         // First the Athlete Name has to be added to the modal
-        var notExistingAthletes = getValuesFromStorage(this.store);
-        var athlete = notExistingAthletes[hash];
+        var athlete = getValuesFromStorage(window.athleteStore)[storeID];
         this.addAthleteToFrom(athlete);
         // Second: Open the modal
-        $("#" + this.athleteModalId).modal(); // Open Modal
+        $("#" + window.athleteModalId).modal(); // Open Modal
         // Make Sure To Call the Remove function after the insertation
-        // TODO should be done in the insert Method
-        this.removeAthleteFromList(hash);
     }
 
-    removeAthleteFromList(id) {
-        removeValueById(this.store, id);
-        this.createAthleteTable(this.athleteTableId);
-    }
 
     addAthleteToFrom(athlete) {
         window.athForm.setFullName(athlete.fullName);
-        window.athForm.setBirthDate(athlete.date);
+        window.athForm.setBirthDate(this.parseDate(athlete.date).toString());
         window.athForm.updateModal();
         window.athForm.selectDefault();
     }
-
+    parseDate(input) {
+        var parts = input.match(/(\d+)/g);
+        // note parts[1]-1
+        // return new Date(parts[2], parts[1]-1, parts[0]);
+        return parts[2] + "-" + parts[1] + "-" + parts[0];
+    }
 }
 
-
-String.prototype.hashCode = function(max){
-    var hash = 0;
-    if (!this.length) return hash;
-    for (var i = 0; i < this.length; i++) {
-      var char = this.charCodeAt(i);
-      hash = ((hash<<5)-hash)+char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(max?hash%max:hash);
-  };
-  

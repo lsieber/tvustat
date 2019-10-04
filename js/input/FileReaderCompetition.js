@@ -1,5 +1,5 @@
 import { FileReaderInternal, parse } from "./FileReaderInternal.js";
-import { addValueToArrayStorage, removeValueById, getValuesFromStorage } from "./SessionStorageHandler.js";
+import { addValueToArrayStorage, getStorageLength, getValuesFromStorage, getCompetition } from "./SessionStorageHandler.js";
 
 export class FileReaderCompetition extends FileReaderInternal {
 
@@ -17,6 +17,8 @@ export class FileReaderCompetition extends FileReaderInternal {
     loadData() {
         var reader = this.getReaderFromFile();
         reader.onload = function (e) {
+            var htmlhead = '<table><tbody>'
+            var html = htmlhead; // 
             var text = reader.result;
             var array = parse(text);
             var nameIndex = -1; // this throws an exeption if not changed before usage
@@ -44,68 +46,55 @@ export class FileReaderCompetition extends FileReaderInternal {
                         var compDate = element[dateIndex].substring(0,10);
                         var compVilage = element[villageIndex];                        
                         if (compName != null && compName != "") {
-                            // existing_entries JSON.stringify(
-                            $.post('existing_entries.php', { "type": "competitionExists", "competitionName": compName, "competitionDate": compDate, "village": compVilage },
-                                function (a) {
-                                    // var a = JSON.parse(data);
-                                    if (a.competitionExists == "false") {
-                                        var comboName = a.competitionName+a.village+a.competitionDate;
-                                        addValueToArrayStorage(window.competitionStorage, comboName.hashCode(), a);
+                            var newCompetition = { competitionName: compName, competitionDate: compDate, village: compVilage, inserted: false };
+                            var competition = getCompetition(newCompetition);
+                            if (competition == null) {
+                                var storeIndex = getStorageLength(window.competitionStore);
+                                newCompetition.storeID = storeIndex;
+                                addValueToArrayStorage(window.competitionStore, storeIndex, newCompetition)
+                                html += "<tr onclick='openModalWithCompetition(" + storeIndex + ")'><td>" + storeIndex + " </td><td>" + newCompetition.competitionDate + " </td><td>" + newCompetition.competitionName + " </td><td>" + newCompetition.village + " </td></tr> ";
+                            } else {
+                                if ("inserted" in competition) {
+                                    if (competition["inserted"] == false) {
+                            html += "<tr onclick='openModalWithCompetition(" + competition.storeID + ")'><td>" + competition.storeID + " </td><td>" + competition.competitionDate + " </td><td>" + competition.competitionName + " </td><td>" + competition.village + " </td></tr> ";
                                     }
-                                }, "json");
+                                }
+                            }
+     
                         }
                     }
                 }
 
             }
+            
+            if (htmlhead == html) {
+                document.getElementById(window.modalResultId).innerHTML = "<h3> ALL Competitions are in the Data Base</h3>";
+            } else {
+                document.getElementById(window.competitionTableId).innerHTML = html + '</tbody> </table>';
+            }
         }
     }
 
-
-    createCompetitionTable() {
-        var notExistingCompetitions = getValuesFromStorage(window.competitionStorage);
-        var string = '<table class="table table-condensed"><tbody>';
-        for (const hash in notExistingCompetitions) {
-            var competition = notExistingCompetitions[hash];
-            var newS = "<tr onclick='openModalWithCompetition(" + hash+ ")'><td>" + hash + " </td><td>" + competition.competitionName + " </td> <td>" + competition.village + " </td><td>" + competition.competitionDate + " </td></tr> ";
-            string = string + newS;
-        }
-        document.getElementById(this.competitionTableId).innerHTML = string + '</tbody> </table>';
-    }
-
-    openModalWithCompetition(hash) {
+    openModalWithCompetition(id) {
         // First the Competition Name has to be added to the modal
-        var notExistingCompetitions = getValuesFromStorage(window.competitionStorage);
-        var competition = notExistingCompetitions[hash];
-        this.addCompetitionToFrom(competition);
+        this.addCompetitionToFrom(getValuesFromStorage(window.competitionStore)[id]);
+
         // Second: Open the modal
-        $("#" + this.competitionModalId).modal(); // Open Modal
+        $("#" + window.competitionModalId).modal(); // Open Modal
         // Make Sure To Call the Remove function after the insertation
-        removeValueById(window.competitionStorage, hash);
     }
 
-    removeCompetitionFromList(id) {
-        removeValueById(window.competitionStorage, id);
-        this.createCompetitionTable(this.competitionTableId);
-    }
 
     addCompetitionToFrom(competition) {
-        window.compForm.setValueCompDate(competition.competitionDate);
+        window.compForm.setValueCompDate(this.parseDate(competition.competitionDate));
         window.compForm.setValueCompName(competition.competitionName);
         window.compForm.setValueCompLocation(competition.village);
     }
 
-}
-
-
-String.prototype.hashCode = function(max){
-    var hash = 0;
-    if (!this.length) return hash;
-    for (var i = 0; i < this.length; i++) {
-      var char = this.charCodeAt(i);
-      hash = ((hash<<5)-hash)+char;
-      hash = hash & hash; // Convert to 32bit integer
+    parseDate(input) {
+        var parts = input.match(/(\d+)/g);
+        // note parts[1]-1
+        // return new Date(parts[2], parts[1]-1, parts[0]);
+        return parts[2] + "-" + parts[1] + "-" + parts[0];
     }
-    return Math.abs(max?hash%max:hash);
-  };
-  
+}

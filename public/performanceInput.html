@@ -15,31 +15,7 @@
                   onload();
             }
             function test() {
-                  var data = { a:
-                        {
-                              a1:"text1",
-                              a2:"text2",
-                              a3:"text3",
-                              a4:"text4"
-                        },
-                        b:{
-                              b1:"text5",
-                              b2:"text6",
-                              b3:"text7",
-                              b4:"text8"
-                        },
-                        c:{
-                              c1:"text9",
-                              c2:"text10",
-                              c3:"text11",
-                              c4:"text12"
-                        }
-                  };
-
-                  var first = "b";
-                  var second = "b2";
-                  alert(data[first][second]);
-
+                  document.getElementById(window.inserteationOutput).innerHTML = "<p>" + "HEEE" + "</p>"
 
             }
       </script>
@@ -59,6 +35,9 @@
                   <div class="col-sm-12">
                         <div class="input-group">
                               <div class="custom-file">
+                                          <div class="input-group-prepend">
+                                                      <span class="input-group-text" id="inputFileDescription">Upload</span>
+                                                </div>
                                     <input type="file" class="custom-file-input" id="inputFile"
                                           aria-describedby="inputFileDescription">
                                     <label class="custom-file-label" for="inputFile">Choose file</label>
@@ -67,36 +46,57 @@
                   </div>
             </div>
             <div class="jumbotron" id="modalResult">
+                  <a class="btn btn-primary" href="#" onclick="loadPerformances()">Load Performances</a>
+                  <a class="btn btn-primary" href="#" onclick="insertPerfectMatches()">insert Perfect Matches</a>
+                  <div id="inserteationOutput"></div>
             </div>
+            <div class="row">
+                  <div class="col-sm-12">
+                        <h2>Category</h2>
+                        <div id="categoryList"> </div>
+                  </div>
+            </div>
+
             <div class="row">
                   <div class="col-sm-3">
                         <h2>Competition</h2>
                         <div id="competitionList">
-
-
                         </div>
                   </div>
-                  <div class="col-sm-2">
-                        <h2>Category</h2>
-                        <div id="categoryList">
 
 
-                  </div>
-                  <div class="col-sm-2">
+                  <div class="col-sm-3">
                         <h2>Disziplin</h2>
+                        <div id="disziplinList"> </div>
 
 
                   </div>
                   <div class="col-sm-3">
                         <h2>Athlete</h2>
+                        <div id="athleteList"> </div>
 
                   </div>
                   <div class="col-sm-2">
                         <h2>Performance</h2>
+                        <div id="performanceInputDiv">
+                              <div class="form-group">
+                                    <label>Performance</label>
+                                    <input type="text" class="form-control" id="performanceInput"
+                                          placeholder="Enter Performance">
+                              </div>
 
+                              <a class="btn btn-primary" href="#" onclick="insertPerformance()"> Register</a>
+                              <div class="form-group">
+                                    <label> Wind</label>
+                                    <input type="text" class="form-control" id="windInput" placeholder="">
+                              </div>
+                              <div class="form-group">
+                                    <label> Rangking</label>
+                                    <input type="text" class="form-control" id="rankingInput" placeholder="">
+                              </div>
+                        </div>
                   </div>
             </div>
-      </div>
 </body>
 
 </html>

@@ -32,7 +32,7 @@ if ($insert_disziplin) {
             echo "We have a problem with the time value of the diszipln";
         }
     }
-
+    
     $disziplin = new Disziplin( //
     $_POST[dbDisziplin::NAME], //
     $c->getSorting(intval($_POST[dbDisziplin::SORTINGID])), //
@@ -42,7 +42,8 @@ if ($insert_disziplin) {
     $c->getDisziplinType(intval($_POST[dbDisziplin::DISZIPLINTYPE])), //
     $c->getTeamType(intval($_POST[dbDisziplin::TEAMTYPEID])), //
     floatval($_POST[dbDisziplin::MINVAL]), //
-    floatval($_POST[dbDisziplin::MAXVAL])); //
+    floatval($_POST[dbDisziplin::MAXVAL])) //
+    ; //
 
     /**
      * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
@@ -105,20 +106,29 @@ if ($insert_performance) {
         $forcedEntry = (isset($_POST['forced'])) ? $_POST['forced'] == "true" : FALSE;
 
         if (($minValueOk && $maxValueOk && $teamTypeMatches) || ($forcedEntry)) {
-            $result = $db->addPerformanceWithIdsOnly($_POST);
+            if (! $db->checkPerformanceByIds($_POST)) {
+                $result = $db->addPerformanceWithIdsOnly($_POST);
+            } else {
+                $result = new QuerryOutcome("The entered Performance does identically exist allready", false);
+            }
         } else {
             $result = new QuerryOutcome("The entered Performance does not meet the specifications of the minimal and maximal Value of the Disziplin or the Team Type does not match. You can carry out the insertation with the additional argument 'forced':'true'.", FALSE);
             $result->putCustomValue(dbDisziplin::MINVAL, $disziplin->getMinValue());
             $result->putCustomValue(dbDisziplin::MAXVAL, $disziplin->getMaxValue());
             $result->putCustomValue("enteredValue", $_POST[dbPerformance::PERFORMANCE]);
-            $result->putCustomValue("disziplinTeamType", $disziplin->getTeamType()->getType());
-            $result->putCustomValue("athleteTeampType", $athlete->getTeamType()->getType());
+            $result->putCustomValue("disziplinTeamType", $disziplin->getTeamType()
+                ->getType());
+            $result->putCustomValue("athleteTeampType", $athlete->getTeamType()
+                ->getType());
         }
     } else {
         $result = new QuerryOutcome("The given atheteId, competitionId or disziplinId does not exist.", FALSE);
         $result->putCustomValue("athleteExists", $athleteEx);
         $result->putCustomValue("disziplinExists", $disEx);
         $result->putCustomValue("competitionExists", $compEx);
+    }
+    if (isset($_POST["fromFile"])) {
+        $result->putCustomValue("fromFile", $_POST["fromFile"]);
     }
     echo json_encode($result->getJSONArray());
 }

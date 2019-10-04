@@ -17,4 +17,5 @@ class dbCategory {
     
     public const GENDERID = "genderID";
     
+    public const ORDER = "catOrderNumber";
 }

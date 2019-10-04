@@ -114,7 +114,7 @@ class dbDisziplin extends dbTableDescription
         $conn->getDisziplinType($r[self::DISZIPLINTYPE]), //
         $conn->getTeamType($r[self::TEAMTYPEID]), //
         $r[self::MINVAL], // miN vALUE
-        $r[self::MAXVAL], // Max Value TODO
+        $r[self::MAXVAL], // Max Value 
         $r[self::ID]);
     }
 }

@@ -6,37 +6,56 @@ import { loadBasicData, loadCompetitionLocations, loadCompetitionNames } from ".
 import { FileReaderDisziplin } from "./FileReaderDisziplin.js";
 import { FileReaderAthlete } from "./FileReaderAthlete.js";
 import { FileReaderCompetition } from "./FileReaderCompetition.js";
+import { loadCompetitions, loadDisziplins, loadAthletes } from "./ListingUtils.js"
 
 
 import { getValuesFromStorage } from "./SessionStorageHandler.js";
 import { AthleteInputForm } from "./AthleteInputForm.js";
 import { CompetitionForm } from "./CompetitionForm.js";
 
-const basicDefintionFile = './BasicDefinitions.php';
-const existingEntriesFile = './existing_entries.php';
-const inputFileFieldId = "inputGroupFile01";
+
+/**
+ * FILES
+ */
+window.basicDefintionFile = './BasicDefinitions.php';
+window.existingEntriesFile = './existing_entries.php';
+
+/**
+ * FIELDS 
+ * 
+ */
+// GENERAL
+window.inputFileFieldId = "inputGroupFile01";
 window.modalResultId = "modalResult";
 
+// DISZIPLIN
+window.disziplinModalId = "disziplinModal";
+window.disziplinFormId = "disziplinForm";
+window.disziplinTableId = "disziplinInputs";
 
-const disziplinModalId = "disziplinModal";
-const disziplinFormId = "disziplinForm";
-const disziplinTableId = "disziplinInputs";
-const disziplinStorageName = "disStore";
+// ATHLETES
+window.athleteModalId = "athleteModal";
+window.athleteFormId = "athleteForm";
+window.athleteTableId = "athleteInputs";
 
-const athleteModalId = "athleteModal";
-const athleteFormId = "athleteForm";
-const athleteTableId = "athleteInputs";
-const athleteStorageName = "athStore";
+// COMPETITION
+window.competitionModalId = "competitionModal";
+window.competitionTableId = "competitionInputs";
+window.competitionFormId = "competitionForm";
 
-const competitionModalId = "competitionModal";
-const competitionTableId = "competitionInputs";
-const competitionStorageName = "athStore";
-
-const competitionFormId = "competitionForm";
+/**
+ * STORAGES
+ *  */
 window.competitionNameStorage = "compNames";
 window.competitionLocationStorage = "compLoc";
-window.competitionStorage = "compStore";
+window.competitionStore = "allcompStore";
+window.disziplinStore = "alldisStore"
+window.athleteStore = "allathStore";
+window.refuseLIsting = true;
 
+/**
+ * MISC
+ */
 const competitionNameIdentifier = "newCompetitionName";
 const disabledNameIdentifier = "CompetitionNameDisabled";
 const disabledNameIdIdentifier = "CompetitionNameID";
@@ -45,64 +64,46 @@ const disabledLocationIdentifier = "CompetitionLocationDisabled";
 const competitionLocationID = "CompetitionLocationID";
 const competitionDateFieldIdentifier = "competitionDate";
 
-window.disForm = new DisziplinInputForm(disziplinFormId);
-window.athForm = new AthleteInputForm(athleteFormId);
+/**
+ * FORMS
+ */
+window.disForm = new DisziplinInputForm();
+window.athForm = new AthleteInputForm();
 window.compForm = new CompetitionForm(competitionFormId, competitionNameIdentifier, disabledNameIdentifier, disabledNameIdIdentifier, competitionLocationIdentifier, disabledLocationIdentifier, competitionLocationID, competitionDateFieldIdentifier);
 
-
-const fileReaderDisziplin = new FileReaderDisziplin(inputFileFieldId, disziplinTableId, disziplinStorageName, disziplinModalId);
-const fileReaderAthlete = new FileReaderAthlete(inputFileFieldId, athleteTableId, athleteStorageName, athleteModalId);
-const fileReaderCompetition = new FileReaderCompetition(inputFileFieldId, competitionTableId, competitionModalId);
+/**
+ * FILE READERs
+ */
+const fileReaderDisziplin = new FileReaderDisziplin();
+const fileReaderAthlete = new FileReaderAthlete();
+const fileReaderCompetition = new FileReaderCompetition(competitionTableId, competitionModalId);
 
 
 function onload() {
-  loadBasicData(basicDefintionFile);
-  loadCompetitionNames(existingEntriesFile);
-  loadCompetitionLocations(existingEntriesFile);
+  loadBasicData(window.basicDefintionFile);
+  loadCompetitionNames(window.existingEntriesFile);
+  loadCompetitionLocations(window.existingEntriesFile);
+  loadCompetitions();
+  loadDisziplins();
+  loadAthletes();
   // window.disForm.updateModal();
   // window.athForm.updateModal();
 }
 window.onload = onload
 
+/**
+ * Disziplin Functions
+ */
 function readDisziplins() {
   fileReaderDisziplin.loadData();
-  fileReaderDisziplin.createDisziplinTable();
 }
 window.readDisziplins = readDisziplins
 
-function readAthletes() {
-  fileReaderAthlete.loadData();
-  fileReaderAthlete.createAthleteTable();
-}
-window.readAthletes = readAthletes
-
-
-function readCompetitions() {
-  fileReaderCompetition.loadData();
-  fileReaderCompetition.createCompetitionTable();
-}
-window.readCompetitions = readCompetitions
-
-
-// function displayDisziplinStorage() {
-//   alert(getValuesFromStorage(disziplinStorageName));
-// }
-// window.displayDisziplinStorage = displayDisziplinStorage
 
 function closeDisziplinModal() {
   $("#" + disziplinModalId).modal('hide');
 }
 window.closeDisziplinModal = closeDisziplinModal
-
-function closeAthleteModal() {
-  $("#" + athleteModalId).modal('hide');
-}
-window.closeAthleteModal = closeAthleteModal
-
-function closeCompetitionModal() {
-  $("#" + competitionModalId).modal('hide');
-}
-window.closeCompetitionModal = closeCompetitionModal
 
 
 function openModalWithDisziplin(id) {
@@ -110,22 +111,39 @@ function openModalWithDisziplin(id) {
 }
 window.openModalWithDisziplin = openModalWithDisziplin
 
+function updateDisziplinInput() {
+  window.disForm.updateModal();
+}
+window.updateDisziplinInput = updateDisziplinInput
+
+function insertDisziplin() {
+  window.disForm.disziplinToDB(modalResultId);
+}
+window.insertDisziplin = insertDisziplin
+/**
+ * Athlete Functions
+ */
+function readAthletes() {
+  fileReaderAthlete.loadData();
+}
+window.readAthletes = readAthletes
+
+
+function closeAthleteModal() {
+  $("#" + athleteModalId).modal('hide');
+}
+window.closeAthleteModal = closeAthleteModal
+
 function openModalWithAthlete(id) {
   fileReaderAthlete.openModalWithAthlete(id, athleteModalId, athleteTableId);
 }
 window.openModalWithAthlete = openModalWithAthlete
 
-function openModalWithCompetition(id) {
-  updateCompetitionInput();
-  fileReaderCompetition.openModalWithCompetition(id);
-}
-window.openModalWithCompetition = openModalWithCompetition
-
 
 function openNextAthlete() {
-  var values = getValuesFromStorage(athleteStorageName);
+  var values = getValuesFromStorage(window.athleteStore);
   var first = true;
-  for (const key in values) {
+  for (const key in values.filter(notInsertedElement)) {
     if (first) {
       openModalWithAthlete(key);
     }
@@ -134,8 +152,46 @@ function openNextAthlete() {
 }
 window.openNextAthlete = openNextAthlete
 
+function notInsertedElement(element) {
+  if ("inserted" in element) {
+    return element["inserted"] == false
+  }
+}
+
+function updateAthleteInput() {
+  window.athForm.updateModal();
+}
+window.updateAthleteInput = updateAthleteInput
+
+function insertAthlete() {
+  window.athForm.athleteToDB();
+}
+window.insertAthlete = insertAthlete
+
+
+/**
+ * Competition Funcitons
+ */
+function readCompetitions() {
+  fileReaderCompetition.loadData();
+}
+window.readCompetitions = readCompetitions
+
+
+function closeCompetitionModal() {
+  $("#" + competitionModalId).modal('hide');
+}
+window.closeCompetitionModal = closeCompetitionModal
+
+function openModalWithCompetition(id) {
+  updateCompetitionInput();
+  fileReaderCompetition.openModalWithCompetition(id);
+}
+window.openModalWithCompetition = openModalWithCompetition
+
+
 function openNextCompetition() {
-  var values = getValuesFromStorage(window.competitionStorage);
+  var values = getValuesFromStorage(window.competitionStorage).filter(notInsertedElement);
   var first = true;
   for (const key in values) {
     if (first) {
@@ -147,32 +203,11 @@ function openNextCompetition() {
 window.openNextCompetition = openNextCompetition
 
 
-function updateDisziplinInput() {
-  window.disForm.updateModal();
-  // $("#" + disziplinModalId).modal(); // Open Modal
-
-}
-window.updateDisziplinInput = updateDisziplinInput
-
-function updateAthleteInput() {
-  window.athForm.updateModal();
-}
-window.updateAthleteInput = updateAthleteInput
-
 function updateCompetitionInput() {
   window.compForm.updateModal();
 }
 window.updateCompetitionInput = updateCompetitionInput
 
-function insertDisziplin() {
-  window.disForm.disziplinToDB(modalResultId);
-}
-window.insertDisziplin = insertDisziplin
-
-function insertAthlete() {
-  window.athForm.athleteToDB();
-}
-window.insertAthlete = insertAthlete
 
 function insertCompetitionName() {
   window.compForm.competitionNameToDB();

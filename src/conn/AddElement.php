@@ -27,7 +27,7 @@ class AddElement extends DbHandler
         $arrayAssociative[dbPerformance::LASTCHANGE] = DateFormatUtils::nowForDB();
         $collumns = dbPerformance::getCollumNames();
         foreach ($collumns as $key => $dbPosition) {
-            $values[$dbPosition] = isset($arrayAssociative[$key]) ?  $arrayAssociative[$key]: NULL;
+            $values[$dbPosition] = isset($arrayAssociative[$key]) ? $arrayAssociative[$key] : NULL;
         }
         return $this->addValues($values, $this->getTable(dbPerformance::class));
     }
@@ -112,16 +112,16 @@ class AddElement extends DbHandler
     {
         $v = $desc->classToCollumns($element);
 
-        return $this->addValues($v);
+        return $this->addValues($v, $desc);
     }
 
     private function addValues(array $values, dbTableDescription $desc)
     {
-        $sql = "INSERT INTO " . $desc->getTableName() . " VALUES ('Null";
+        $sql = "INSERT INTO " . $desc->getTableName() . " VALUES (Null";
         for ($i = 1; $i < sizeof($values); $i ++) {
-            $sql .= "','" . $values[$i];
+            $sql .= "," . self::sqlValue($values[$i]);
         }
-        $sql .= "')";
+        $sql .= ")";
 
         // echo $sql;
         $result = $this->conn->getConn()->query($sql);
@@ -134,5 +134,19 @@ class AddElement extends DbHandler
         $querry->putCustomValue("sql", $sql);
 
         return $querry;
+    }
+
+    private static function sqlValue($v)
+    {
+        if (is_bool($v)) {
+            return $v ? 1 : 0;
+        }
+        if ($v == "") {
+            return "NULL";
+        }
+        if (is_string($v)) {
+            return "'" . $v . "'";
+        }
+        return $v;
     }
 }

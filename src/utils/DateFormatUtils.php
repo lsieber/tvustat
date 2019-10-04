@@ -12,8 +12,8 @@ class DateFormatUtils
      * @return string
      */
     static function formatDateForBL(\DateTime $date)
-    {
-        return $date->format(DefaultSettings::DATEFORMAT);
+    {        
+        return $date->format("d.m.Y");
     }
     
     /**
@@ -33,6 +33,19 @@ class DateFormatUtils
      */
     static  function DateTimeFromDB(string $dateString) {
         return \DateTime::createFromFormat("Y-m-d", $dateString);
+    }
+
+    /**
+     * 
+     * @param string $dbTime
+     * @return string
+     */
+    static function convertDateFromDB2BL(string $dbTime){
+        return self::formatDateForBL(self::db2DateTime($dbTime));
+    }
+    
+    static function db2DateTime(string $dbTime) {
+        return \DateTime::createFromFormat("Y-m-d", $dbTime);
     }
 
     /**

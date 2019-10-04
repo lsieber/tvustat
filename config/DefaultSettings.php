@@ -3,7 +3,7 @@ namespace config;
 
 class DefaultSettings
 {
-    const DATEFORMAT = 'j.n.Y';
+    const DATEFORMAT = 'd.n.Y';
     const TOPALLVAALUES = "all";
 }
 

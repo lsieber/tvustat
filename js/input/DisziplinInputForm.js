@@ -1,11 +1,12 @@
 import { InputForm } from "./InputForm.js";
 import { getSelectedRadioButton } from "./Selection.js";
+import { loadDisziplins } from "./ListingUtils.js"
 
 
 
 export class DisziplinInputForm extends InputForm {
-    constructor(formId) {
-        super(formId);
+    constructor() {
+        super(window.disziplinFormId);
 
         this.id = -1;
         this.disziplinIdentifier = "disziplin";
@@ -15,10 +16,10 @@ export class DisziplinInputForm extends InputForm {
         this.orderNumber = this.textField("Order Number", 'type="number" value="1000" id="' + this.orderNumberIdentifier + '" class="form-control" placeholder="Enter Order Number"');
 
         this.minValIndentifier = "minVal";
-        this.minVal = this.textField("Minimal Value", 'type="number" value="0" id="' + this.minValIndentifier + '" class="form-control" placeholder="Enter Minimal Value"');
+        this.minVal = this.textField("Minimal Value", 'type="number" step="0.01" value="0" id="' + this.minValIndentifier + '" class="form-control" placeholder="Enter Minimal Value"');
 
         this.maxValIndentifier = "maxVal";
-        this.maxVal = this.textField("Maximal Value", 'type="number" value="1000" id="' + this.maxValIndentifier + '" class="form-control" placeholder="Enter Maximal Value"');
+        this.maxVal = this.textField("Maximal Value", 'type="number" step="0.01" value="1000" id="' + this.maxValIndentifier + '" class="form-control" placeholder="Enter Maximal Value"');
 
         this.sortingIdentifier = "sorting";
 
@@ -37,7 +38,7 @@ export class DisziplinInputForm extends InputForm {
 
     updateModal() {
         this.updateBasicDefintion();
-        document.getElementById(this.formId).innerHTML = this.createHTML();
+        document.getElementById(window.disziplinFormId).innerHTML = this.createHTML();
     }
 
     createHTML() {
@@ -103,10 +104,10 @@ export class DisziplinInputForm extends InputForm {
         var decimal = getSelectedRadioButton(this.decimalIdentifier);
         var disziplinType = getSelectedRadioButton(this.disziplinTypeIdentifier);
         var teamType = getSelectedRadioButton(this.teamTypeIdentifier);
+        
 
-        if (name.value == "" || orderNum.value == "" || min.value == "" || max.value == "" || max.value < 0 || min.value >= max.value) //  
-        {
-            alert("Bitte Fülle alle Felder Korrekt aus");
+        if (name.value == "" || orderNum.value == "" || min.value == ""  || max.value == "" || parseFloat(min.value) <= 0 || parseFloat(min.value) >= parseFloat(max.value)){
+            alert("Bitte Fülle alle Felder Korrekt aus. use , not . for min and max");
             return false;
         } else {
             // insert into db
@@ -118,14 +119,14 @@ export class DisziplinInputForm extends InputForm {
                 "maxVal": max.value,
                 "sortingID": sortingId,
                 "isTime": isTime,
-                "decimalPlaces": decimal,
+                "decimalPlaces": parseFloat(decimal),
                 "disziplinTypeID": disziplinType,
                 "teamTypeID": teamType
             }, function (data) {
                 var r = JSON.parse(data);
-                $("#"+resultFieldId).html("<p>" + r.message + "</p>");
-                alert(r,success);
-                return (r.success === "true"); 
+                $("#"+window.resultFieldId).html("<p>" + r.message + "</p>");
+                loadDisziplins();
+                window.readDisziplins();
             });
         }
     }

@@ -5,17 +5,19 @@ namespace config;
 
 class dbAgeCategory {
     
-    public const DBNAME = "ageCategoryID";
+    public const DBNAME = "agecategory";
     
-    public const ID = "ageCategoryName";
+    public const ID = "ageCategoryID";
+    
+    public const NAME = "ageCategoryName";
     
     public const MINAGE = "minAge";
     
-    public const MINAGE = "maxAge";
+    public const MAXAGE = "maxAge";
     
-    public const MINAGE = "openBelow";
+    public const OPENBELOW = "openBelow";
     
-    public const MINAGE = "openAbove";
+    public const OPENABOVE = "openAbove";
     
     
     

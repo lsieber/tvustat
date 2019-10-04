@@ -10,9 +10,13 @@ import { addValueToArrayStorage } from "./SessionStorageHandler.js";
 export function loadCompetitions() {
     $.post(window.existingEntriesFile, { type: "allCompetitions" }, function (data) {
         for (const key in data) {
-            addValueToArrayStorage(window.competitionStore, key, data[key]);
+            var v = data[key];
+            v["storeID"] = key;
+            addValueToArrayStorage(window.competitionStore, key, v);
         }
-        createCompetitionList(data);
+        if (window.refuseLIsting == null) {
+            createCompetitionList(data);
+        }
     }, "json");
 }
 
@@ -20,26 +24,28 @@ export function loadCompetitions() {
 function createCompetitionList(values) {
     // var values = getValuesFromStorage(window.competitionStore);
     var idents = ["competitionName", "village", "competitionDate"];
-    var html = createRadioSelectorsHtml(values, "competitionID", idents, window.competitionRadioName, "comp", "Competitions", "Search...");
+    var html = createRadioSelectorsHtmlComp(values, "competitionID", idents, window.competitionRadioName, "comp", "Competitions", "Search...");
     document.getElementById(window.competitionList).innerHTML = html;
 }
 
-function createRadioSelectorsHtml(params, idIdent, valueIdents, name, idPref, label, placeholder) {
+function createRadioSelectorsHtmlComp(params, idIdent, valueIdents, name, idPref, label, placeholder) {
     var html = '<div class="form-group"> <label>' + label + '</label>';
     var onkeyUp = 'onkeyup="filterCompetitions()"';
     html += '<input type="text" class="form-control" ' + onkeyUp + ' id="' + window.competitionSearch + '" placeholder="' + placeholder + '"';
     html += "<div " + window.competitionRadios + ">"
     for (const key in params) {
-        var id = idPref + params[key][idIdent];
+        var idDB = params[key][idIdent];
+        var idRadio = idPref + idDB;
+        var idStore = key;
         var value = valueIdents.map(v => params[key][v]).join(",");
-        html += '<input type="radio" class="form-control" name="' + name + '" value="' + value + '" id="' + id + '"></input>';
-        html += '<label for="' + id + '">' + value + '</label>'
+        html += '<input type="radio" class="form-control" name="' + name + '" value="' + idStore + '" id="' + idRadio + '"></input>';
+        html += '<label for="' + idRadio + '">' + value + '</label>'
     }
     html += '</div></div>';
     return html;
 }
 
-function filterCompetitions(){
+function filterCompetitions() {
     textFilter(window.competitionSearch, window.competitionRadioName);
 }
 window.filterCompetitions = filterCompetitions
@@ -53,49 +59,97 @@ window.filterCompetitions = filterCompetitions
 export function loadCategories() {
     $.post(window.existingEntriesFile, { type: "allCategories" }, function (data) {
         for (const key in data) {
-            addValueToArrayStorage(window.categoryStore, key, data[key]);
+            var v = data[key];
+            v["storeID"] = key;
+            addValueToArrayStorage(window.categoryStore, key, v);
         }
-        createCategoryList(data);
+        if (window.refuseLIsting == null) {
+            createCategoryList(data);
+        }
     }, "json");
 }
 
 
 function createCategoryList(values) {
-    var idents = ["categoryStoreName", "village", "categoryStoreDate"];
-    var html = createRadioSelectorsHtml(values, "categoryStoreID", idents, window.categoryStoreRadioName, "cat", "Categories", "Search...");
-    document.getElementById(window.categoryStoreList).innerHTML = html;
+    var html = createRadioSelectorsHtml(values, "categoryID", ["categoryName"], window.categoryRadioName, "cat", "Categories", window.categoryRadios);
+    document.getElementById(window.categoryList).innerHTML = html;
 }
 
-function createRadioSelectorsHtml(params, idIdent, valueIdents, name, idPref, label, placeholder) {
-    var html = '<div class="form-group"> <label>' + label + '</label>';
-    var onkeyUp = 'onkeyup="filterCategories()"';
-    html += '<input type="text" class="form-control" ' + onkeyUp + ' id="' + window.categoryStoreSearch + '" placeholder="' + placeholder + '"';
-    html += "<div " + window.categoryStoreRadios + ">"
-    for (const key in params) {
-        var id = idPref + params[key][idIdent];
-        var value = valueIdents.map(v => params[key][v]).join(",");
-        html += '<input type="radio" class="form-control" name="' + name + '" value="' + value + '" id="' + id + '"></input>';
-        html += '<label for="' + id + '">' + value + '</label>'
-    }
-    html += '</div></div>';
-    return html;
+/** ********************************************************
+ * CREAT Disziplin LISTING
+* ********************************************************/
+
+
+export function loadDisziplins() {
+    $.post(window.existingEntriesFile, { type: "allDisziplins" }, function (data) {
+        for (const key in data) {
+            var v = data[key];
+            v["storeID"] = key;
+            addValueToArrayStorage(window.disziplinStore, key, v);
+        }
+        if (window.refuseLIsting == null) {
+            createDisziplinList(data);
+        }
+
+    }, "json");
 }
 
-function filterCategories(){
-    textFilter(window.categoryStoreSearch, window.categoryStoreRadioName);
+
+function createDisziplinList(values) {
+    var html = createRadioSelectorsHtml(values, "disziplinID", ["disziplinName"], window.disziplinRadioName, "dis", "Disziplins", window.disziplinRadios);
+    document.getElementById(window.disziplinList).innerHTML = html;
 }
-window.filterCategories = filterCategories
+
+/** ********************************************************
+ * CREAT Athlete LISTING
+* ********************************************************/
+
+
+export function loadAthletes(/*categoryID, year*/) {
+    $.post(window.existingEntriesFile, { type: "allAthletes" /*, categoryID: categoryID, year:year*/ }, function (data) {
+        for (const key in data) {
+            var v = data[key];
+            v["storeID"] = key;
+            addValueToArrayStorage(window.athleteStore, key, v);
+        }
+        if (window.refuseLIsting == null) {
+            createAthleteList(data);
+        }
+    }, "json");
+}
+
+
+function createAthleteList(values) {
+    var html = createRadioSelectorsHtml(values, "athleteID", ["fullName"], window.athleteRadioName, "ath", "athlete", window.athleteRadios);
+    document.getElementById(window.athleteList).innerHTML = html;
+}
+
 
 
 /** ********************************************************
  *  BASIC FUNCTIONS
  * ********************************************************/
 
+function createRadioSelectorsHtml(params, idIdent, valueIdents, name, idPref, label, radiosDiv) {
+    var html = '<div class="form-group"> <label>' + label + '</label>';
+    html += "<div " + radiosDiv + ">"
+    for (const key in params) {
+        var idDB = params[key][idIdent];
+        var idRadio = idPref + idDB;
+        var idStore = key;
+        var value = valueIdents.map(v => params[key][v]).join(", \n");
+        html += '<input type="radio" class="form-control" name="' + name + '" value="' + idStore + '" id="' + idRadio + '"></input>';
+        html += '<label for="' + idRadio + '">' + value + '</label>'
+    }
+    html += '</div></div>';
+    return html;
+}
+
 function textFilter(searchField, radioName) {
     var filter, radios, a;
     filter = document.getElementById(searchField).value.toUpperCase();
     radios = document.getElementsByName(radioName);
-    
+
     for (var i = 0; i < radios.length; i++) {
         var radio = radios[i];
         a = radio.value;
@@ -109,12 +163,12 @@ function textFilter(searchField, radioName) {
     }
 }
 
-function hideTandem(id){
+function hideTandem(id) {
     $('#' + id + ', label[for=' + id + ']').hide();
 }
 
-function showTandem(id){
+function showTandem(id) {
     $('#' + id + ', label[for=' + id + ']').show();
-    document.getElementById(id).style ="none";
+    document.getElementById(id).style = "none";
 }
 
