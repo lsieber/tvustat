@@ -11,18 +11,22 @@ trait BestListColumnDefinition
             "Name",
             "Jg",
             "Ort",
-            "Datum"
+            "Datum", 
+            "Detail",
+            "Kategorie"
         );
     }
 
-    protected static function bestListElements(Performance $performance)
-    {
+    protected static function bestListElements(Performance $performance, CategoryUtils $categoryutils)
+    {        
         return array( //
             $performance->getFormatedPerformance(),
             $performance->getAthlete()->getFullName(),
-            DateFormatUtils::formatDateForBL($performance->getAthlete()->getDate()),
+            DateFormatUtils::formatBirthYearForBL($performance->getAthlete()->getDate()),
             $performance->getCompetition()->getLocation()->getVillage(),
-            DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate())
+            DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate()),
+            $performance->getDetail(),
+            $categoryutils->categoryOf($performance)->getName()
         );
     }
 

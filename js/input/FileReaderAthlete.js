@@ -7,8 +7,11 @@ export class FileReaderAthlete extends FileReaderInternal {
 
         var reader = this.getReaderFromFile();
         reader.onload = function (e) {
-            var html = '<table><tbody>'; // 
+            var htmlhead = '<table><tbody>'
+            var html = htmlhead; //           
+
             var text = reader.result;
+
             var array = parse(text);
             var nameIndex = -1; // this throws an exeption if not changed before usage
             var dateIndex = -1;
@@ -38,11 +41,11 @@ export class FileReaderAthlete extends FileReaderInternal {
                                 addValueToArrayStorage(window.athleteStore, storeIndex, newAthlete)
                                 html += "<tr onclick='openModalWithAthlete(" + storeIndex + ")'><td>" + storeIndex + " </td><td>" + newAthlete.fullName + " </td><td>" + newAthlete.date + " </td></tr> ";
                             } else {
-                                if ("inserted" in athlete) {
-                                    if (athlete["inserted"] == false) {
-                                        html += "<tr onclick='openModalWithAthlete(" + athlete.storeID + ")'><td>" + athlete.storeID + " </td><td>" + athlete.fullName + " </td><td>" + athlete.date + " </td></tr> ";
-                                    }
-                                }
+                                // if ("inserted" in athlete) {
+                                //     if (athlete["inserted"] == false) {
+                                //         html += "<tr onclick='openModalWithAthlete(" + athlete.storeID + ")'><td>" + athlete.storeID + " </td><td>" + athlete.fullName + " </td><td>" + athlete.date + " </td></tr> ";
+                                //     }
+                                // }
                             }
                         }
 
@@ -50,7 +53,12 @@ export class FileReaderAthlete extends FileReaderInternal {
                 }
 
             }
-            document.getElementById(window.athleteTableId).innerHTML = html + '</tbody> </table>';
+
+            if (htmlhead == html) {
+                document.getElementById(window.modalResultId).innerHTML = "<h3> ALL Athletes are in the Data Base</h3>";
+            } else {
+                document.getElementById(window.athleteTableId).innerHTML = html + '</tbody> </table>';
+            }
         }
     }
 
@@ -59,6 +67,7 @@ export class FileReaderAthlete extends FileReaderInternal {
         // First the Athlete Name has to be added to the modal
         var athlete = getValuesFromStorage(window.athleteStore)[storeID];
         this.addAthleteToFrom(athlete);
+        window.athleteInModalStoreID = storeID;
         // Second: Open the modal
         $("#" + window.athleteModalId).modal(); // Open Modal
         // Make Sure To Call the Remove function after the insertation
@@ -71,6 +80,7 @@ export class FileReaderAthlete extends FileReaderInternal {
         window.athForm.updateModal();
         window.athForm.selectDefault();
     }
+    
     parseDate(input) {
         var parts = input.match(/(\d+)/g);
         // note parts[1]-1

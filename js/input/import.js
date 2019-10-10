@@ -27,6 +27,7 @@ window.existingEntriesFile = './existing_entries.php';
 // GENERAL
 window.inputFileFieldId = "inputGroupFile01";
 window.modalResultId = "modalResult";
+window.counter = 0;
 
 // DISZIPLIN
 window.disziplinModalId = "disziplinModal";
@@ -135,20 +136,13 @@ function closeAthleteModal() {
 window.closeAthleteModal = closeAthleteModal
 
 function openModalWithAthlete(id) {
-  fileReaderAthlete.openModalWithAthlete(id, athleteModalId, athleteTableId);
+  fileReaderAthlete.openModalWithAthlete(id)
 }
 window.openModalWithAthlete = openModalWithAthlete
 
 
 function openNextAthlete() {
-  var values = getValuesFromStorage(window.athleteStore);
-  var first = true;
-  for (const key in values.filter(notInsertedElement)) {
-    if (first) {
-      openModalWithAthlete(key);
-    }
-    first = false;
-  }
+  fileReaderAthlete.openModalWithAthlete(window.athleteInModalStoreID + 1);
 }
 window.openNextAthlete = openNextAthlete
 

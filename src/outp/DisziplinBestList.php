@@ -10,21 +10,13 @@ class DisziplinBestList extends DisziplinBestListRaw
      *
      * @var bool
      */
-    private $dateFormat;
-
-    /**
-     *
-     * @var bool
-     */
     private $top;
 
     private function __construct( //
     Disziplin $disziplin, //
-    string $dateFormat = DefaultSettings::DATEFORMAT, //
     bool $topAllValues = DefaultSettings::TOPALLVAALUES) //
     {
         parent::__construct($disziplin);
-        $this->dateFormat = $dateFormat;
         $this->top = $topAllValues;
     }
 
@@ -53,7 +45,7 @@ class DisziplinBestList extends DisziplinBestListRaw
     // *********************
     public function sortPerformances()
     {
-//         var_dump($this->performances);
+        // var_dump($this->performances);
         usort($this->performances, array(
             "tvustat\DisziplinBestList",
             "cmp"
@@ -135,24 +127,6 @@ class DisziplinBestList extends DisziplinBestListRaw
     // ********************
     // GETTERS And SETTERS
     // ********************
-
-    /**
-     *
-     * @return string
-     */
-    public function getDateFormat()
-    {
-        return $this->dateFormat;
-    }
-
-    /**
-     *
-     * @param string $dateFormat
-     */
-    public function setDateFormat($dateFormat)
-    {
-        $this->dateFormat = $dateFormat;
-    }
 
     /**
      *

@@ -1,6 +1,6 @@
 import { InputForm } from "./InputForm.js";
 import { getSelectedRadioButton } from "./Selection.js";
-import { removeValueById } from "./SessionStorageHandler.js";
+import { removeValueById, changeValueInArray, getAthlete } from "./SessionStorageHandler.js";
 
 
 
@@ -60,7 +60,7 @@ export class AthleteInputForm extends InputForm {
 
     selectDefault() {
         document.getElementById("teamType1").checked = true;
-        document.getElementById("gender1").checked = true;
+        document.getElementById("gender2").checked = true;
     }
 
     getId() {
@@ -92,8 +92,12 @@ export class AthleteInputForm extends InputForm {
                 "genderID": genderID,
                 "teamTypeID": teamTypeID
             }, function (data) {
-                // var r = JSON.parse(data);
-                // return (r.success === "true");
+                // if (data.success == true) {
+                //     var athlete = getAthlete(data);
+                //     alert(JSON.stringify(athlete));
+                //     changeValueInArray(window.athleteStore, athlete.storeID, "inserted", "true");
+                //     alert("Heurecka");
+                // }
             }, "json");
         }
     }

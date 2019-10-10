@@ -4,6 +4,8 @@ namespace config;
 use tvustat\ConnectionPreloaded;
 use tvustat\DateFormatUtils;
 use tvustat\Performance;
+use tvustat\TimeUtils;
+use tvustat\WindUtils;
 
 class dbPerformance extends dbTableDescription
 {
@@ -89,9 +91,16 @@ class dbPerformance extends dbTableDescription
         $r[self::PERFORMANCE], //
         $r[self::WIND], //
         $r[self::PLACE], //
-        $r[self::ID]); //
+        $r[self::ID], //
+        self::getDetail($r)); //
         
     }
-
+    
+    private static function getDetail($r) {
+        if (!array_key_exists(dbPerformanceDetail::DETAIL, $r)) {
+            return NULL;
+        }
+        return $r[dbPerformanceDetail::DETAIL];
+    }
 
 }

@@ -4,14 +4,6 @@ import { insertPerformanceWithData } from "./InsertPerformanceUtils.js";
 
 export class FileReaderPerformance extends FileReaderInternal {
 
-    /**
-     * 
-     * @param {string} fileFieldId 
-     */
-    constructor(fileFieldId) {
-        super(fileFieldId);
-    }
-
     loadData() {
         var reader = this.getReaderFromFile();
         reader.onload = function (e) {
@@ -85,12 +77,14 @@ export class FileReaderPerformance extends FileReaderInternal {
                 prevEl = element;
 
             }
+            document.getElementById(window.inserteationOutput).innerHTML = "We loaded " + storageIndex + " Performances.";
         }
     }
 
     insertPerfectMatches() {
         var values = getValuesFromStorage(window.inputPerformanceStore);
 
+        window.counter = 0;
         for (const key in values) {
 
             var p = values[key];
@@ -99,19 +93,17 @@ export class FileReaderPerformance extends FileReaderInternal {
                 var athlete = this.getAthlete(p);
                 var disziplin = this.getDisziplin(p);
                 var competition = this.getCompetition(p);
-                alert("Lets  macth" + athlete.fullName);
 
                 if (athlete != null && disziplin != null && competition != null) {
-                    alert()
                     p["athleteID"] = athlete["athleteID"];
                     p["disziplinID"] = disziplin["disziplinID"];
                     p["competitionID"] = competition["competitionID"];
                     insertPerformanceWithData(p, athlete, disziplin);
                 }
             }
-
-
         }
+        document.getElementById(window.inserteationOutput).innerHTML = "We aded " + window.counter  + " Performances.";
+
     }
 
 

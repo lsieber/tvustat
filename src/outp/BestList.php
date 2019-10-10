@@ -106,27 +106,27 @@ class BestList
     // *************
     // OUTPUT
     // *************
-    public function createHTMLBestList()
+    public function createHTMLBestList(CategoryUtils $categoryUtils)
     {
-        $this->html = "<table>";
+        $this->html = "<div class='table-responsiv'><table class='table table-striped'>";
         $this->html .= HtmlGenerator::htmlTableBestListHeader();
         $this->html .= "<tbody>";
         foreach ($this->bestList as $disBestList) {
-            $this->html .= HtmlGenerator::htmlOfDisziplinBestListForTableBestList($disBestList);
+            $this->html .= HtmlGenerator::htmlOfDisziplinBestListForTableBestList($disBestList, $categoryUtils);
         }
-        $this->html .= "</tbody></table>";
+        $this->html .= "</tbody></table></div> ";
         return $this->html;
     }
 
     public function createHTMLRecord()
-    {
-        $this->html = "<table>";
+    {   
+        $this->html = "<div class='table-responsiv'><table table-striped>";
         $this->html .= HtmlGenerator::htmlTableRecordtHeader();
         $this->html .= "<tbody>";
         foreach ($this->bestList as $disBestList) {
             $this->html .= HtmlGenerator::htmlOfDisziplinBestListForRecordTable($disBestList);
         }
-        $this->html .= "</tbody></table>";
+        $this->html .= "</tbody></table></div> ";
         return $this->html;
     }
 

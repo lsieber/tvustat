@@ -8,7 +8,8 @@ class QuerryOutcome
 
     private $success;
 
-    private $custumValues =  array();
+    private $custumValues = array();
+
     /**
      *
      * @param string $message
@@ -26,23 +27,30 @@ class QuerryOutcome
      */
     public function getJSONArray()
     {
-        $array =  array(
+        $array = array(
             "message" => $this->message,
             "success" => $this->success
         );
-        foreach ($this->custumValues as $key=>$value) {
+        foreach ($this->custumValues as $key => $value) {
             $array[$key] = $value;
         }
         return $array;
     }
-    
+
     /**
-     * 
+     *
      * @param string $key
-     * @param mixed $value, has to be able to convert to a String
+     * @param mixed $value,
+     *            has to be able to convert to a String
      */
-    public function putCustomValue(string $key, $value){
-         $this->custumValues[$key] = strval($value);
+    public function putCustomValue(string $key, $value)
+    {
+        $this->custumValues[$key] = strval($value);
+    }
+
+    public function getCustomValue(string $key)
+    {
+        return $this->custumValues[$key];
     }
 
     /**

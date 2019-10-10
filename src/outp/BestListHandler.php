@@ -18,6 +18,7 @@ class BestListHandler
 
     // Internal Variables
     private $sql;
+    private $teamSQL;
 
     private $db;
 
@@ -25,31 +26,45 @@ class BestListHandler
 
     private $title;
 
-    public function __construct(array $years, Gender $gender, array $categories, string $top, array $disziplins, DBMaintainer $db)
+    public function __construct(array $years, string $categoryControl, array $categories, string $top, array $disziplins, DBMaintainer $db)
     {
         // $this->years = $years;
         // $this->gender = $gender;
         // $this->categories = $categories;
-        $this->top = $top;
         // $this->disziplins = $disziplins;
-
+        
+        $this->top = $top;
         $this->db = $db;
-        $this->sql = OutputSQL::create($gender, $categories, $disziplins, $years);
-        echo $this->sql;
-        $this->title = new BestListTitle($categories, $gender, $years, $top, $disziplins);
-
+        $this->sql = OutputSQL::create($categoryControl, $categories, $disziplins, $years);
+        $this->teamSQL = OutputSQL::createTeam($categoryControl, $categories, $disziplins, $years);
+        $this->title = new BestListTitle($categoryControl, $categories, $years, $top, $disziplins);
         $this->bestList = BestList::empty();
     }
 
     public function callDB()
     {
+        
+        // Athletes
         // Create SQL, Call DB
+//         echo $this->sql;
         $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
 
         // Fill into Best List
         foreach ($array_result as $entry) {
             $performance = dbPerformance::performanceFromAsocArray($entry, $this->db->getConn());
             $this->bestList->addPerformance($performance);
+        }
+        
+        if (!is_null($this->teamSQL)) {
+            // TEAMS
+            // Create SQL, Call DB
+            $team_result = $this->db->getConn()->executeSqlToArray($this->teamSQL);
+            
+            // Fill into Best List
+            foreach ($team_result as $entry) {
+                $performance = dbPerformance::performanceFromAsocArray($entry, $this->db->getConn());
+                $this->bestList->addPerformance($performance);
+            }
         }
     }
 
@@ -76,8 +91,10 @@ class BestListHandler
 
     private function createHTMLCode()
     {
-        $html = "<div class='csc-header csc-header-n1'><h1 class='csc-firstHeader'>" . $this->title->getTitle() . "</h1><p>Stand: " . date('d.m.Y') . "</p></div>";
-        $html .= ($this->top == 1) ? $this->bestList->createHTMLRecord() : $this->bestList->createHTMLBestList();
+        $categoryUtils = new CategoryUtils($this->db->getConn());
+        
+        $html = "<div class='csc-header csc-header-n1'><h1 class='csc-firstHeader'>" . $this->title->getTitle() . "</h1></div>";
+        $html .= ($this->top == 1) ? $this->bestList->createHTMLRecord() : $this->bestList->createHTMLBestList($categoryUtils);
         return $html;
     }
 

@@ -65,7 +65,8 @@ class CheckExistance extends DbHandler
         foreach ($identifiers as $id) {
             $values[dbPerformance::getCollumNames()[$id]] = $post[$id];
         }
-        $values[dbPerformance::getCollumNames()[dbPerformance::WIND]] = floatval($post[dbPerformance::WIND]); // THIS is required to make sure we have a value for inseretation where the wind is ""
+        $values[dbPerformance::getCollumNames()[dbPerformance::PERFORMANCE]] = TimeUtils::time2seconds($post[dbPerformance::PERFORMANCE]); // THIS is required to make sure we have a value for inseretation where the wind is ""
+        $values[dbPerformance::getCollumNames()[dbPerformance::WIND]] = WindUtils::wind2DB($post[dbPerformance::WIND]); // THIS is required to make sure we have a value for inseretation where the wind is ""
         return $this->checkValues($this->getTable(dbPerformance::class), $values, $identifiers);
     }
 
@@ -216,10 +217,14 @@ class CheckExistance extends DbHandler
             if (! $isFirst) {
                 $sql .= " AND ";
             }
-            $sql .= $i . "='" . $values[$k[$i]] . "'";
+            $comp = $values[$k[$i]];
+            if ($comp == NULL) {
+                $sql .= $i .  " IS NULL";
+            }else{
+                $sql .= $i . '="' . $comp . '"';}
             $isFirst = FALSE;
         }
-        
+//         echo $sql;
         $result = $this->conn->getConn()->query($sql);
         $r = $result->fetch_all(MYSQLI_ASSOC);
         if ($r[0]["COUNT(1)"] == 0) {

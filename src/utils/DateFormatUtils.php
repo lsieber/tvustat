@@ -1,61 +1,73 @@
 <?php
 namespace tvustat;
 
-use config\DefaultSettings;
-
 class DateFormatUtils
 {
 
-    /**
-     * 
-     * @param \DateTime $date
-     * @return string
-     */
-    static function formatDateForBL(\DateTime $date)
-    {        
-        return $date->format("d.m.Y");
-    }
-    
     /**
      *
      * @param \DateTime $date
      * @return string
      */
-    static function formatDateForDB(\DateTime $date)
+    static function formatDateForBL(\DateTime $date = NULL)
     {
-        return $date->format('Y-m-d');
+        return (is_null($date)) ? "" : $date->format("d.m.Y");
     }
-    
+
     /**
-     * 
+     *
+     * @param \DateTime $date
+     * @return string
+     */
+    static function formatBirthYearForBL(\DateTime $date = NULL)
+    {
+        return (is_null($date)) ? "" : $date->format("Y");
+    }
+
+    /**
+     *
+     * @param \DateTime $date
+     * @return string
+     */
+    static function formatDateForDB(\DateTime $date = NULL)
+    {
+        return (is_null($date)) ? NULL : $date->format('Y-m-d');
+    }
+
+    /**
+     *
      * @param string $dateString
      * @return \DateTime
      */
-    static  function DateTimeFromDB(string $dateString) {
-        return \DateTime::createFromFormat("Y-m-d", $dateString);
+    static function DateTimeFromDB(string $dateString = NULL)
+    {
+        return (is_null($dateString)) ? NULL : \DateTime::createFromFormat("Y-m-d", $dateString);
     }
 
     /**
-     * 
+     *
      * @param string $dbTime
      * @return string
      */
-    static function convertDateFromDB2BL(string $dbTime){
-        return self::formatDateForBL(self::db2DateTime($dbTime));
+    static function convertDateFromDB2BL(string $dbTime = NULL)
+    {
+        return (is_null($dbTime)) ? NULL : self::formatDateForBL(self::db2DateTime($dbTime));
     }
-    
-    static function db2DateTime(string $dbTime) {
-        return \DateTime::createFromFormat("Y-m-d", $dbTime);
+
+    static function db2DateTime(string $dbTime = NULL)
+    {
+        return (is_null($dbTime)) ? NULL : \DateTime::createFromFormat("Y-m-d", $dbTime);
     }
 
     /**
      */
-    static function formatDateaAsYear(\DateTime $date)
+    static function formatDateaAsYear(\DateTime $date = NULL)
     {
-        return $date->format('Y');
+        return (is_null($date)) ? NULL : $date->format('Y');
     }
-    
-    static function nowForDB() {
+
+    static function nowForDB()
+    {
         return (new \DateTime())->format('Y-m-d h:m:s');
     }
 }

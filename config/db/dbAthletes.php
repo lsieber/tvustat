@@ -19,6 +19,8 @@ class dbAthletes extends dbTableDescription
 
     public const DATE = "date";
 
+    public const CATEGORY = "teamCategoryID";
+
     public const lICENCE = "licenceNumber";
 
     public static function getIDString()
@@ -32,7 +34,8 @@ class dbAthletes extends dbTableDescription
         self::GENDERID => 2,
         self::TEAMTYPEID => 3,
         self::DATE => 4,
-        self::lICENCE => 5
+        self::lICENCE => 5,
+        self::CATEGORY => 6
     );
 
     /**
@@ -68,7 +71,8 @@ class dbAthletes extends dbTableDescription
             2 => $athlete->getGender()->getId(),
             3 => $athlete->getTeamType()->getId(),
             4 => $athlete->getDateForDB(),
-            5 => NULL
+            5 => NULL,
+            6 => $athlete->getTeamCategory()
         );
     }
 
@@ -76,9 +80,21 @@ class dbAthletes extends dbTableDescription
     {
         return new Athlete( //
         $r[self::FULLNAME], //
-        new \DateTime($r[self::DATE]), //
+        self::getDate($r[self::DATE], $conn), //
         $conn->getGender($r[self::GENDERID]), //
         $conn->getTeamType($r[self::TEAMTYPEID]), //
+        self::getTeamCategory($r[self::CATEGORY], $conn), //
         $r[self::ID]);
+    }
+
+    private static function getTeamCategory($dbValue, ConnectionPreloaded $conn)
+    {
+        return is_null($dbValue) ? NULL : $conn->getCategory($dbValue);
+    }
+
+    private static function getDate($dbValue, ConnectionPreloaded $conn)
+    {
+        return is_null($dbValue) ? NULL : new \DateTime($dbValue); //
+        ;
     }
 }

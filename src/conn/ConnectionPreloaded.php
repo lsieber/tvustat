@@ -5,6 +5,8 @@ use config\dbDisziplinTypes;
 use config\dbGenders;
 use config\dbSorting;
 use config\dbTeamTypes;
+use config\dbCategory;
+use config\dbAgeCategory;
 
 class ConnectionPreloaded extends Connection
 {
@@ -33,6 +35,18 @@ class ConnectionPreloaded extends Connection
      */
     protected $sortings = array();
 
+    /**
+     *
+     * @var array
+     */
+    protected $categories = array();
+
+    /**
+     *
+     * @var array
+     */
+    protected $ageCategories = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -40,6 +54,8 @@ class ConnectionPreloaded extends Connection
         $this->loadTeamTypes();
         $this->loadDisziplinTypes();
         $this->loadSorting();
+        $this->loadAgeCategories();
+        $this->loadCategories();
     }
 
     private function loadGenders()
@@ -78,6 +94,26 @@ class ConnectionPreloaded extends Connection
         }
     }
 
+    private function loadAgeCategories()
+    {
+        $sql = "SELECT * From " . dbAgeCategory::DBNAME;
+        $array = $this->executeSqlToArray($sql);
+        foreach ($array as $v) {
+            $this->ageCategories[$v[dbAgeCategory::ID]] = new AgeCategory($v[dbAgeCategory::NAME], $v[dbAgeCategory::MINAGE], $v[dbAgeCategory::MAXAGE], $v[dbAgeCategory::ID]);
+        }
+    }
+
+    private function loadCategories()
+    {
+        $sql = "SELECT * From " . dbCategory::DBNAME;
+        $array = $this->executeSqlToArray($sql);
+        foreach ($array as $v) {
+            $ageCategory = $this->getAgeCategory($v[dbCategory::AGECATEGORYID]);
+            $gender = $this->getGender($v[dbCategory::GENDERID]);
+            $this->categories[$v[dbCategory::ID]] = new Category($ageCategory, $gender, $v[dbCategory::NAME], $v[dbCategory::NAMEOLD], $v[dbCategory::ID]);
+        }
+    }
+
     /**
      *
      * @param int $id
@@ -111,6 +147,26 @@ class ConnectionPreloaded extends Connection
     /**
      *
      * @param int $id
+     * @return AgeCategory or null if the $id does not exist in the range of possible genders
+     */
+    public function getAgeCategory($id)
+    {
+        return (isset($this->ageCategories[$id])) ? $this->ageCategories[$id] : null;
+    }
+
+    /**
+     *
+     * @param int $id
+     * @return Category or null if the $id does not exist in the range of possible genders
+     */
+    public function getCategory($id)
+    {
+        return (isset($this->categories[$id])) ? $this->categories[$id] : null;
+    }
+
+    /**
+     *
+     * @param int $id
      * @return Sorting or null if the $id does not exist in the range of possible genders
      */
     public function getSorting($id)
@@ -136,6 +192,11 @@ class ConnectionPreloaded extends Connection
     public function getAllDisziplinTypes()
     {
         return $this->disziplinTypes;
+    }
+    
+    public function getAllCategories()
+    {
+        return $this->categories;
     }
 }
 

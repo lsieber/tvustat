@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="inc/style.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      <script type=module src="../js/output/output.js"></script>
+      <script>
+            function clearSession() {
+                  sessionStorage.clear();
+                  onload();
+            }
+            function test() {
+                  document.getElementById(window.inserteationOutput).innerHTML = "<p>" + "HEEE" + "</p>"
+
+            }
+      </script>
+</head>
+
+<body onload="onload()">
+      <!--    <div class="container">
+            <div class="row">
+                  <a class="btn btn-primary" href="#" onclick="test()">Test Function</a>
+                  <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
+            </div>
+      </div>  -->
+      <div>
+            <h1>TVU Statistik Tool</h1>
+            <p></p>
+
+
+            <div class="row">
+                  <div class="col-sm-9">
+                        <div id="categoryList"> </div>
+                  </div>
+
+                  <div class="col-sm-3">
+                        <div id="yearsList">
+                        </div>
+                  </div>
+            </div>
+
+            <!--      <div class="row">
+                  <div class="col-sm-12">
+                        <h2>Disziplin</h2>
+                        <div id="disziplinList"> </div>
+
+                  </div>
+            </div>-->
+            <div class="row">
+                  <div class="col-sm-12">
+                        <a class="btn btn-primary" href="#" onclick="loadBestList()">Zur Bestenliste</a>
+                  </div>
+            </div>
+
+            <div class="row">
+                  <div class="col-sm-12" id="bestList">
+                        <div id="categoryList"> </div>
+                  </div>
+            </div>
+
+      </div>
+</body>
+
+</html>

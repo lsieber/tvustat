@@ -1,4 +1,27 @@
-input[type=radio] {
+
+body, container{
+  width:100%;
+}
+
+@media screen and (min-width: 768px) {
+  iframe{    
+    min-width:768px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+  iframe{ 
+    min-width:992px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+  iframe{    
+    min-width:1200px;
+    }
+}
+
+input[type=radio], input[type=checkbox] {
   /* position: absolute; */
   visibility: hidden;
   display: none;
@@ -13,19 +36,19 @@ label {
 }
 
 
-input[type=radio] + label {
+input[type=radio] + label, input[type=checkbox] + label {
   color: #9a929e;
   cursor: pointer;
 }
 
-input[type=radio]:checked + label {
+input[type=radio]:checked + label, input[type=checkbox]:checked + label{
   color: #ccc8ce;
   background: #675f6b;
 }
 
-input[type=radio]:hover + label {
+input[type=radio]:hover + label, input[type=checkbox]:hover + label {
   color: #ccc8ce;
-  background: #675f6b;
+  background: #7a737e;
 }
 
 /* label + input[type=radio] + label {

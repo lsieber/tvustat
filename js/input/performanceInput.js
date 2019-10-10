@@ -60,12 +60,13 @@ window.windInput = "windInput";
 window.rankingInput = "rankingInput";
 
 // INPUT FILE
-const inputFileFieldId = "inputFile";
-const performanceFileReader = new FileReaderPerformance(inputFileFieldId);
+window.inputFileFieldId = "inputFile";
+
+const performanceFileReader = new FileReaderPerformance();
 
 // OUTPUT FIELDS
 window.inserteationOutput = "inserteationOutput";
-
+window.counter = 0;
 /**
  * 
  */

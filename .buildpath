@@ -26,12 +26,7 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry excluding="bl/" kind="src" path="src/outp">
-		<attributes>
-			<attribute name="composer" value="source"/>
-		</attributes>
-	</buildpathentry>
-	<buildpathentry kind="src" path="src/outp/bl">
+	<buildpathentry kind="src" path="src/outp">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>

@@ -4,6 +4,7 @@ namespace tvustat;
 use config\dbAthletes;
 use config\dbTableDescription;
 use config\dbDisziplin;
+use config\dbCategory;
 
 class GetByID extends DbHandler
 {
@@ -21,7 +22,7 @@ class GetByID extends DbHandler
         $r = self::getQuerryResult($this->getTable(dbDisziplin::class), $id);
         return ($r == NULL) ? NULL : dbDisziplin::disziplinFromAsocArray($r, $this->conn);
     }
-
+    
     
 //     private function copetitionFromAsocArray($r)
 //     {

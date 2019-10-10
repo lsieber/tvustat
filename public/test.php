@@ -1,32 +1,45 @@
 <?php
 use tvustat\DBMaintainer;
 use config\dbPerformance;
+use config\dbBirthDateExeptions;
 require_once '../vendor/autoload.php';
 
-$_POST["type"] = "performance";
 
-// 11: Timo
-// 12: Lukas
-// 13: Marc
-$_POST[dbPerformance::ATHLETEID] = 13;
+$db = new DBMaintainer();
 
-// 10/11: Hochdorf
-// 12: Sarnen Frühling
-$_POST[dbPerformance::COMPETITOINID] = 11;
+$athleteName = "Timo Fahrenbruch";
+$birthDate = DateTime::createFromFormat("Y-m-d", "2002-11-30");
 
-// 3: Kids Cup
-// 4: Hürden
-// 9: 1000m
-// 13: Weit Zone
-// 14: 5x frei
-// 20: kugel
-$_POST[dbPerformance::DISZIPLINID] = 4;
+$test = dbBirthDateExeptions::isAthleteException($athleteName, $birthDate, $db->getConn());
 
-$_POST[dbPerformance::PERFORMANCE] = 16.1;
-$_POST[dbPerformance::WIND] = NULL;
-$_POST[dbPerformance::PLACE] = "1rt";
+echo "Result if Timo Exeption Exists = " . var_dump($test);
 
-include ('insertToDB.php');
+
+
+// $_POST["type"] = "performance";
+
+// // 11: Timo
+// // 12: Lukas
+// // 13: Marc
+// $_POST[dbPerformance::ATHLETEID] = 13;
+
+// // 10/11: Hochdorf
+// // 12: Sarnen Frï¿½hling
+// $_POST[dbPerformance::COMPETITOINID] = 11;
+
+// // 3: Kids Cup
+// // 4: Hï¿½rden
+// // 9: 1000m
+// // 13: Weit Zone
+// // 14: 5x frei
+// // 20: kugel
+// $_POST[dbPerformance::DISZIPLINID] = 4;
+
+// $_POST[dbPerformance::PERFORMANCE] = 16.1;
+// $_POST[dbPerformance::WIND] = NULL;
+// $_POST[dbPerformance::PLACE] = "1rt";
+
+// include ('insertToDB.php');
 
 // $answer_Post = json_decode($_POST);
 // var_dump($answer_Post);

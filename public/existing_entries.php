@@ -1,4 +1,4 @@
-<?php
+    <?php
 use tvustat\DBMaintainer;
 use tvustat\DisziplinNameOnly;
 use tvustat\AthleteNameOnly;
@@ -16,6 +16,9 @@ $disziplin_exists = ($_POST['type'] == 'disziplinExists') ? TRUE : FALSE;
 $athlete_exists = ($_POST['type'] == 'athleteExists') ? TRUE : FALSE;
 $competition_exists = ($_POST['type'] == 'competitionExists') ? TRUE : FALSE;
 
+
+$competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
+
 $allCompetitions = ($_POST['type'] == 'allCompetitions') ? TRUE : FALSE;
 $allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
 $allCompetitionLocations = ($_POST['type'] == 'allCompetitionLocations') ? TRUE : FALSE;
@@ -23,6 +26,8 @@ $allAgeCategories = ($_POST['type'] == 'allAgeCategories') ? TRUE : FALSE;
 $allCategories = ($_POST['type'] == 'allCategories') ? TRUE : FALSE;
 $allDisziplins = ($_POST['type'] == 'allDisziplins') ? TRUE : FALSE;
 $allAthletes = ($_POST['type'] == 'allAthletes') ? TRUE : FALSE;
+$allYears = ($_POST['type'] == 'allYears') ? TRUE : FALSE;
+
 
 $db = new DBMaintainer();
 
@@ -68,6 +73,12 @@ if ($competition_exists) {
     );
     echo json_encode($result);
 }
+
+if ($allCompetitions) {
+    var_dump($_POST["years"]);
+    echo json_encode($db->getCompetitionsForYear($_POST["years"]));
+}
+
 if ($allCompetitions) {
     echo json_encode($db->getAllCompetitions());
 }
@@ -92,5 +103,9 @@ if ($allDisziplins) {
 
 if ($allAthletes) {
     echo json_encode($db->getAllAthletes());
+}
+
+if ($allYears) {
+    echo json_encode($db->getAllYears());
 }
 ?>

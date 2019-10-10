@@ -12,6 +12,7 @@ use tvustat\CompetitionOnlyIds;
 use tvustat\DBMaintainer;
 use tvustat\Disziplin;
 use tvustat\QuerryOutcome;
+use tvustat\TimeUtils;
 
 require_once '../vendor/autoload.php';
 
@@ -61,7 +62,10 @@ if ($insert_athlete) {
     /**
      * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
      */
-    echo json_encode($db->addAthlete($athlete)->getJSONArray());
+    $querry =$db->addAthlete($athlete);
+    $querry->putCustomValue(dbAthletes::FULLNAME, $_POST[dbAthletes::FULLNAME]);
+    $querry->putCustomValue(dbAthletes::DATE, $_POST[dbAthletes::DATE]);
+    echo json_encode($querry->getJSONArray());
 }
 
 if ($insert_competionName) {
@@ -97,9 +101,11 @@ if ($insert_performance) {
 
         $disziplin = $db->getDisziplin($_POST[dbPerformance::DISZIPLINID]);
         $athlete = $db->getAthlete($_POST[dbPerformance::ATHLETEID]);
+        
+        $perfModified = ($disziplin->isTime())? TimeUtils::time2seconds($_POST["performance"]):$_POST["performance"];
 
-        $minValueOk = $_POST["performance"] >= $disziplin->getMinValue();
-        $maxValueOk = $_POST["performance"] <= $disziplin->getMaxValue();
+        $minValueOk = $perfModified >= $disziplin->getMinValue();
+        $maxValueOk = $perfModified <= $disziplin->getMaxValue();
 
         $teamTypeMatches = $athlete->getTeamType()->getId() == $disziplin->getTeamType()->getId();
 

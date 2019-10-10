@@ -44,7 +44,7 @@ export function insertPerformanceWithData(params, athlete, disziplin) {
         var minValue = parseFloat(disziplin["minVal"]);
         var maxValue = parseFloat(disziplin["maxVal"]);
 
-        var performanceValue = params.performance;
+        var performanceValue = convert(params.performance);
         if (performanceValue < minValue || performanceValue > maxValue) {
             alert("The Value " + performanceValue + " exteeds the limit for the disziplin " + disziplin["disziplinName"] + " which are: min=" + minValue + ", max=" + maxValue);
         } else if (disziplin["teamTypeID"] !== athlete["teamTypeID"]) {
@@ -68,8 +68,25 @@ export function insertPerformanceWithData(params, athlete, disziplin) {
                     if (data["fromFile"] != null) {
                         changeValueInArray(window.inputPerformanceStore, data["fromFile"], "inserted", true);
                     }
+                    window.counter = window.counter + 1;;
 
                 }, "json");
         }
+    }
+
+    function convert(time) {
+        if(typeof time == 'number'){
+            return time;
+        }
+        var parts = time.split(':');
+        if (parts.length == 1) {
+            return time;
+        }
+        if (parts.length == 2) {
+            var minutes = +parts[0];
+            var seconds = +parts[1];
+            return (minutes * 60 + seconds).toFixed(2);
+        }
+        return null;
     }
 }

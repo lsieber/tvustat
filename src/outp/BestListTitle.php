@@ -1,6 +1,8 @@
 <?php
 namespace tvustat;
 
+use config\CategoryControl;
+
 class BestListTitle
 {
 
@@ -9,9 +11,9 @@ class BestListTitle
     const typeRecord = "Rekord";
 
     // Input values
-    private $category;
+    private $categoryControl;
 
-    private $gender;
+    private $category;
 
     private $year;
 
@@ -24,10 +26,10 @@ class BestListTitle
 
     private $titleParts;
 
-    public function __construct(array $category, Gender $gender, array $year, $top, $disziplin)
+    public function __construct(string $categoryControl, array $category, array $year, $top, $disziplin)
     {
+        $this->categoryControl = $categoryControl;
         $this->category = $category;
-        $this->gender = $gender;
         $this->year = $year;
         $this->top = $top;
         $this->disziplin = $disziplin;
@@ -40,9 +42,9 @@ class BestListTitle
 
         array_push($this->titleParts, $this->getKatGenderString());
         array_push($this->titleParts, $this->getYearString());
-        if ($this->getTopString() != "") {
-            array_push($this->titleParts, $this->getTopString());
-        }
+//         if ($this->getTopString() != "") {
+//             array_push($this->titleParts, $this->getTopString());
+//         }
         $this->title = implode(", ", $this->titleParts);
     }
 
@@ -54,38 +56,25 @@ class BestListTitle
 
     private function getKatGenderString()
     {
-        $sex = $this->gender->getName(); // TODO use German version
-        
         $kat = "";
-        foreach ($this->category as $key => $one_kat) {
-            $kat .= ($key == 0) ? "" : ", ";
-            $kat .= $one_kat->getName();
-//             if ($one_kat == Categories::ADULTKEYSTRING) {
-//                 // TODO clean this up not hard coded
-//                 switch ($this->gender->getNumericalValue()) {
-//                     case 3:
-//                         $kat = "Frauen und Männer";
-//                         break;
-//                     case 1:
-//                         $kat = "Frauen";
-//                         break;
-//                     case 2:
-//                         $kat = "Männer";
-//                         break;
-//                     default:
-//                         echo "Keine Kategorie gewaehlt";
-//                 }
-//                 $sex = "";
-//             } else {
-//                 $kat .= $one_kat;
-//             }
-//         }
-//         if ($this->category[0] == Categories::ALL) {
-//             $kat = "Alle Kategorien ";
-//         }
-
+        switch ($this->categoryControl) {
+            case CategoryControl::ALL:
+                $kat = "Alle Kategorien";
+                break;
+            case CategoryControl::MEN:
+                $kat = "Alle Männer";
+                break;
+            case CategoryControl::WOMEN:
+                $kat = "Alle Frauen";
+                break;
+            default:
+                foreach ($this->category as $key => $one_kat) {
+                    $kat .= ($key == 0) ? "" : " & ";
+                    $kat .= $one_kat->getName();
+                }
+                break;
         }
-        return $kat . $sex;
+        return $kat;
     }
 
     private function getYearString()

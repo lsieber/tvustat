@@ -41,7 +41,13 @@ class Performance extends DBTableEntry
      */
     private $competition;
 
-    public function __construct(Disziplin $disziplin, Athlete $athlete, Competition $competition, float $performance, float $wind = NULL, string $ranking = NULL, int $id = NULL)
+    /**
+     *
+     * @var string
+     */
+    private $detail;
+
+    public function __construct(Disziplin $disziplin, Athlete $athlete, Competition $competition, float $performance, float $wind = NULL, string $ranking = NULL, int $id = NULL, string $detail = NULL)
     {
         $this->performance = $performance;
         $this->wind = $wind;
@@ -51,6 +57,7 @@ class Performance extends DBTableEntry
         $this->competition = $competition;
         if ($id != NULL)
             $this->setId($id);
+        $this->detail = $detail;
     }
 
     public function print()
@@ -111,6 +118,33 @@ class Performance extends DBTableEntry
     public function getCompetition()
     {
         return $this->competition;
+    }
+
+    /**
+     *
+     * @return float | null
+     */
+    public function getWind()
+    {
+        return $this->wind;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getPlacement()
+    {
+        return $this->ranking;
+    }
+
+    /**
+     *
+     * @return string | NULL
+     */
+    public function getDetail()
+    {
+        return $this->detail;
     }
 }
 
