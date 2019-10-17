@@ -1,31 +1,11 @@
 <?php
 namespace tvustat;
 
-use config\DefaultSettings;
-
 class BestList
 {
 
     // mandatory varibales
     private $bestList = array();
-
-    // Formating Variables
-    private $formatTime;
-
-    private $top;
-
-    // additional variables
-    private $html;
-
-    private $txt;
-
-    private function __construct( //
-    string $dateFormat = DefaultSettings::DATEFORMAT, //
-    bool $topAllValues = DefaultSettings::TOPALLVAALUES) //
-    {
-        $this->dateFormat = $dateFormat;
-        $this->top = $topAllValues;
-    }
 
     public static function empty()
     {
@@ -90,98 +70,53 @@ class BestList
         return ($a->getDisziplin()->getOrderNumber() < $b->getDisziplin()->getOrderNumber()) ? - 1 : 1;
     }
 
-    public function keepBestPerformancePerPerson()
+    public function keepBestPerformancePerPerson(array $teamTypes)
     {
-        foreach ($this->bestList as $disBestList) {
-            $this->keepBestPerformance($disBestList);
+        if (sizeof($teamTypes) > 0) {
+            foreach ($this->bestList as $disBestList) {
+                $this->keepBestPerformance($disBestList, $teamTypes);
+            }
         }
     }
-    
-    private function keepBestPerformance(DisziplinBestList $disBestList) {
-        if ($disBestList->getDisziplin()->getTeamType()->getId() == 1) { // TODO define at other place
+
+    private function keepBestPerformance(DisziplinBestList $disBestList, array $teamTypes)
+    {
+        if (in_array($disBestList->getDisziplin()
+            ->getTeamType()
+            ->getId(), $teamTypes)) {
             $disBestList->keepBestPerformancePerPerson();
         }
     }
 
-    // *************
-    // OUTPUT
-    // *************
-    public function createHTMLBestList(CategoryUtils $categoryUtils)
+    public function keepBestPerAthleteAndYear(array $teamTypes)
     {
-        $this->html = "<div class='table-responsiv'><table class='table table-striped'>";
-        $this->html .= HtmlGenerator::htmlTableBestListHeader();
-        $this->html .= "<tbody>";
-        foreach ($this->bestList as $disBestList) {
-            $this->html .= HtmlGenerator::htmlOfDisziplinBestListForTableBestList($disBestList, $categoryUtils);
-        }
-        $this->html .= "</tbody></table></div> ";
-        return $this->html;
-    }
-
-    public function createHTMLRecord()
-    {   
-        $this->html = "<div class='table-responsiv'><table table-striped>";
-        $this->html .= HtmlGenerator::htmlTableRecordtHeader();
-        $this->html .= "<tbody>";
-        foreach ($this->bestList as $disBestList) {
-            $this->html .= HtmlGenerator::htmlOfDisziplinBestListForRecordTable($disBestList);
-        }
-        $this->html .= "</tbody></table></div> ";
-        return $this->html;
-    }
-
-    public function createTXT($path, $title)
-    {
-        $myfile = fopen($path, "w") or die("Unable to open file!");
-        fwrite($myfile, "\r\n");
-        fwrite($myfile, $title . "\t\t" . "Erstellt am: " . date("d.m.Y") . "\r\n");
-
-        foreach ($this->bestList as $DisziplinBestList) {
-            fwrite($myfile, "\n");
-            fwrite($myfile, utf8_decode($DisziplinBestList->getDisziplin()->getName() . "\n"));
-            foreach ($DisziplinBestList->getTopList() as $performance) {
-                // Change Information in Best List .TXT HERE!!!
-                $a = implode("\t ", array(
-                    $performance->getPerson()->getFullName(),
-                    $performance->getFormatedPerformance()
-                ));
-                fwrite($myfile, utf8_decode($a . "\n"));
+        if (sizeof($teamTypes) > 0) {
+            foreach ($this->bestList as $disBestList) {
+                $this->keepBestAthleteAndYear($disBestList, $teamTypes);
             }
         }
-        fclose($myfile);
-        return "Success: Text File Created!";
     }
 
-    public function printBestLIst()
+    private function keepBestAthleteAndYear(DisziplinBestList $disBestList, array $teamTypes)
     {
-        foreach ($this->bestList as $disBestList) {
-            $disBestList->printBestList();
-            echo "<br>";
+        if (in_array($disBestList->getDisziplin()
+            ->getTeamType()
+            ->getId(), $teamTypes)) {
+            $disBestList->keepBestAthleteAndYear();
         }
     }
 
     // ****************
     // GETTERS AND SETTERS
     // ****************
-    /**
-     *
-     * @return bool
-     */
-    public function getTop()
-    {
-        return $this->top;
-    }
 
     /**
      *
-     * @param bool $top
+     * @return array DisziplinBestList
      */
-    public function setTop($top)
+    public function getDisziplinBestLists()
     {
-        $this->top = $top;
-        foreach ($this->bestList as $disBestList) {
-            $disBestList->setTop($top);
-        }
+        return $this->bestList;
     }
 }
 

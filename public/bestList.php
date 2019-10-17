@@ -8,6 +8,26 @@ require_once '../vendor/autoload.php';
 
 $db = new DBMaintainer();
 
+
+/**
+ * TESTING VALUES
+ */
+// $_POST["top"] = 15;
+// $_POST["years"] = array(2019, 2018, 2017, 2016);
+// $_POST["categories"] = array(1,2,3, 4, 5, 6);
+// $_POST["categoryControl"] = "multiple";
+// $_POST["keepTeam"] = "YEARATHLETE";
+// $_POST["keepPerson"] = "ATHLETE";
+// $_POST["disziplins"] = array(5,6,7);
+
+/**
+ * END OF TESTING VALUES
+ */
+
+/**
+ * Start Of the imput of values from the POST Variable whith the required tests of the variables 
+ */
+
 $years = $_POST["years"];
 
 $categoryIDs = $_POST["categories"];
@@ -18,26 +38,53 @@ foreach ($categoryIDs as $key => $id) {
     $categories[$key] = $db->getConn()->getCategory($id);
 }
 
-// $male = $db->getConn()->getGender(1);
+$top = $_POST["top"];
 
-// $U16 = new AgeCategory("U16", "U16", 14, 15, 4);
-// $U18 = new AgeCategory("U18", "U18", 16, 17, 5);
-// $Aktiv = new AgeCategory("aktiv", "aktiv", 23, 100, 8);
+/* Values:
+ * ALL: keeps all values of an athlete for all years
+ * ATHLETE: keeps best per Athlete not woriing about the year (personal bests)
+ * YEARATHLETE: keeps best per Athlete and year. This results in a list which has all saison bests in it for each athlete
+ */ 
+$keepTeam = $_POST["keepTeam"];
+$keepPerson = $_POST["keepPerson"];
+$keepAthlete = array();
+$keepYearAthlete = array();
+switch ($keepPerson) {
+    case "ALL":
+        break;
+    case "ATHLETE":
+        array_push($keepAthlete, 1); // TEAM TYPE 1 for the team
+        break;
+    case "YEARATHLETE":
+        array_push($keepYearAthlete, 1); // TEAM TYPE 1 for the team
+        break;
+    default:
+        echo "ERROR WE COULD NOT FIND THE DEFINED VALUE". $keepTeam;
+        break;
+}
+switch ($keepTeam) {
+    case "ALL":
+    break;
+    case "ATHLETE":
+        array_push($keepAthlete, 2); // TEAM TYPE 2 for the team
+        break;
+    case "YEARATHLETE":
+        array_push($keepYearAthlete, 2); // TEAM TYPE 2 for the team
+        break;
+    default:
+        echo "ERROR WE COULD NOT FIND THE DEFINED VALUE". $keepTeam;
+    break;
+}
 
-// $U16M = new Category($U16, $male, "U16M", "Jugend B", 0);
-// $U18M = new Category($U18, $male, "Männer", "Jugend A", 0);
-// $man = new Category($Aktiv, $male, "Männer", "Männer", 0);
-// $categories = array(
-// $man, $U16M, $U18M
-// );
 
-$top = 1000; // COULD BE DONE SOMEWHEN
-
-$disziplins = array(); // DOES NOT MATHER YET
-
+$disziplins = (array_key_exists("disziplins", $_POST)) ? $_POST["disziplins"] : array();
 $blh = new BestListHandler($years, $categoryControl, $categories, $top, $disziplins, $db);
 
 $blh->callDB();
-$blh->formatBestList();
+$blh->formatBestList($keepAthlete, $keepYearAthlete);
 $blh->printTable();
+$blh->createTXT();
+
+
+
 

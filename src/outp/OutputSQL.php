@@ -57,7 +57,7 @@ class OutputSQL
         $sql .= " INNER JOIN " . dbDisziplin::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
         $sql .= " INNER JOIN " . dbAthletes::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::ATHLETEID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
         $sql .= " LEFT JOIN " . dbPerformanceDetail::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::ID . " = " . dbPerformanceDetail::DBNAME . "." . dbPerformanceDetail::PERFORMANCEID;
-        
+
         $sql .= " INNER JOIN " . dbCompetitionLocations::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::LOCATIONID . " = " . dbCompetitionLocations::DBNAME . "." . dbCompetitionLocations::ID;
         $sql .= " INNER JOIN " . dbCompetitionNames::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::NAMEID . " = " . dbCompetitionNames::DBNAME . "." . dbCompetitionNames::ID;
         return $sql;
@@ -134,7 +134,7 @@ class OutputSQL
             $sql .= $category->getId() . "=" . dbAthletes::CATEGORY;
         }
         $sql .= ") AND ";
-        
+
         return $sql;
     }
 
@@ -152,10 +152,10 @@ class OutputSQL
     private static function disziplins($disziplins)
     {
         $sql = "";
-        $AllDisziplins = TRUE; // TODO here you can add a Statement when that not all disziplin should be considered
+        $AllDisziplins = sizeof($disziplins) == 0; // TODO here you can add a Statement when that not all disziplin should be considered
         if (! $AllDisziplins) {
             $list = implode(",", $disziplins);
-            $sql .= " AND " . dbPerformance::DISZIPLINID . " IN (" . $list . ")";
+            $sql .= " AND " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " IN (" . $list . ")";
         }
 
         return $sql;

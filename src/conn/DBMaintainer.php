@@ -11,6 +11,7 @@ use config\dbDisziplin;
 use config\dbAthletes;
 use config\dbPerformance;
 use config\dbBirthDateExeptions;
+use config\dbOutputCategory;
 
 class DBMaintainer
 {
@@ -194,6 +195,11 @@ class DBMaintainer
         return $this->getById->disziplin($id);
     }
     
+    public function getCompetition(int $id)
+    {
+        return $this->getById->competition($id);
+    }
+    
 
     /**
      * GETTERS
@@ -227,10 +233,25 @@ class DBMaintainer
     public function getCompetitionsForYear(array $years){
         $sql = self::getCompetitionSQl();
         $list = implode(",", $years);
-        $sql .= " EXTRACT(YEAR FROM " . dbCompetition::DATE . ") IN (" . $list . ")";
-        echo $sql;
+        $sql .= " WHERE EXTRACT(YEAR FROM " . dbCompetition::DATE . ") IN (" . $list . ") ORDER BY ". dbCompetition::DATE;
+        $r= self::changeDateType($this->conn->executeSqlToArray($sql),dbCompetition::DATE);
+        
+        foreach ($r as $k=>$v){
+            $r[$k]["numberPerformances"] = self::countNumberPerformancesForCompetition($v[dbCompetition::ID]);
+        }
+        
+        return $r;
     }
-
+    
+    private function countNumberPerformancesForCompetition(int $competitionID){
+        $sql = 'SELECT COUNT(*) FROM '.dbPerformance::DBNAME.' WHERE '.dbPerformance::COMPETITOINID.' = '.$competitionID;
+        return $this->conn->executeSqlToArray($sql)[0]["COUNT(*)"];
+    }
+    private function countNumberPerformancesForCompetitionAndCat(int $competitionID, AgeCategory $ageCat){
+        $sql = 'SELECT COUNT(*) FROM '.dbPerformance::DBNAME.' WHERE '.dbPerformance::COMPETITOINID.' = '.$competitionID;
+        return $this->conn->executeSqlToArray($sql)[0]["COUNT(*)"];
+    }
+    
     public function getAllCompetitionLocations()
     {
         return $this->conn->executeSqlToArray("SELECT * From " . dbCompetitionLocations::DBNAME);
@@ -253,6 +274,11 @@ class DBMaintainer
         return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbCategory::ORDER);
     }
 
+    public function getAllOutputCategories()
+    {
+        $sql = "SELECT * From " . dbOutputCategory::DBNAME;
+        return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbOutputCategory::ORDER);
+    }
     public function getAllDisziplins()
     {
         $sql = "SELECT * From " . dbDisziplin::DBNAME;

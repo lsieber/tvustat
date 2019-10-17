@@ -1,10 +1,10 @@
 <?php
 
 namespace tvustat;
-trait RecordsColumnDefinition
+class RecordsColumnDefinition
 {
 
-    protected static function recordHeaders()
+    public static function recordHeaders()
     {
         return array( //
             "Leistung",
@@ -15,7 +15,7 @@ trait RecordsColumnDefinition
         );
     }
 
-    protected static function recordElements(Performance $performance)
+    public static function recordElements(Performance $performance)
     {
         return array( //
             $performance->getDisziplin()->getName(),
@@ -26,12 +26,8 @@ trait RecordsColumnDefinition
         );
     }
 
-    protected static function numberRecordElements()
+    public static function numberRecordElements()
     {
-        // $person = new Person("", "", 0, 0, 0);
-        // $comp = new Competition("", "", new DateTime('now'));
-        // $disziplin = new Disziplin("", 1, 0, 1);
-        // return sizeof(HtmlGenerator::bestListElements(new Performance(0, $disziplin, $person, $comp)));
         return sizeof(self::recordHeaders());
     }
 }

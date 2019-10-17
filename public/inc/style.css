@@ -62,3 +62,23 @@ input[type=radio]:hover + label, input[type=checkbox]:hover + label {
   border-radius: 10px;
   overflow: hidden;
 }
+
+/* SETTINGS BUTTON*/
+.btn-setting {
+  background-color: #ffcc00;
+  color: #fcfcfc;
+
+}
+
+.btn-setting:hover {
+  background-color: #ffcc00;
+  color: #cc6633;
+}
+
+
+
+/* CHECKBOX CONTROL*/
+.checkbox-control + input[type=radio]:checked{
+  background: #88844d;
+
+}

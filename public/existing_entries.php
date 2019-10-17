@@ -9,6 +9,7 @@ use tvustat\CompetitionLocation;
 use tvustat\CompetitionName;
 use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
+use tvustat\CompetitoinBestList;
 
 require_once '../vendor/autoload.php';
 
@@ -18,12 +19,14 @@ $competition_exists = ($_POST['type'] == 'competitionExists') ? TRUE : FALSE;
 
 
 $competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
+$performancesForCompetitoin = ($_POST['type'] == 'competitionList') ? TRUE : FALSE;
 
 $allCompetitions = ($_POST['type'] == 'allCompetitions') ? TRUE : FALSE;
 $allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
 $allCompetitionLocations = ($_POST['type'] == 'allCompetitionLocations') ? TRUE : FALSE;
 $allAgeCategories = ($_POST['type'] == 'allAgeCategories') ? TRUE : FALSE;
 $allCategories = ($_POST['type'] == 'allCategories') ? TRUE : FALSE;
+$allOutputCategories = ($_POST['type'] == 'allOutputCategories') ? TRUE : FALSE;
 $allDisziplins = ($_POST['type'] == 'allDisziplins') ? TRUE : FALSE;
 $allAthletes = ($_POST['type'] == 'allAthletes') ? TRUE : FALSE;
 $allYears = ($_POST['type'] == 'allYears') ? TRUE : FALSE;
@@ -74,8 +77,7 @@ if ($competition_exists) {
     echo json_encode($result);
 }
 
-if ($allCompetitions) {
-    var_dump($_POST["years"]);
+if ($competitionsInYear) {
     echo json_encode($db->getCompetitionsForYear($_POST["years"]));
 }
 
@@ -96,6 +98,9 @@ if ($allAgeCategories) {
 if ($allCategories) {
     echo json_encode($db->getAllCategories());
 }
+if ($allOutputCategories) {
+    echo json_encode($db->getAllOutputCategories());
+}
 
 if ($allDisziplins) {
     echo json_encode($db->getAllDisziplins());
@@ -107,5 +112,13 @@ if ($allAthletes) {
 
 if ($allYears) {
     echo json_encode($db->getAllYears());
+}
+
+if ($performancesForCompetitoin) {
+    $competitionID = $_POST["competitionID"];
+    $bl = new CompetitoinBestList($competitionID, $db);
+    $bl->callDB();
+    $bl->formatBestList();
+    $bl->printTable();
 }
 ?>

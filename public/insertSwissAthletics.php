@@ -9,7 +9,7 @@ use tvustat\Performance;
 use tvustat\TimeUtils;
 use tvustat\DateFormatUtils;
 
-$year = 2016;
+$year = 2015;
 
 $path = '../data/' . $year . '/resultsByAthlete/';
 // $files = scandir($path);

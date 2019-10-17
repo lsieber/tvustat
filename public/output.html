@@ -34,8 +34,14 @@
 
 
             <div class="row">
+              <!--  <div class="col-sm-9">
+                        <div id="outputCategoryList"> </div>
+                  </div>-->  
                   <div class="col-sm-9">
+
                         <div id="categoryList"> </div>
+                        <a class="btn btn-setting" href="#" onclick="changeCatList()">ChangeKatList</a>
+
                   </div>
 
                   <div class="col-sm-3">
@@ -51,11 +57,36 @@
 
                   </div>
             </div>-->
+
             <div class="row">
-                  <div class="col-sm-12">
-                        <a class="btn btn-primary" href="#" onclick="loadBestList()">Zur Bestenliste</a>
+                  <div id="additionalSettings" class="collapse">
+
+                        <div class="col-sm-3">
+                              Alle Resultate pro Athlet
+                              Bestes Resultat pro Athlet
+                        </div>
+
+                        <div class="col-sm-3">
+                              Anzahl Resultate pro Disziplin
+
+                        </div>
+
+                        <div class="col-sm-3">
+                              Alle
+                              Disziplin
+                        </div>
                   </div>
             </div>
+
+            <div class="row">
+                  <div class="col-sm-12">
+                        <a class="btn btn-setting" href="#" onclick="loadBestList()">Bestenliste</a>
+                        <button class="btn btn-setting" data-toggle="collapse"
+                              data-target="#additionalSettings">Einstellungen</button>
+                  </div>
+            </div>
+
+
 
             <div class="row">
                   <div class="col-sm-12" id="bestList">

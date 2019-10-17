@@ -1,6 +1,8 @@
 <?php
 namespace tvustat;
 
+use config\Top;
+
 class DisziplinBestListRaw
 {
 
@@ -25,7 +27,7 @@ class DisziplinBestListRaw
     // ADD AND REMOVE ELEMENTS
     // *********************
     /**
-     * 
+     *
      * @param Performance $performance
      */
     public function addPerformance(Performance $performance)
@@ -41,7 +43,7 @@ class DisziplinBestListRaw
     }
 
     /**
-     * 
+     *
      * @param int $performanceId
      */
     public function removePerformanceById(int $performanceId)
@@ -54,7 +56,7 @@ class DisziplinBestListRaw
     }
 
     /**
-     * 
+     *
      * @param DisziplinBestListRaw $disziplinBestList
      * @return boolean
      */
@@ -72,6 +74,22 @@ class DisziplinBestListRaw
     // *********************
     // GETTERS
     // *********************
+
+    /**
+     *
+     * @param int $top
+     *            if top is null the complete best list is given else the first $top elements of the list
+     * @return array|\tvustat\Performance[]
+     */
+    public function getTopList(int $top = NULL)
+    {
+//         echo "</br> TOP Parameter  = " . $top . " </br>";
+        if ($top != NULL and $top > 0) {
+            return array_slice($this->performances, 0, $top);
+        }
+        return $this->performances;
+    }
+
     /**
      *
      * @return Disziplin

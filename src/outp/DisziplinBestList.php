@@ -98,13 +98,35 @@ class DisziplinBestList extends DisziplinBestListRaw
             $this->removePerformanceById($performanceToRemove);
         }
     }
-
-    public function getTopList()
-    {
-        if ($this->top != DefaultSettings::TOPALLVAALUES and $this->top >= 0) {
-            return array_slice($this->performances, 0, $this->top);
+    
+    public function keepBestAthleteAndYear(){
+        $bestPerfPerPerson = array();
+        $performancesToRemove = array();
+        $perfId2Key = array();
+        
+        foreach ($this->performances as $key => $performance) {
+            $perfId2Key[$performance->getId()] = $key;
+            // Adding the year to the athlete id distinuishes the results of the different years.
+            $athYearId = strval($performance->getAthlete()->getId()) . DateFormatUtils::formatDateaAsYear($performance->getCompetition()->getDate());
+            if (array_key_exists($athYearId, $bestPerfPerPerson)) {
+                $bestPerformance = $bestPerfPerPerson[$athYearId];
+                // If there exists no other result which is as good as the current one and in the same year
+                if (DisziplinBestList::cmp($bestPerformance, $performance) > 0) {
+                    array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                    $bestPerfPerPerson[$athYearId] = $performance;
+                    // If there exists already a better result for that athlete in this year
+                } else {
+                    array_push($performancesToRemove, $key);
+                }
+                // If there exists no result for this athlete in this year
+            } else {
+                $bestPerfPerPerson[$athYearId] = $performance;
+            }
         }
-        return $this->performances;
+        // remove all the supperficial results
+        foreach ($performancesToRemove as $performanceToRemove) {
+            $this->removePerformanceById($performanceToRemove);
+        }
     }
 
     // ********************
@@ -114,36 +136,14 @@ class DisziplinBestList extends DisziplinBestListRaw
     /*
      * CONSOLE PRINT OUT
      */
-    public function printBestList()
+    public function printBestList($top = NULL)
     {
         echo "<br>";
         echo $this->disziplin->getName();
-        foreach ($this->getTopList() as $performance) {
+        foreach ($this->getTopList($top) as $performance) {
             echo "<br>";
             $performance->print();
         }
-    }
-
-    // ********************
-    // GETTERS And SETTERS
-    // ********************
-
-    /**
-     *
-     * @return boolean
-     */
-    public function isTop()
-    {
-        return $this->top;
-    }
-
-    /**
-     *
-     * @param boolean $top
-     */
-    public function setTop($top)
-    {
-        $this->top = $top;
     }
 }
 
