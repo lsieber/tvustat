@@ -18,7 +18,6 @@ class dbConfig
         ));
     }
 
-
     private function loadDBTableDescriptions(array $tableDecriptions)
     {
         foreach ($tableDecriptions as $desc) {
@@ -41,7 +40,7 @@ class dbConfig
     }
 
     /**
-     * 
+     *
      * @param string $className
      * @return NULL|dbTableDescription
      */

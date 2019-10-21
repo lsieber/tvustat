@@ -1,5 +1,6 @@
 
 import { addValueToArrayStorage } from "./SessionStorageHandler.js";
+import { CompetitionForm } from "./CompetitionForm.js";
 
 
 /** ********************************************************
@@ -18,6 +19,8 @@ export function loadCompetitions() {
             createCompetitionList(data);
         }
     }, "json");
+    // var competitionModal = new CompetitionForm("newCompetition", "nameField", "disNameField", "disNameIdField", "locationField", "disLocField", "disLocIdField", "dateField");
+    // competitionModal.
 }
 
 
@@ -122,6 +125,32 @@ export function loadAthletes(/*categoryID, year*/) {
 function createAthleteList(values) {
     var html = createRadioSelectorsHtml(values, "athleteID", ["fullName"], window.athleteRadioName, "ath", "athlete", window.athleteRadios);
     document.getElementById(window.athleteList).innerHTML = html;
+}
+
+
+/** ********************************************************
+ * CREAT Source LISTING
+* ********************************************************/
+
+
+export function loadSources() {
+    $.post(window.existingEntriesFile, { type: "allSources" }, function (data) {
+        for (const key in data) {
+            var v = data[key];
+            v["storeID"] = key;
+            addValueToArrayStorage(window.athleteStore, key, v);
+        }
+        createSourceSelector(data);
+    }, "json");
+}
+
+
+function createSourceSelector(data) {
+    var html = '<select class="form-control" id="sources">';
+    for (const key in data) {
+        html += '<option value='+data[key]["sourceID"]+'>'+ data[key]["sourceName"]+ '</option>';
+    }
+    document.getElementById("sourceInput").innerHTML = html + '</select>';
 }
 
 

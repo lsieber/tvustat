@@ -3,7 +3,7 @@ namespace tvustat;
 
 use config\dbPerformance;
 
-class CompetitoinBestList
+class CompetitionBestList
 {
 
     // Internal Variables
@@ -18,7 +18,7 @@ class CompetitoinBestList
     public function __construct(int $competitionId, DBMaintainer $db)
     {
         $this->db = $db;
-        $this->sql = CompetitionOutputSQL::create($competitionId);
+        $this->sql = SpecialOutputSQL::createCompetition($competitionId);
 //         echo $this->sql;
         $competition = $db->getCompetition($competitionId);
         $this->title = "Resultate für Wettkampf: " . $competition->getName()->getCompetitionName() . //

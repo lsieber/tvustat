@@ -7,6 +7,8 @@ use config\dbSorting;
 use config\dbTeamTypes;
 use config\dbCategory;
 use config\dbAgeCategory;
+use config\dbPerformanceSource;
+use config\dbPointSchemeNames;
 
 class ConnectionPreloaded extends Connection
 {
@@ -47,6 +49,17 @@ class ConnectionPreloaded extends Connection
      */
     protected $ageCategories = array();
 
+    /**
+     *
+     * @var array
+     */
+    protected $sources = array();
+
+    /**
+     * 
+     */
+    protected $pointSchemeNames = array();
+    
     public function __construct()
     {
         parent::__construct();
@@ -56,6 +69,8 @@ class ConnectionPreloaded extends Connection
         $this->loadSorting();
         $this->loadAgeCategories();
         $this->loadCategories();
+        $this->loadSources();
+        $this->loadPointSchemeNames();
     }
 
     private function loadGenders()
@@ -114,12 +129,30 @@ class ConnectionPreloaded extends Connection
         }
     }
 
+    private function loadSources()
+    {
+        $sql = "SELECT * From " . dbPerformanceSource::DBNAME;
+        $array = $this->executeSqlToArray($sql);
+        foreach ($array as $v) {
+            $this->sources[$v[dbPerformanceSource::ID]] = dbPerformanceSource::sourceFromAssocArray($v);
+        }
+    }
+    
+    private function loadPointSchemeNames()
+    {
+        $sql = "SELECT * From " . dbPointSchemeNames::DBNAME;
+        $array = $this->executeSqlToArray($sql);
+        foreach ($array as $v) {
+            $this->pointSchemeNames[$v[dbPointSchemeNames::ID]] = $v;
+        }
+    }
+
     /**
      *
      * @param int $id
      * @return Gender or null if the $id does not exist in the range of possible genders
      */
-    public function getGender($id)
+    public function getGender(int $id)
     {
         return (isset($this->genders[$id])) ? $this->genders[$id] : null;
     }
@@ -129,7 +162,7 @@ class ConnectionPreloaded extends Connection
      * @param int $id
      * @return TeamType or null if the $id does not exist in the range of possible genders
      */
-    public function getTeamType($id)
+    public function getTeamType(int $id)
     {
         return (isset($this->teamTypes[$id])) ? $this->teamTypes[$id] : null;
     }
@@ -139,7 +172,7 @@ class ConnectionPreloaded extends Connection
      * @param int $id
      * @return TeamType or null if the $id does not exist in the range of possible genders
      */
-    public function getDisziplinType($id)
+    public function getDisziplinType(int $id)
     {
         return (isset($this->disziplinTypes[$id])) ? $this->disziplinTypes[$id] : null;
     }
@@ -149,7 +182,7 @@ class ConnectionPreloaded extends Connection
      * @param int $id
      * @return AgeCategory or null if the $id does not exist in the range of possible genders
      */
-    public function getAgeCategory($id)
+    public function getAgeCategory(int $id)
     {
         return (isset($this->ageCategories[$id])) ? $this->ageCategories[$id] : null;
     }
@@ -159,7 +192,7 @@ class ConnectionPreloaded extends Connection
      * @param int $id
      * @return Category or null if the $id does not exist in the range of possible genders
      */
-    public function getCategory($id)
+    public function getCategory(int $id)
     {
         return (isset($this->categories[$id])) ? $this->categories[$id] : null;
     }
@@ -169,9 +202,19 @@ class ConnectionPreloaded extends Connection
      * @param int $id
      * @return Sorting or null if the $id does not exist in the range of possible genders
      */
-    public function getSorting($id)
+    public function getSorting(int $id)
     {
         return (isset($this->sortings[$id])) ? $this->sortings[$id] : null;
+    }
+
+    /**
+     *
+     * @param int $id
+     * @return PerformanceSource | NULL
+     */
+    public function getSource(int $id)
+    {
+        return (isset($this->sources[$id])) ? $this->sources[$id] : null;
     }
 
     public function getAllGenders()
@@ -193,10 +236,20 @@ class ConnectionPreloaded extends Connection
     {
         return $this->disziplinTypes;
     }
-    
+
     public function getAllCategories()
     {
         return $this->categories;
+    }
+
+    public function getSources()
+    {
+        return $this->sources;
+    }
+    
+    public function getPointSchemeNames()
+    {
+        return $this->pointSchemeNames;
     }
 }
 

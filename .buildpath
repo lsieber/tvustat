@@ -6,7 +6,12 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="config/db">
+	<buildpathentry excluding="pts/" kind="src" path="config/db">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="config/db/pts">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
@@ -36,7 +41,12 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry excluding="coldef/|html/|txt/" kind="src" path="src/outp">
+	<buildpathentry kind="src" path="src/outp/json">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry excluding="coldef/|html/|json/|txt/" kind="src" path="src/outp">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
@@ -46,12 +56,17 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
+	<buildpathentry kind="src" path="src/pts">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
 	<buildpathentry kind="src" path="src/spezout">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry excluding="conn/|elmt/|inp/|outp/|spezout/|utils/" kind="src" path="src">
+	<buildpathentry excluding="conn/|elmt/|inp/|outp/|pts/|spezout/|utils/" kind="src" path="src">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>

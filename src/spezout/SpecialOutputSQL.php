@@ -9,16 +9,25 @@ use config\dbDisziplin;
 use config\dbPerformance;
 use config\dbPerformanceDetail;
 
-class CompetitionOutputSQL
+class SpecialOutputSQL
 {
 
-    public static function create(int $competitionId)
+    public static function createCompetition(int $competitionId)
     {
         $sql = self::selectAndJoins();
         $sql .= " WHERE";
         $sql .= self::competition($competitionId);
         return $sql;
     }
+    
+    public static function createAthlete(int $athleteId)
+    {
+        $sql = self::selectAndJoins();
+        $sql .= " WHERE";
+        $sql .= self::athlete($athleteId);
+        return $sql;
+    }
+    
 
     /**
      * Returns only a sql if the category control is not ALL, Men, or Women.
@@ -45,6 +54,11 @@ class CompetitionOutputSQL
     private static function competition($competitionId)
     {
         return " " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . "=" . $competitionId;
+    }
+    
+    private static function athlete($athleteId)
+    {
+        return " " . dbAthletes::DBNAME . "." . dbAthletes::ID . "=" . $athleteId;
     }
 }
 

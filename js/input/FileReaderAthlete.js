@@ -11,8 +11,8 @@ export class FileReaderAthlete extends FileReaderInternal {
             var html = htmlhead; //           
 
             var text = reader.result;
-
             var array = parse(text);
+
             var nameIndex = -1; // this throws an exeption if not changed before usage
             var dateIndex = -1;
             for (let index = 0; index < array.length - 1; index++) {
@@ -80,7 +80,7 @@ export class FileReaderAthlete extends FileReaderInternal {
         window.athForm.updateModal();
         window.athForm.selectDefault();
     }
-    
+
     parseDate(input) {
         var parts = input.match(/(\d+)/g);
         // note parts[1]-1

@@ -36,8 +36,7 @@ class HtmlGeneratorDisziplinIndiv extends HtmlGenerator
      */
     public function createHtml(BestList $bestList, int $top = NULL)
     {
-//         echo "</br> TOP Parameter  = " . $top . " </br>";
-        
+        // echo "</br> TOP Parameter = " . $top . " </br>";
         $this->html = "<div class='csc-header csc-header-n1'><h1 class='csc-firstHeader'>";
         $this->html .= $this->title->getTitle() . "</h1></div>";
         foreach ($bestList->getDisziplinBestLists() as $disBestList) {

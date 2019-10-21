@@ -22,6 +22,8 @@ class dbPerformance extends dbTableDescription
 
     public const PERFORMANCE = "performance";
 
+    public const SOURCE = "sourceID";
+
     public const WIND = "wind";
 
     public const PLACE = "placement";
@@ -41,7 +43,8 @@ class dbPerformance extends dbTableDescription
         self::PERFORMANCE => 4,
         self::WIND => 5,
         self::PLACE => 6,
-        self::LASTCHANGE => 7
+        self::SOURCE => 7,
+        self::LASTCHANGE => 8
     );
 
     /**
@@ -78,7 +81,8 @@ class dbPerformance extends dbTableDescription
             4 => $performance->getPerformance(),
             5 => $performance->getWind(),
             6 => $performance->getPlacement(),
-            7 => DateFormatUtils::formatDateForDB(new \DateTime())
+            7 => $performance->getSource()->getId(),
+            8 => DateFormatUtils::formatDateForDB(new \DateTime())
         );
     }
 
@@ -91,16 +95,16 @@ class dbPerformance extends dbTableDescription
         $r[self::PERFORMANCE], //
         $r[self::WIND], //
         $r[self::PLACE], //
+        $conn->getSource($r[self::SOURCE]), //
         $r[self::ID], //
         self::getDetail($r)); //
-        
     }
-    
-    private static function getDetail($r) {
-        if (!array_key_exists(dbPerformanceDetail::DETAIL, $r)) {
+
+    private static function getDetail($r)
+    {
+        if (! array_key_exists(dbPerformanceDetail::DETAIL, $r)) {
             return NULL;
         }
         return $r[dbPerformanceDetail::DETAIL];
     }
-
 }

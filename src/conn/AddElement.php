@@ -177,6 +177,9 @@ class AddElement extends DbHandler
         if ($v == "") {
             return "NULL";
         }
+        if ($v == NULL) {
+            return "NULL";
+        }
         if (is_string($v)) {
             return '"' . $v . '"';
         }

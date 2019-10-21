@@ -105,6 +105,56 @@ function areAllOfGender(genderID) {
  * YEARS
  */
 
+
+function selectYears() {
+    var yearControl = getSelectedRadioButtonObject(window.yearControl);
+    if (yearControl.id == "yall") {
+        selectAllValues(window.yearsCheckName);
+    }
+    if (yearControl.id == "ymultiple") {
+        var allChecked = areAllValuesSelected(window.yearsCheckName);
+        if (allChecked) {
+            unselectAllValues(window.yearsCheckName);
+        }
+    }
+    if (yearControl.id == "ysingle") {
+        unselectAllValues(window.yearsCheckName);
+        if (localStorage.lastClickedYear != null) {
+            document.getElementById(localStorage.lastClickedYear).checked = true;
+        }
+    }
+}
+window.selectYears = selectYears
+
+function selectYearControl(clickedField) {
+    var yearControl = getSelectedRadioButtonObject(window.yearControl);
+    switch (yearControl.id) {
+        case "yall":
+            document.getElementById("ymultiple").checked = true;
+            break;
+
+        case "ymultiple":
+            if (areAllValuesSelected(window.yearsCheckName)) {
+                document.getElementById("yall").checked = true;
+            }
+            break;
+
+        case "ysingle":
+            unselectAllValues(window.yearsCheckName);
+            clickedField.checked = true;
+            break;
+
+        default:
+            break;
+    }
+    if (clickedField.checked == true) {
+        localStorage.lastClickedYear = clickedField.id;
+    }
+
+}
+window.selectYearControl = selectYearControl
+
+
 export function selectLargestYear() {
     var years = getValuesFromStorage(window.yearsStore);
     var checkBoxes = document.getElementsByName(window.yearsCheckName);

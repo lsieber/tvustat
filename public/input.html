@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="inc/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<script type=module src="../js/in/input.js"></script>
+
+</head>
+
+<body onload="onload()">
+	<div class="container">
+		<h1>Performance Input</h1>
+
+		<div class="row">
+			<div id="collapseYearCat" class="collapse in">
+
+				<div class="col-sm-2">
+					<h2>Year</h2>
+					<div id="yearDiv">
+					</div>
+				</div>
+				<div class="col-sm-8">
+					<h2>Category</h2>
+					<div id="categoryDiv"></div>
+				</div>
+			</div>
+
+			<div class="col-sm-2">
+				<a class="btn btn-setting" data-toggle="collapse" href="#collapseYearCat">Hide Year & Category</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3">
+				<h2>Competition</h2>
+				<div id="competitionDiv"></div>
+			</div>
+
+			<div class="col-sm-3">
+				<h2>Disziplin</h2>
+				<a class="btn btn-setting" onclick=showOnlyMultiple()>Mehrkämpfe</a>
+				<a class="btn btn-setting" onclick=showAllDisziplins()>Alle</a>
+				<div id="disziplinDiv"></div>
+			</div>
+
+			<div class="col-sm-3">
+				<h2>Athlete</h2>
+				<div id="athleteDiv"></div>
+			</div>
+
+			<div class="col-sm-3">
+				<h2>Performance</h2>
+				<div id="performanceDivAll">
+					<div class="form-group" id="performanceDiv">
+					</div>
+
+					<a class="btn btn-primary" href="#" onclick="insertPerformance()">
+						Register</a>
+
+
+
+					<div class="form-group">
+						<label> Wind</label> <input type="text" class="form-control" id="windInput" placeholder="">
+					</div>
+					<div class="form-group">
+						<label> Rangking</label> <input type="text" class="form-control" id="rankingInput"
+							placeholder="">
+					</div>
+					<div class="form-group">
+						<label> Source</label>
+						<div id="sourceDiv"></div>
+					</div>
+
+					<div class="form-group" id="pointSchemeDiv"></div>
+					<div class="form-group" id="lastPerformances"></div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

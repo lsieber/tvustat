@@ -76,18 +76,18 @@ function createCategoryList(values, idIdent, valueIdent, labelIdents) {
 
 function createCategoryControl() {
 
-    var html = "<div class='checkbox-control' id='categoryControl'>";
-    html += createRadio("all", "Alle", "selectCategory()");
-    html += createRadio("men", "Männer", "selectCategory()");
-    html += createRadio("women", "Frauen", "selectCategory()");
-    html += createRadio("multiple", "Mehrere", "selectCategory()");
-    html += createRadio("single", "Einzeln", "selectCategory()");
+    var html = "";
+    html += createRadio(window.catControl, "all", "Alle", "selectCategory()");
+    html += createRadio(window.catControl, "men", "M", "selectCategory()");
+    html += createRadio(window.catControl, "women", "W", "selectCategory()");
+    html += createRadio(window.catControl, "multiple", "Mehrere", "selectCategory()");
+    html += createRadio(window.catControl, "single", "Einzeln", "selectCategory()");
     html += "</div>";
     return html;
 }
 
-function createRadio(id, value, onclick) {
-    var begin = '<input type="radio" class="form-control" name="' + window.catControl + '"';
+function createRadio(name, id, value, onclick) {
+    var begin = '<input type="radio" class="form-control" name="' + name + '"';
     var html = begin + 'id="' + id + '" onclick="' + onclick + '" checked="true"></input>';
     html += '<label for="' + id + '">' + value + '</label>'
     return html;
@@ -109,10 +109,18 @@ export function loadYears() {
     }, "json");
 }
 
-
+function createYearControl() {
+    var html = "";
+    html += createRadio(window.yearControl, "yall", "Alle", "selectYears()");
+    html += createRadio(window.yearControl, "ymultiple", "Mehrere", "selectYears()");
+    html += createRadio(window.yearControl, "ysingle", "Einzeln", "selectYears()");
+    html += "</div>";
+    return html;
+}
 
 function createYearsList(values) {
-    var html = createCheckboxSelectorsHtml(values, "YEAR(competitionDate)", "storeID", ["YEAR(competitionDate)"], window.yearsCheckName, "year", "Jahr", window.yearsChecksName, "", "");
+    var afterLabelHTML = createYearControl();
+    var html = createCheckboxSelectorsHtml(values, "YEAR(competitionDate)", "storeID", ["YEAR(competitionDate)"], window.yearsCheckName, "year", "Jahr", window.yearsChecksName, afterLabelHTML, 'onclick="selectYearControl(this)"');
     document.getElementById(window.yearsList).innerHTML = html;
 }
 
@@ -123,8 +131,9 @@ function createYearsList(values) {
  * ********************************************************/
 
 function createCheckboxSelectorsHtml(params, idIdent, valueIdent, valueIdents, name, idPref, label, radiosDiv, afterLabelHTML, addidtionAttributes) {
-    var html = '<div class="form-group"> <label>' + label + '</label>';
-    html += afterLabelHTML;
+    var html = "<div class='checkbox-control'>";
+    html += '<div class="form-group"> <label><h3>' + label + '</h3></label>';
+    html += afterLabelHTML + "</div>";
     html += "<div id='" + radiosDiv + "'>";
     html += createCheckboxes(params, idIdent, valueIdent, valueIdents, name, idPref, addidtionAttributes);
     html += '</div></div>';

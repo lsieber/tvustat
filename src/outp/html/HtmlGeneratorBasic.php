@@ -18,12 +18,11 @@ class HtmlGeneratorBasic extends HtmlGenerator
      */
     private $title;
 
-    
     private $columnDefinition;
-    
+
     public function __construct(ColumnDefinition $columDefinition, BestListTitle $title)
     {
-//         parent::__construct($columDefinition);
+        // parent::__construct($columDefinition);
         $this->columnDefinition = $columDefinition;
         $this->title = $title;
     }
@@ -55,7 +54,5 @@ class HtmlGeneratorBasic extends HtmlGenerator
         }
         return $disziplinBestListHtml;
     }
-
-
 }
 

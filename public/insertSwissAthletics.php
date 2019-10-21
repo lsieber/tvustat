@@ -9,7 +9,7 @@ use tvustat\Performance;
 use tvustat\TimeUtils;
 use tvustat\DateFormatUtils;
 
-$year = 2015;
+$year = 2006;
 
 $path = '../data/' . $year . '/resultsByAthlete/';
 // $files = scandir($path);
@@ -192,7 +192,8 @@ foreach ($files as $file) {
                         /**
                          * Performance
                          */
-                        $preformance = new Performance($disziplin, $athlete, $competition, $perf, $wind, $ranking, NULL, $detail);
+                        $source = $db->getConn()->getSource(1);
+                        $preformance = new Performance($disziplin, $athlete, $competition, $perf, $wind, $ranking, $source, NULL, $detail);
 
                         $querry = $db->addPerformance($preformance);
                         if ($querry->getSuccess()) {

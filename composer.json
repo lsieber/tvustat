@@ -9,13 +9,16 @@
 				"src/outp",
 				"src/outp/coldef",
 				"src/outp/html",
+				"src/outp/json",
 				"src/outp/txt",
+				"src/pts",
 				"src/spezout",
 				"src/utils"
 			],
 			"config\\" : [
 				"config",
-				"config/db"
+				"config/db",
+				"config/db/pts"
 			],
 			"test\\" : [
 				"tests",

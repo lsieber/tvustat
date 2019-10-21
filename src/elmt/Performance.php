@@ -47,7 +47,13 @@ class Performance extends DBTableEntry
      */
     private $detail;
 
-    public function __construct(Disziplin $disziplin, Athlete $athlete, Competition $competition, float $performance, float $wind = NULL, string $ranking = NULL, int $id = NULL, string $detail = NULL)
+    /**
+     *
+     * @var PerformanceSource
+     */
+    private $source;
+
+    public function __construct(Disziplin $disziplin, Athlete $athlete, Competition $competition, float $performance, float $wind = NULL, string $ranking = NULL, PerformanceSource $source = NULL, int $id = NULL, string $detail = NULL)
     {
         $this->performance = $performance;
         $this->wind = $wind;
@@ -55,6 +61,7 @@ class Performance extends DBTableEntry
         $this->disziplin = $disziplin;
         $this->athlete = $athlete;
         $this->competition = $competition;
+        $this->source = $source;
         if ($id != NULL)
             $this->setId($id);
         $this->detail = $detail;
@@ -145,6 +152,15 @@ class Performance extends DBTableEntry
     public function getDetail()
     {
         return $this->detail;
+    }
+
+    /**
+     *
+     * @return \tvustat\PerformanceSource
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 }
 

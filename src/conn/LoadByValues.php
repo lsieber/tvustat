@@ -44,8 +44,8 @@ class LoadByValues extends DbHandler
      */
     public function loadCompetitionNameByName(string $competitionName)
     {
-        $sql = "SELECT * FROM " . dbCompetitionNames::getTableName() . " WHERE " . dbCompetitionNames::NAME . "='" . $competitionName . "'";
-        // echo $sql;
+        $sql = "SELECT * FROM " . dbCompetitionNames::getTableName() . " WHERE " . dbCompetitionNames::NAME . '="' . $competitionName . '"';
+//         echo $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbCompetitionNames::competitionNameFromAsocArray($array[0], $this->conn);
     }
@@ -75,9 +75,11 @@ class LoadByValues extends DbHandler
         $sql = "SELECT * From " . dbCompetition::DBNAME;
         $sql .= " INNER JOIN " . dbCompetitionLocations::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::LOCATIONID . " = " . dbCompetitionLocations::DBNAME . "." . dbCompetitionLocations::ID;
         $sql .= " INNER JOIN " . dbCompetitionNames::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::NAMEID . " = " . dbCompetitionNames::DBNAME . "." . dbCompetitionNames::ID;
-        $sql .= " WHERE " . dbCompetitionNames::NAME . "='" . $name . "' AND " . dbCompetitionLocations::VILLAGE . '="' . $village . '" AND ' . dbCompetition::DATE . "='" . DateFormatUtils::formatDateForDB($date) . "'";
+        $sql .= " WHERE " . dbCompetitionNames::NAME . '="' . $name . '" AND ' . dbCompetitionLocations::VILLAGE . '="' . $village . '" AND ' . dbCompetition::DATE . "='" . DateFormatUtils::formatDateForDB($date) . "'";
         // echo "</br>" . $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbCompetition::competitionFromAsocArray($array[0], $this->conn);
     }
+    
+        
 }

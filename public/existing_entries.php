@@ -1,124 +1,163 @@
     <?php
-use tvustat\DBMaintainer;
-use tvustat\DisziplinNameOnly;
-use tvustat\AthleteNameOnly;
-use tvustat\DateFormatUtils;
-use config\dbCompetition;
-use tvustat\Competition;
-use tvustat\CompetitionLocation;
-use tvustat\CompetitionName;
-use config\dbCompetitionLocations;
-use config\dbCompetitionNames;
-use tvustat\CompetitoinBestList;
+    use tvustat\DBMaintainer;
+    use tvustat\DisziplinNameOnly;
+    use tvustat\AthleteNameOnly;
+    use tvustat\DateFormatUtils;
+    use config\dbCompetition;
+    use tvustat\Competition;
+    use tvustat\CompetitionLocation;
+    use tvustat\CompetitionName;
+    use config\dbCompetitionLocations;
+    use config\dbCompetitionNames;
+    use tvustat\CompetitoinBestList;
+use config\dbAthletes;
+use config\dbPerformance;
 
-require_once '../vendor/autoload.php';
+    require_once '../vendor/autoload.php';
 
-$disziplin_exists = ($_POST['type'] == 'disziplinExists') ? TRUE : FALSE;
-$athlete_exists = ($_POST['type'] == 'athleteExists') ? TRUE : FALSE;
-$competition_exists = ($_POST['type'] == 'competitionExists') ? TRUE : FALSE;
+    $disziplin_exists = ($_POST['type'] == 'disziplinExists') ? TRUE : FALSE;
+    $athlete_exists = ($_POST['type'] == 'athleteExists') ? TRUE : FALSE;
+    $competition_exists = ($_POST['type'] == 'competitionExists') ? TRUE : FALSE;
+    $performancesDisAthComp =  ($_POST['type'] == 'performancesDisAthComp') ? TRUE : FALSE;
+    
+    $competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
+    $athletesforCategory = ($_POST['type'] == 'athletesforCategory') ? TRUE : FALSE;
 
+    $allCompetitions = ($_POST['type'] == 'allCompetitions') ? TRUE : FALSE;
+    $allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
+    $allCompetitionLocations = ($_POST['type'] == 'allCompetitionLocations') ? TRUE : FALSE;
+    $allAgeCategories = ($_POST['type'] == 'allAgeCategories') ? TRUE : FALSE;
+    $allCategories = ($_POST['type'] == 'allCategories') ? TRUE : FALSE;
+    $allOutputCategories = ($_POST['type'] == 'allOutputCategories') ? TRUE : FALSE;
+    $allDisziplins = ($_POST['type'] == 'allDisziplins') ? TRUE : FALSE;
+    $allAthletes = ($_POST['type'] == 'allAthletes') ? TRUE : FALSE;
+    $allYears = ($_POST['type'] == 'allYears') ? TRUE : FALSE;
+    $allSources = ($_POST['type'] == 'allSources') ? TRUE : FALSE;
+    $allpointSchemeNames = ($_POST['type'] == 'allPointSchemeNames') ? TRUE : FALSE;
 
-$competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
-$performancesForCompetitoin = ($_POST['type'] == 'competitionList') ? TRUE : FALSE;
+    $db = new DBMaintainer();
 
-$allCompetitions = ($_POST['type'] == 'allCompetitions') ? TRUE : FALSE;
-$allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
-$allCompetitionLocations = ($_POST['type'] == 'allCompetitionLocations') ? TRUE : FALSE;
-$allAgeCategories = ($_POST['type'] == 'allAgeCategories') ? TRUE : FALSE;
-$allCategories = ($_POST['type'] == 'allCategories') ? TRUE : FALSE;
-$allOutputCategories = ($_POST['type'] == 'allOutputCategories') ? TRUE : FALSE;
-$allDisziplins = ($_POST['type'] == 'allDisziplins') ? TRUE : FALSE;
-$allAthletes = ($_POST['type'] == 'allAthletes') ? TRUE : FALSE;
-$allYears = ($_POST['type'] == 'allYears') ? TRUE : FALSE;
+    if ($disziplin_exists) {
+        $disziplinExists = $db->checkDisziplinExists(new DisziplinNameOnly($_POST["disziplin"], $db->getConn()));
+        $converted_res = ($disziplinExists) ? 'true' : 'false';
+        $result = array(
+            "disziplinExists" => $converted_res,
+            "disziplinName" => $_POST["disziplin"]
+        );
+        echo json_encode($result);
+    }
 
+    if ($athlete_exists) {
+        $date = DateTime::createFromFormat("d.m.Y", $_POST["date"]);
+        $athleteExists = $db->checkAthleteExists(new AthleteNameOnly($_POST["fullName"], $db->getConn()));
+        $converted_res = ($athleteExists) ? 'true' : 'false';
 
-$db = new DBMaintainer();
+        $result = array(
+            "athleteExists" => $converted_res,
+            "fullName" => $_POST["fullName"],
+            "date" => DateFormatUtils::formatDateForDB($date)
+            // "date" => $_POST["date"]
+        );
+        echo json_encode($result);
+    }
 
-if ($disziplin_exists) {
-    $disziplinExists = $db->checkDisziplinExists(new DisziplinNameOnly($_POST["disziplin"], $db->getConn()));
-    $converted_res = ($disziplinExists) ? 'true' : 'false';
-    $result = array(
-        "disziplinExists" => $converted_res,
-        "disziplinName" => $_POST["disziplin"]
-    );
-    echo json_encode($result);
-}
+    if ($competition_exists) {
+        $date = DateTime::createFromFormat("d.m.Y", $_POST[dbCompetition::DATE]);
+        $name = new CompetitionName($_POST[dbCompetitionNames::NAME]);
+        $location = new CompetitionLocation($_POST[dbCompetitionLocations::VILLAGE], "");
+        $competiton = new Competition($name, $location, $date);
 
-if ($athlete_exists) {
-    $date = DateTime::createFromFormat("d.m.Y", $_POST["date"]);
-    $athleteExists = $db->checkAthleteExists(new AthleteNameOnly($_POST["fullName"], $db->getConn()));
-    $converted_res = ($athleteExists) ? 'true' : 'false';
+        $competitionExists = $db->checkCompetitionExists($competiton);
+        $converted_res = ($competitionExists) ? 'true' : 'false';
 
-    $result = array(
-        "athleteExists" => $converted_res,
-        "fullName" => $_POST["fullName"],
-        "date" => DateFormatUtils::formatDateForDB($date)
-        // "date" => $_POST["date"]
-    );
-    echo json_encode($result);
-}
+        $result = array(
+            "competitionExists" => $converted_res,
+            dbCompetitionNames::NAME => $name->getCompetitionName(),
+            dbCompetition::DATE => DateFormatUtils::formatDateForDB($date),
+            dbCompetitionLocations::VILLAGE => $location->getVillage()
+            // "date" => $_POST["date"]
+        );
+        echo json_encode($result);
+    }
 
-if ($competition_exists) {
-    $date = DateTime::createFromFormat("d.m.Y", $_POST[dbCompetition::DATE]);
-    $name = new CompetitionName($_POST[dbCompetitionNames::NAME]);
-    $location = new CompetitionLocation($_POST[dbCompetitionLocations::VILLAGE], "");
-    $competiton = new Competition($name, $location, $date);
+    if($performancesDisAthComp){
+        $results = array();
+        foreach ($_POST[dbPerformance::DISZIPLINID] as $dbStoreId => $diszipliId) {
+            $sql = "SELECT * FROM " . dbPerformance::DBNAME . " WHERE " . dbPerformance::ATHLETEID . " = ". $_POST[dbPerformance::ATHLETEID];
+            //         $sql .= " INNER JOIN " . dbDisziplin::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
+            $sql .= " AND " . dbPerformance::COMPETITOINID . " = ". $_POST[dbPerformance::COMPETITOINID];
+            $sql .= " AND " . dbPerformance::DISZIPLINID . " = ". $diszipliId;
+            $r = $db->getConn()->executeSqlToArray($sql);
+            if (sizeof($r) > 0) {
+                $results[$dbStoreId] = $r;
+            }
+        }
 
-    $competitionExists = $db->checkCompetitionExists($competiton);
-    $converted_res = ($competitionExists) ? 'true' : 'false';
+        echo json_encode($results);
+        
+    }
+    
+    if ($competitionsInYear) {
+        echo json_encode($db->getCompetitionsForYear($_POST["years"]));
+    }
 
-    $result = array(
-        "competitionExists" => $converted_res,
-        dbCompetitionNames::NAME => $name->getCompetitionName(),
-        dbCompetition::DATE => DateFormatUtils::formatDateForDB($date),
-        dbCompetitionLocations::VILLAGE => $location->getVillage()
-        // "date" => $_POST["date"]
-    );
-    echo json_encode($result);
-}
+    if ($allCompetitions) {
+        echo json_encode($db->getAllCompetitions());
+    }
 
-if ($competitionsInYear) {
-    echo json_encode($db->getCompetitionsForYear($_POST["years"]));
-}
+    if ($allCompetitionNames) {
+        echo json_encode($db->getAllCompetitionNames());
+    }
+    if ($allCompetitionLocations) {
+        echo json_encode($db->getAllCompetitionLocations());
+    }
 
-if ($allCompetitions) {
-    echo json_encode($db->getAllCompetitions());
-}
+    if ($allAgeCategories) {
+        echo json_encode($db->getAllAgeCategories());
+    }
+    if ($allCategories) {
+        echo json_encode($db->getAllCategories());
+    }
+    if ($allOutputCategories) {
+        echo json_encode($db->getAllOutputCategories());
+    }
 
-if ($allCompetitionNames) {
-    echo json_encode($db->getAllCompetitionNames());
-}
-if ($allCompetitionLocations) {
-    echo json_encode($db->getAllCompetitionLocations());
-}
+    if ($allDisziplins) {
+        echo json_encode($db->getAllDisziplins());
+    }
 
-if ($allAgeCategories) {
-    echo json_encode($db->getAllAgeCategories());
-}
-if ($allCategories) {
-    echo json_encode($db->getAllCategories());
-}
-if ($allOutputCategories) {
-    echo json_encode($db->getAllOutputCategories());
-}
+    if ($allAthletes) {
+        echo json_encode($db->getAllAthletes());
+    }
 
-if ($allDisziplins) {
-    echo json_encode($db->getAllDisziplins());
-}
+    if ($allYears) {
+        echo json_encode($db->getAllYears());
+    }
+    if ($allSources) {
+        echo json_encode($db->getAllSources());
+    }
 
-if ($allAthletes) {
-    echo json_encode($db->getAllAthletes());
-}
+    if ($allpointSchemeNames) {
+        echo json_encode($db->getAllPointNameSchemes());
+    }
+    
+    if ($athletesforCategory) {
+        // TODO Remove from this place 
+        $year = $_POST["year"];
+        $sql = "SELECT * FROM ".dbAthletes::DBNAME . " WHERE (";
+        $first = true;
+        foreach ($_POST["categories"] as $id) {
+            if (!$first) {
+                $sql .= " OR";
+            }
+            $category = $db->getConn()->getCategory($id);
+            $sql .= " (" . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DATE . ") >= " . $category->getAgeCategory()->getMinAge() . " AND";
+            $sql .= " " . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DATE . ") <= " . $category->getAgeCategory()->getMaxAge() . " AND ";
+            $sql .= dbAthletes::GENDERID . " = " .$category->getGender()->getId() . ")";
+            $first = false;
+        }
+        $sql .= ") OR (" .dbAthletes::CATEGORY . " IN (".implode(",", $_POST["categories"]).") ) ORDER BY " . dbAthletes::TEAMTYPEID . "," . dbAthletes::FULLNAME;
+        echo json_encode($db->getConn()->executeSqlToArray($sql));
+    }
 
-if ($allYears) {
-    echo json_encode($db->getAllYears());
-}
-
-if ($performancesForCompetitoin) {
-    $competitionID = $_POST["competitionID"];
-    $bl = new CompetitoinBestList($competitionID, $db);
-    $bl->callDB();
-    $bl->formatBestList();
-    $bl->printTable();
-}
-?>
+    ?>

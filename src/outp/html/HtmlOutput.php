@@ -23,14 +23,17 @@ class HtmlOutput implements BestListOutput
     {
         return $this->html;
     }
+    
+    /**
+     * 
+     * {@inheritDoc}
+     * @see \tvustat\BestListOutput::toString()
+     */
+    public function toString()
+    {
+        return $this->getHtml();
+    }
 
-//     /**
-//      *
-//      * @param string $html
-//      */
-//     public function setHtml($html)
-//     {
-//         $this->html = $html;
-//     }
+
 }
 

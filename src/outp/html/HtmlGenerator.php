@@ -3,25 +3,24 @@ namespace tvustat;
 
 abstract class HtmlGenerator implements BestListOutputGenerator
 {
-    
-//     /**
-//      * 
-//      * @var ColumnDefinition
-//      */
-//     protected $columnDefinition;
-    
-//     /**
-//      * 
-//      * @param ColumnDefinition $columDefinition
-//      */
-//     public function __construct(ColumnDefinition $columDefinition){
-//         $this->columnDefinition = $columDefinition;
-//     }
-    
+
+    // /**
+    // *
+    // * @var ColumnDefinition
+    // */
+    // protected $columnDefinition;
+
+    // /**
+    // *
+    // * @param ColumnDefinition $columDefinition
+    // */
+    // public function __construct(ColumnDefinition $columDefinition){
+    // $this->columnDefinition = $columDefinition;
+    // }
 
     /**
-     * 
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \tvustat\BestListOutputGenerator::createOutput()
      */
     public function createOutput(BestList $bestList, int $top = NULL)
@@ -29,9 +28,8 @@ abstract class HtmlGenerator implements BestListOutputGenerator
         return $this->createHtml($bestList, $top);
     }
 
-    
     /**
-     * 
+     *
      * @param BestList $bestlist
      * @return HtmlOutput
      */

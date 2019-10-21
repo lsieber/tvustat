@@ -82,8 +82,8 @@ $blh = new BestListHandler($years, $categoryControl, $categories, $top, $diszipl
 
 $blh->callDB();
 $blh->formatBestList($keepAthlete, $keepYearAthlete);
-$blh->printTable();
-$blh->createTXT();
+$blh->printTable("html");
+// $blh->createTXT();
 
 
 

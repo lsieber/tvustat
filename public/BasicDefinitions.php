@@ -14,7 +14,8 @@ $result = array( //
     "genders" => arrayOfGenders($conn), //
     "sortings" => arrayOfSortings($conn), //
     "disziplinTypes" => arrayOfDisziplinTypes($conn), //
-    "teamTypes" => arrayOfTeamTypes($conn)
+    "teamTypes" => arrayOfTeamTypes($conn), //
+    "pointSchemeNames" =>  $conn->getPointSchemeNames()
 );
 
 echo json_encode($result);
@@ -104,5 +105,6 @@ function arrayOfTeamType(TeamType $tT)
         "id" => $tT->getId()
     );
 }
+
 
 ?>

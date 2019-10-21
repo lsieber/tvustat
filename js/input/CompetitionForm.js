@@ -148,7 +148,7 @@ export class CompetitionForm extends InputForm {
         }
     }
 
-    competitionToDB(resultFieldId) {
+    competitionToDB() {
         var nameId = document.getElementById(this.disabledNameIdField);
         var date = document.getElementById(this.dateField);
         var locationId = document.getElementById(this.disabledLocationIdField);
@@ -165,10 +165,7 @@ export class CompetitionForm extends InputForm {
                 locationNameID: locationId.value,
                 competitionDate: date.value
             }, function (data) {
-                // removeValueById(window.competitionStorage)
-                // var r = JSON.parse(data);
-                // $("#" + resultFieldId).html("<p>" + data.message + "</p>");
-                // return (r.success === "true");
+               
             }, "json");
         }
     }

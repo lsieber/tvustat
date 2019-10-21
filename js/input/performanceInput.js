@@ -2,7 +2,7 @@
  * 
  */
 import { loadBasicData } from "./BasicDefinitions.js"
-import { loadCompetitions, loadCategories, loadDisziplins, loadAthletes } from "./ListingUtils.js"
+import { loadCompetitions, loadCategories, loadDisziplins, loadAthletes, loadSources } from "./ListingUtils.js"
 
 
 
@@ -76,6 +76,7 @@ function onload() {
   loadCategories();
   loadDisziplins();
   loadAthletes();
+  loadSources();
   // createCompetitionList();
 }
 window.onload = onload

@@ -4,7 +4,7 @@ namespace tvustat;
 trait HtmlUtils
 {
     
-    protected static function row(Performance $performance, $columDefinition)
+    protected static function row(Performance $performance, ColumnDefinition $columDefinition)
     {
         return self::tr($columDefinition->bestListElements($performance));
     }

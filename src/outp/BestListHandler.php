@@ -38,7 +38,7 @@ class BestListHandler
         $this->db = $db;
         $this->sql = OutputSQL::create($categoryControl, $categories, $disziplins, $years);
         $this->teamSQL = OutputSQL::createTeam($categoryControl, $categories, $disziplins, $years);
-        $this->title = new BestListTitle($categoryControl, $categories, $years, $top, $disziplins);
+        $this->title = new BestListTitleBasic($categoryControl, $categories, $years, $top, $disziplins);
         $this->bestList = BestList::empty();
     }
 
@@ -75,20 +75,36 @@ class BestListHandler
         $this->bestList->sortDisziplinOrder();
         $this->bestList->keepBestPerformancePerPerson($keepAthlete);
         $this->bestList->keepBestPerAthleteAndYear($keepYearAthlete);
-        
     }
 
-    public function printTable()
+    public function printTable(string ...$outputs)
     {
         $categoryUtils = new CategoryUtils($this->db->getConn());
         $columnDefCatDetail = new ColumnDefinitionCatDetail($categoryUtils);
-//         $columnDefDetail = new ColumnDefinitionDetail();
+        //         $columnDefDetail = new ColumnDefinitionDetail();
         $columnDefCat = new ColumnDefinitionCategory($categoryUtils);
-//         $columnDefBasic = new ColumnDefinitionBasic();
+        //         $columnDefBasic = new ColumnDefinitionBasic();
+        
+        if (sizeof($outputs) == 0) {
+            array_push($outputs, "html");
+        }
+        
+        foreach ($outputs as $output) {
 
-        $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
-        $html = $htmlGenerator->createOutput($this->bestList, $this->top);
-        echo $html->getHtml();
+            if ($output == "html") {
+                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
+                $html = $htmlGenerator->createOutput($this->bestList, $this->top);
+                echo $html->getHtml();
+            }
+
+            if ($output == "json") {
+                $jsonGenerator = new JsonGenerator($columnDefCatDetail);
+                $json = $jsonGenerator->createOutput($this->bestList, $this->top);
+                echo $json->toString();
+                echo "TEEEET";
+            }
+        }
+
     }
 
     // public function printHTMLCode()
