@@ -1,25 +1,25 @@
     <?php
-    use tvustat\DBMaintainer;
-    use tvustat\DisziplinNameOnly;
-    use tvustat\AthleteNameOnly;
-    use tvustat\DateFormatUtils;
+    use config\dbAthleteActiveYear;
+    use config\dbAthletes;
     use config\dbCompetition;
+    use config\dbCompetitionLocations;
+    use config\dbCompetitionNames;
+    use config\dbPerformance;
+    use tvustat\AthleteNameOnly;
     use tvustat\Competition;
     use tvustat\CompetitionLocation;
     use tvustat\CompetitionName;
-    use config\dbCompetitionLocations;
-    use config\dbCompetitionNames;
-    use tvustat\CompetitoinBestList;
-use config\dbAthletes;
-use config\dbPerformance;
+    use tvustat\DBMaintainer;
+    use tvustat\DateFormatUtils;
+    use tvustat\DisziplinNameOnly;
 
     require_once '../vendor/autoload.php';
 
     $disziplin_exists = ($_POST['type'] == 'disziplinExists') ? TRUE : FALSE;
     $athlete_exists = ($_POST['type'] == 'athleteExists') ? TRUE : FALSE;
     $competition_exists = ($_POST['type'] == 'competitionExists') ? TRUE : FALSE;
-    $performancesDisAthComp =  ($_POST['type'] == 'performancesDisAthComp') ? TRUE : FALSE;
-    
+    $performancesDisAthComp = ($_POST['type'] == 'performancesDisAthComp') ? TRUE : FALSE;
+
     $competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
     $athletesforCategory = ($_POST['type'] == 'athletesforCategory') ? TRUE : FALSE;
 
@@ -80,13 +80,13 @@ use config\dbPerformance;
         echo json_encode($result);
     }
 
-    if($performancesDisAthComp){
+    if ($performancesDisAthComp) {
         $results = array();
         foreach ($_POST[dbPerformance::DISZIPLINID] as $dbStoreId => $diszipliId) {
-            $sql = "SELECT * FROM " . dbPerformance::DBNAME . " WHERE " . dbPerformance::ATHLETEID . " = ". $_POST[dbPerformance::ATHLETEID];
-            //         $sql .= " INNER JOIN " . dbDisziplin::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
-            $sql .= " AND " . dbPerformance::COMPETITOINID . " = ". $_POST[dbPerformance::COMPETITOINID];
-            $sql .= " AND " . dbPerformance::DISZIPLINID . " = ". $diszipliId;
+            $sql = "SELECT * FROM " . dbPerformance::DBNAME . " WHERE " . dbPerformance::ATHLETEID . " = " . $_POST[dbPerformance::ATHLETEID];
+            // $sql .= " INNER JOIN " . dbDisziplin::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
+            $sql .= " AND " . dbPerformance::COMPETITOINID . " = " . $_POST[dbPerformance::COMPETITOINID];
+            $sql .= " AND " . dbPerformance::DISZIPLINID . " = " . $diszipliId;
             $r = $db->getConn()->executeSqlToArray($sql);
             if (sizeof($r) > 0) {
                 $results[$dbStoreId] = $r;
@@ -94,9 +94,8 @@ use config\dbPerformance;
         }
 
         echo json_encode($results);
-        
     }
-    
+
     if ($competitionsInYear) {
         echo json_encode($db->getCompetitionsForYear($_POST["years"]));
     }
@@ -140,23 +139,25 @@ use config\dbPerformance;
     if ($allpointSchemeNames) {
         echo json_encode($db->getAllPointNameSchemes());
     }
-    
+
     if ($athletesforCategory) {
-        // TODO Remove from this place 
         $year = $_POST["year"];
-        $sql = "SELECT * FROM ".dbAthletes::DBNAME . " WHERE (";
+
+        $sql = "SELECT * FROM " . dbAthletes::DBNAME; 
+        $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        $sql .=  " WHERE (";
         $first = true;
         foreach ($_POST["categories"] as $id) {
-            if (!$first) {
+            if (! $first) {
                 $sql .= " OR";
             }
             $category = $db->getConn()->getCategory($id);
             $sql .= " (" . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DATE . ") >= " . $category->getAgeCategory()->getMinAge() . " AND";
             $sql .= " " . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DATE . ") <= " . $category->getAgeCategory()->getMaxAge() . " AND ";
-            $sql .= dbAthletes::GENDERID . " = " .$category->getGender()->getId() . ")";
+            $sql .= dbAthletes::GENDERID . " = " . $category->getGender()->getId() . ")";
             $first = false;
         }
-        $sql .= ") OR (" .dbAthletes::CATEGORY . " IN (".implode(",", $_POST["categories"]).") ) ORDER BY " . dbAthletes::TEAMTYPEID . "," . dbAthletes::FULLNAME;
+        $sql .= ") OR (" . dbAthletes::CATEGORY . " IN (" . implode(",", $_POST["categories"]) . ") ) ORDER BY " . dbAthletes::TEAMTYPEID . "," . dbAthletes::FULLNAME;
         echo json_encode($db->getConn()->executeSqlToArray($sql));
     }
 

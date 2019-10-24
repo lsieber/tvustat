@@ -31,7 +31,17 @@ class AddElement extends DbHandler
         foreach ($collumns as $key => $dbPosition) {
             $values[$dbPosition] = isset($arrayAssociative[$key]) ? $arrayAssociative[$key] : NULL;
         }
-        return $this->addValues($values, $this->getTable(dbPerformance::class));
+        $querry = $this->addValues($values, $this->getTable(dbPerformance::class));
+        if (array_key_exists(dbPerformanceDetail::DETAIL, $arrayAssociative)) {
+            $detail = $arrayAssociative[dbPerformanceDetail::DETAIL];
+            if ($detail != NULL && $detail != "") {
+                $perfId = $querry->getCustomValue(dbPerformance::getIDString());
+                $sqlDetail = "INSERT INTO " . dbPerformanceDetail::DBNAME . ' VALUES (Null, ' . $perfId . ',"' . $detail . '")';
+                $result = $this->conn->getConn()->query($sqlDetail);
+                $querry->putCustomValue("DetailInsertion", ($result == 1));
+            }
+        }
+        return $querry;
     }
 
     /**
@@ -51,13 +61,13 @@ class AddElement extends DbHandler
             ->getId() == $disziplin->getTeamType()->getId();
         if (($minValueOk && $maxValueOk && $teamTypeMatches)) {
             $querry = $this->addElement($performance, $this->getTable(dbPerformance::class));
-//             echo "Detail: " . $performance->getDetail();
+            // echo "Detail: " . $performance->getDetail();
             if (! is_null($performance->getDetail())) {
                 $perfId = $querry->getCustomValue(dbPerformance::getIDString());
                 $sqlDetail = "INSERT INTO " . dbPerformanceDetail::DBNAME . ' VALUES (Null, ' . $perfId . ',"' . $performance->getDetail() . '")';
-//                 echo $sqlDetail;
+                // echo $sqlDetail;
                 $result = $this->conn->getConn()->query($sqlDetail);
-//                 var_dump($result);
+                // var_dump($result);
                 $querry->putCustomValue("DetailInsertion", ($result == 1));
             }
             return $querry;
@@ -156,7 +166,7 @@ class AddElement extends DbHandler
         }
         $sql .= ")";
 
-//         echo $sql;
+        // echo $sql;
         $result = $this->conn->getConn()->query($sql);
         $new_id = $this->conn->getConn()->insert_id;
         $success = ($result == 1);

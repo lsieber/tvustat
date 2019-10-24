@@ -16,6 +16,7 @@ use config\dbPerformanceSource;
 use config\dbPointSchemeNames;
 use config\dbPointSchemes;
 use config\dbMultipleDisziplins;
+use config\dbAthleteActiveYear;
 
 class DBMaintainer
 {
@@ -51,6 +52,13 @@ class DBMaintainer
         return $this->add->person($athlete);
     }
 
+    public function addAthleteActiveYear(int $athleteID, int $athleteActiveYear)
+    {
+        $sqlActive = "INSERT INTO " . dbAthleteActiveYear::DBNAME . " VALUES (" . $athleteID . "," . $athleteActiveYear . ")";
+        return $this->conn->getConn()->query($sqlActive);
+    }
+    
+    
     public function addDisziplin(Disziplin $disziplin)
     {
         return $this->add->disziplin($disziplin);
@@ -293,14 +301,15 @@ class DBMaintainer
     {
         $sql = "SELECT * From " . dbDisziplin::DBNAME;
         $sql .= " LEFT JOIN " . dbMultipleDisziplins::DBNAME . " ON " . dbMultipleDisziplins::DBNAME . "." . dbMultipleDisziplins::ID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
-        
+
         // $sql .= " INNER JOIN " . dbAgeCategory::DBNAME . " ON " . dbCategory::DBNAME . "." . dbCategory::AGECATEGORYID . " = " . dbAgeCategory::DBNAME . "." . dbAgeCategory::ID;
         return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbDisziplin::ORDER);
     }
 
     public function getAllAthletes()
     {
-        $r = $this->conn->executeSqlToArray("SELECT * From " . dbAthletes::DBNAME . " ORDER BY " . dbAthletes::FULLNAME);
+        $innerjoin = " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        $r = $this->conn->executeSqlToArray("SELECT * From " . dbAthletes::DBNAME . $innerjoin . " ORDER BY " . dbAthletes::FULLNAME);
         return self::changeDateType($r, dbAthletes::DATE);
     }
 

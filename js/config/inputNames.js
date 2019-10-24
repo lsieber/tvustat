@@ -66,6 +66,13 @@ export const existingPerformances = "existingPerformances";
 export const lastPerformances = "lastPerformances";
 
 /**
+ * Details
+ */
+export const detailDiv = "detailDiv";
+export const detailInput = "detailInput";
+
+
+/**
  * POINTS
  */
 export const pointsSchemeSelect = "pointsSchemeSelect"

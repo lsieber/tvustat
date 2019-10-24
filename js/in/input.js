@@ -96,11 +96,13 @@ export function insertPerformanceField(perfId) {
     var disziplin = getValuesFromStorage(STORE.disziplinStore)[disziplinIDStore];
     var disziplinID = disziplin[DB.disziplinID];
     var detail = null;
-    if(disziplin[DB.multiIds] != null){
-      detail = createMultipleDetail();
+    if (disziplin[DB.multiIds] != null) {
+      detail = document.getElementById(INPUT.detailInput).value;
+      alert(detail);
     }
+
     var performanceValue = performance.value;
-     
+
     var data = {
       athleteID: athleteID, //
       disziplinID: disziplinID, //
@@ -108,8 +110,10 @@ export function insertPerformanceField(perfId) {
       performance: performanceValue, //
       wind: wind.value, //
       placement: ranking.value, //
-      sourceID: sourceID
+      sourceID: sourceID, // 
+      detailDescription: detail
     }
+
     insertPerformanceWithData(data, athlete, disziplin)
   }
 }
@@ -139,8 +143,58 @@ function insertPerformanceWithData(params, athlete, disziplin) {
   }
 }
 
-function createMultipleDetail(){
+function createMultipleDetail() {
+  const outcategory = getSelectedRadioButtonObject(INPUT.categoryInputName);
+  const outcategoryStoreID = outcategory.id.slice(INPUT.categoryPrefix.length);
 
+  const categoryID = getValuesFromStorage(STORE.outputCategoryStore)[outcategoryStoreID][DB.categoryIDs].split(",")[0];
+
+  const genderID = getValuesFromStorage(STORE.categoryStore)[categoryID][DB.genderID];
+
+  const e = document.getElementById(INPUT.pointsSchemeSelect);
+  const schemeNameId = e.options[e.selectedIndex].value;
+
+  const schemeID = getSchemeID(schemeNameId, genderID);
+
+  const multipleIDStore = getSelectedRadioButtonObject(INPUT.disziplinInputName).id.slice(INPUT.disziplinPrefix.length);
+
+  var detail = [];
+
+  const performances = document.getElementsByName(INPUT.performanceInputName);
+  for (const key in performances) { // each performance belongs to a disziplin which is stored in the performance field id
+    const p = performances[key];
+    if (p.id != undefined) {
+      var disStoreID = p.id.slice(INPUT.performancePrefix.length);
+      if (disStoreID != multipleIDStore) { // if the disziplin is not the multiple
+        var disziplinDBID = getValuesFromStorage(STORE.disziplinStore)[disStoreID][DB.disziplinID];
+        if (p.value != "") {
+          detail.push(createDetailOf(disziplinDBID, schemeID, p.value));
+        }
+      }
+    }
+  }
+  return detail.join("/");
+}
+
+function getSchemeID(schemeNameId, genderID) {
+  // alert(schemeNameId + ",   " + genderID);
+  var schemeStore = getValuesFromStorage(STORE.definitionsStore)[STORE.pointSchemesStore];
+  for (const key in schemeStore) {
+    if (schemeStore[key][DB.pointSchemeNameID] == schemeNameId && schemeStore[key][DB.genderID] == genderID) {
+      return schemeStore[key][DB.pointSchemeID];
+    }
+  }
+  return null;
+}
+
+function createDetailOf(disziplinDBID, schemeID, value) {
+  if (value != "") {
+    var p = getValuesFromStorage(STORE.definitionsStore)[STORE.pointParameterStore];
+    // alert(schemeID + ", " + disziplinDBID);
+    var pointParameter = p[schemeID][disziplinDBID];
+    return pointParameter[DB.shortDisziplinName] + " " + value;
+  }
+  return "";
 }
 
 function processPerformanceData(data) {
@@ -241,8 +295,13 @@ window.time2seconds = time2seconds
  */
 
 function calcualtePoints(field) {
-
   pointCalculator.calculate(field);
+
+  var detail = createMultipleDetail();
+  var html = '<input type="text" class="form-control" id=' + INPUT.detailInput + '>';
+  document.getElementById(INPUT.detailDiv).innerHTML = html;
+  document.getElementById(INPUT.detailInput).value = detail;
+
 }
 window.calcualtePoints = calcualtePoints
 

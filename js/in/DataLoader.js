@@ -52,13 +52,19 @@ function createRadioParamsCompetition(data) {
 
 
 export function loadCategories() {
-
-    existingEntries.post({ type: "allOutputCategories" }, processCategoriesResult, "json");
+    existingEntries.post({ type: "allOutputCategories" }, processOutputCategoriesResult, "json");
+    existingEntries.post({ type: "allCategories" }, processCategoriesResult, "json");
 }
 window.loadCategories = loadCategories
 
 function processCategoriesResult(data) {
-    addToStorage(data, STORE.categoryStore);
+    for (const key in data) {
+        addValueToArrayStorage(STORE.categoryStore, data[key][DB.categoryID], data[key]);
+    }
+}
+
+function processOutputCategoriesResult(data) {
+    addToStorage(data, STORE.outputCategoryStore);
     var html = createRadios(INPUT.categoryList, createRadioParamsCategories(data));
     document.getElementById(INPUT.categoryDiv).innerHTML = html;
 }
@@ -128,12 +134,15 @@ function createRadioParamsAthlete(data) {
     var params = [];
     for (const key in data) {
         const value = data[key];
-        params[key] = {};
-        params[key].id = INPUT.athletePrefix + value[INPUT.storeIdentifier];
-        params[key].name = INPUT.athleteInputName;
-        params[key].value = value[DB.athleteID];
-        params[key].text = value[DB.athleteName];
-        params[key].additional = " onclick=onSelectionChange()";
+        // alert(value[DB.activeYear] + ", " + document.getElementById(INPUT.yearInput).value);
+        if (value[DB.activeYear] >= document.getElementById(INPUT.yearInput).value) {
+            params[key] = {};
+            params[key].id = INPUT.athletePrefix + value[INPUT.storeIdentifier];
+            params[key].name = INPUT.athleteInputName;
+            params[key].value = value[DB.athleteID];
+            params[key].text = value[DB.athleteName];
+            params[key].additional = " onclick=onSelectionChange()";
+        }
     }
     return params;
 }
@@ -162,12 +171,12 @@ function processSourceResult(data) {
 * ********************************************************/
 
 function createPointSchemeNamesSelector() {
-    var html = '<select class="form-control" id="' + INPUT.pointsSchemeSelect + '">';
+    var html = '<label>Point Scheme</label><select class="form-control" id="' + INPUT.pointsSchemeSelect + '">';
 
     var pointSNs = getValuesFromStorage(STORE.definitionsStore)[STORE.pointSchemeNamesStore];
     for (const key in pointSNs) {
         const pointSN = pointSNs[key];
-        html += '<option value=' + pointSN[DB.pointSchemeNameID] + '>' + pointSN[DB.pointSchemeName]+ '</option>';
+        html += '<option value=' + pointSN[DB.pointSchemeNameID] + '>' + pointSN[DB.pointSchemeName] + '</option>';
     }
     document.getElementById(INPUT.pointSchemeDiv).innerHTML = html + '</select>';
 }
@@ -182,7 +191,7 @@ function changePerformanceInput() {
     var multiIds = dbdisziplin[DB.multiIds];
 
     if (multiIds == null) {
-        document.getElementById(INPUT.performanceDiv).innerHTML = createPerformanceInput(dbdisziplin[INPUT.storeIdentifier], INPUT.performanceInputName, dbdisziplin[DB.disziplinName],"");
+        document.getElementById(INPUT.performanceDiv).innerHTML = createPerformanceInput(dbdisziplin[INPUT.storeIdentifier], INPUT.performanceInputName, dbdisziplin[DB.disziplinName], "");
     } else {
         createPointSchemeNamesSelector();
         const ids = multiIds.split(",");
@@ -218,10 +227,10 @@ function createPerformanceInput(id, name, label, additional) {
             value = " value='" + lastIsterted[id] + "'";
         }
     }
-    var html = '<label>' + label + '</label> <div id='+INPUT.performanceInputPrefix + id+' ></div><input type="text" class="form-control" ';
+    var html = '<label>' + label + '</label> <div id=' + INPUT.performanceInputPrefix + id + ' ></div><input type="text" class="form-control" ';
     html += 'id="' + INPUT.performancePrefix + id + '" name="' + name + '" placeholder="Enter Performance"';
-    html += value + additional +' onchange="registerPerformance(this)" >'
-    html += '<input type="hidden" name='+INPUT.pointName+' id="'+INPUT.pointPrefix + id+'">';
+    html += value + additional + ' onchange="registerPerformance(this)" >'
+    html += '<input type="hidden" name=' + INPUT.pointName + ' id="' + INPUT.pointPrefix + id + '">';
     return html;
 }
 

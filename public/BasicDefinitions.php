@@ -15,7 +15,9 @@ $result = array( //
     "sortings" => arrayOfSortings($conn), //
     "disziplinTypes" => arrayOfDisziplinTypes($conn), //
     "teamTypes" => arrayOfTeamTypes($conn), //
-    "pointSchemeNames" =>  $conn->getPointSchemeNames()
+    "pointSchemeNames" =>  $conn->getPointSchemeNames(), //
+    "pointSchemes" =>  $conn->getPointSchemes(), //
+    "pointParameter" => $conn->getPointParameters()
 );
 
 echo json_encode($result);

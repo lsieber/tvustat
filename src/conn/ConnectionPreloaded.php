@@ -9,6 +9,8 @@ use config\dbCategory;
 use config\dbAgeCategory;
 use config\dbPerformanceSource;
 use config\dbPointSchemeNames;
+use config\dbPointSchemes;
+use config\dbPointParameters;
 
 class ConnectionPreloaded extends Connection
 {
@@ -56,10 +58,23 @@ class ConnectionPreloaded extends Connection
     protected $sources = array();
 
     /**
-     * 
+     *
+     * @var array
      */
     protected $pointSchemeNames = array();
-    
+
+    /**
+     *
+     * @var array
+     */
+    protected $pointSchemes = array();
+
+    /**
+     *
+     * @var array
+     */
+    protected $pointParameter = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -71,6 +86,8 @@ class ConnectionPreloaded extends Connection
         $this->loadCategories();
         $this->loadSources();
         $this->loadPointSchemeNames();
+        $this->loadPointSchemes();
+        $this->loadPointParameter();
     }
 
     private function loadGenders()
@@ -137,13 +154,34 @@ class ConnectionPreloaded extends Connection
             $this->sources[$v[dbPerformanceSource::ID]] = dbPerformanceSource::sourceFromAssocArray($v);
         }
     }
-    
+
     private function loadPointSchemeNames()
     {
         $sql = "SELECT * From " . dbPointSchemeNames::DBNAME;
         $array = $this->executeSqlToArray($sql);
         foreach ($array as $v) {
             $this->pointSchemeNames[$v[dbPointSchemeNames::ID]] = $v;
+        }
+    }
+
+    private function loadPointSchemes()
+    {
+        $sql = "SELECT * From " . dbPointSchemes::DBNAME;
+        $array = $this->executeSqlToArray($sql);
+        foreach ($array as $v) {
+            $this->pointSchemes[$v[dbPointSchemes::ID]] = $v;
+        }
+    }
+
+    private function loadPointParameter()
+    {
+        $sql = "SELECT * From " . dbPointParameters::DBNAME;
+        $array = $this->executeSqlToArray($sql);        
+        foreach ($array as $v) {
+            if (!array_key_exists($v[dbPointParameters::SCHEMEID], $this->pointParameter)) {
+                $this->pointParameter[$v[dbPointParameters::SCHEMEID]] = array();
+            }
+            $this->pointParameter[$v[dbPointParameters::SCHEMEID]][$v[dbPointParameters::DISZIPLINID]] = $v;
         }
     }
 
@@ -246,10 +284,20 @@ class ConnectionPreloaded extends Connection
     {
         return $this->sources;
     }
-    
+
     public function getPointSchemeNames()
     {
         return $this->pointSchemeNames;
+    }
+
+    public function getPointSchemes()
+    {
+        return $this->pointSchemes;
+    }
+    
+    public function getPointParameters()
+    {
+        return $this->pointParameter;
     }
 }
 

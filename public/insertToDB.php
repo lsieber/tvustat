@@ -13,6 +13,8 @@ use tvustat\DBMaintainer;
 use tvustat\Disziplin;
 use tvustat\QuerryOutcome;
 use tvustat\TimeUtils;
+use config\dbAthleteActiveYear;
+use tvustat\DateFormatUtils;
 
 require_once '../vendor/autoload.php';
 
@@ -33,7 +35,7 @@ if ($insert_disziplin) {
             echo "We have a problem with the time value of the diszipln";
         }
     }
-    
+
     $disziplin = new Disziplin( //
     $_POST[dbDisziplin::NAME], //
     $c->getSorting(intval($_POST[dbDisziplin::SORTINGID])), //
@@ -43,8 +45,8 @@ if ($insert_disziplin) {
     $c->getDisziplinType(intval($_POST[dbDisziplin::DISZIPLINTYPE])), //
     $c->getTeamType(intval($_POST[dbDisziplin::TEAMTYPEID])), //
     floatval($_POST[dbDisziplin::MINVAL]), //
-    floatval($_POST[dbDisziplin::MAXVAL])) //
-    ; //
+    floatval($_POST[dbDisziplin::MAXVAL])); //
+                                            //
 
     /**
      * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
@@ -53,16 +55,28 @@ if ($insert_disziplin) {
 }
 
 if ($insert_athlete) {
+    $date = null;
+    if (strlen($_POST[dbAthletes::DATE]) == 4) {
+        $str = $_POST[dbAthletes::DATE] .".01.01";
+        $date = DateTime::createFromFormat("Y.m.d", $str);
+    } else if (strlen($_POST[dbAthletes::DATE]) == 10) {
+        $date = new DateTime($_POST[dbAthletes::DATE]);
+    }
+    echo DateFormatUtils::formatDateForBL($date)<
     $athlete = new Athlete( //
     $_POST[dbAthletes::FULLNAME], //
-    new DateTime($_POST[dbAthletes::DATE]), //
+    $date, //
     $c->getGender(intval($_POST[dbAthletes::GENDERID])), //
     $c->getTeamType(intval($_POST[dbDisziplin::TEAMTYPEID]))); //
 
     /**
      * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
      */
-    $querry =$db->addAthlete($athlete);
+    $querry = $db->addAthlete($athlete);
+    if (array_key_exists(dbAthleteActiveYear::YEAR, $_POST)) {
+        $value = $db->addAthleteActiveYear($querry->getCustomValue(dbAthletes::getIDString()), intval($_POST[dbAthleteActiveYear::YEAR]));
+        $querry->putCustomValue("active year Result", $value);
+    }
     $querry->putCustomValue(dbAthletes::FULLNAME, $_POST[dbAthletes::FULLNAME]);
     $querry->putCustomValue(dbAthletes::DATE, $_POST[dbAthletes::DATE]);
     echo json_encode($querry->getJSONArray());
@@ -101,8 +115,8 @@ if ($insert_performance) {
 
         $disziplin = $db->getDisziplin($_POST[dbPerformance::DISZIPLINID]);
         $athlete = $db->getAthlete($_POST[dbPerformance::ATHLETEID]);
-        
-        $perfModified = ($disziplin->isTime())? TimeUtils::time2seconds($_POST["performance"]):$_POST["performance"];
+
+        $perfModified = ($disziplin->isTime()) ? TimeUtils::time2seconds($_POST["performance"]) : $_POST["performance"];
 
         $minValueOk = $perfModified >= $disziplin->getMinValue();
         $maxValueOk = $perfModified <= $disziplin->getMaxValue();
