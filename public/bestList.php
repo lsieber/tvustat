@@ -8,7 +8,6 @@ require_once '../vendor/autoload.php';
 
 $db = new DBMaintainer();
 
-
 /**
  * TESTING VALUES
  */
@@ -19,15 +18,15 @@ $db = new DBMaintainer();
 // $_POST["keepTeam"] = "YEARATHLETE";
 // $_POST["keepPerson"] = "ATHLETE";
 // $_POST["disziplins"] = array(5,6,7);
-
 /**
  * END OF TESTING VALUES
  */
 
 /**
- * Start Of the imput of values from the POST Variable whith the required tests of the variables 
+ * Start Of the imput of values from the POST Variable whith the required tests of the variables
  */
 
+$yearsControl = $_POST["yearsControl"];
 $years = $_POST["years"];
 
 $categoryIDs = $_POST["categories"];
@@ -40,11 +39,14 @@ foreach ($categoryIDs as $key => $id) {
 
 $top = $_POST["top"];
 
-/* Values:
+$disziplins = (array_key_exists("disziplins", $_POST)) ? $_POST["disziplins"] : array();
+
+/*
+ * Values:
  * ALL: keeps all values of an athlete for all years
  * ATHLETE: keeps best per Athlete not woriing about the year (personal bests)
  * YEARATHLETE: keeps best per Athlete and year. This results in a list which has all saison bests in it for each athlete
- */ 
+ */
 $keepTeam = $_POST["keepTeam"];
 $keepPerson = $_POST["keepPerson"];
 $keepAthlete = array();
@@ -59,12 +61,12 @@ switch ($keepPerson) {
         array_push($keepYearAthlete, 1); // TEAM TYPE 1 for the team
         break;
     default:
-        echo "ERROR WE COULD NOT FIND THE DEFINED VALUE". $keepTeam;
+        echo "ERROR WE COULD NOT FIND THE DEFINED VALUE" . $keepTeam;
         break;
 }
 switch ($keepTeam) {
     case "ALL":
-    break;
+        break;
     case "ATHLETE":
         array_push($keepAthlete, 2); // TEAM TYPE 2 for the team
         break;
@@ -72,13 +74,16 @@ switch ($keepTeam) {
         array_push($keepYearAthlete, 2); // TEAM TYPE 2 for the team
         break;
     default:
-        echo "ERROR WE COULD NOT FIND THE DEFINED VALUE". $keepTeam;
-    break;
+        echo "ERROR WE COULD NOT FIND THE DEFINED VALUE" . $keepTeam;
+        break;
 }
 
+/*
+ * BEST LIST BUILD
+ *
+ */
 
-$disziplins = (array_key_exists("disziplins", $_POST)) ? $_POST["disziplins"] : array();
-$blh = new BestListHandler($years, $categoryControl, $categories, $top, $disziplins, $db);
+$blh = new BestListHandler($yearsControl, $years, $categoryControl, $categories, $top, $disziplins, $db);
 
 $blh->callDB();
 $blh->formatBestList($keepAthlete, $keepYearAthlete);

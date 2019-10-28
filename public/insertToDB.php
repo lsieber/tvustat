@@ -58,13 +58,12 @@ if ($insert_disziplin) {
 if ($insert_athlete) {
     $date = null;
     if (strlen($_POST[dbAthletes::DATE]) == 4) {
-        $str = $_POST[dbAthletes::DATE] .".01.01";
+        $str = $_POST[dbAthletes::DATE] . ".01.01";
         $date = DateTime::createFromFormat("Y.m.d", $str);
     } else if (strlen($_POST[dbAthletes::DATE]) == 10) {
         $date = new DateTime($_POST[dbAthletes::DATE]);
     }
-    echo DateFormatUtils::formatDateForBL($date)<
-    $athlete = new Athlete( //
+    echo DateFormatUtils::formatDateForBL($date) < $athlete = new Athlete( //
     $_POST[dbAthletes::FULLNAME], //
     $date, //
     $c->getGender(intval($_POST[dbAthletes::GENDERID])), //
@@ -117,8 +116,7 @@ if ($insert_performance) {
         $disziplin = $db->getDisziplin($_POST[dbPerformance::DISZIPLINID]);
         $athlete = $db->getAthlete($_POST[dbPerformance::ATHLETEID]);
         $competition = $db->getCompetition($_POST[dbPerformance::COMPETITOINID]);
-        
-        
+
         $perfModified = ($disziplin->isTime()) ? TimeUtils::time2seconds($_POST["performance"]) : $_POST["performance"];
 
         $minValueOk = $perfModified >= $disziplin->getMinValue();
@@ -127,7 +125,7 @@ if ($insert_performance) {
         $forcedEntry = (isset($_POST['forced'])) ? $_POST['forced'] == "true" : FALSE;
 
         if (($minValueOk && $maxValueOk && $teamTypeMatches) || ($forcedEntry)) {
-            if (! $db->checkPerformanceByIds($_POST)) { 
+            if (! $db->checkPerformanceByIds($_POST)) {
                 $existingPerformances = $db->checkPerformanceAthleteYear($disziplin->getId(), $athlete->getId(), DateFormatUtils::formatDateaAsYear($competition->getDate()));
                 $performanceExists = false;
                 if (CompetitionUtils::isFromTVUBuch($competition)) {
@@ -136,7 +134,7 @@ if ($insert_performance) {
                         $performanceExists = true;
                     }
                 }
-                if(!$performanceExists){
+                if (! $performanceExists) {
                     $result = $db->addPerformanceWithIdsOnly($_POST);
                     $newPerf = $db->getPerformance($result->getCustomValue(dbPerformance::getIDString()));
                     foreach ($existingPerformances as $performanceRaw) {

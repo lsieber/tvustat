@@ -2,14 +2,17 @@
 <html>
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="inc/style.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-	<script type=module src="../js/input/performanceInput.js"></script>
-	<script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="inc/style.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type=module src="../js/input/performanceInput.js"></script>
+<script>
 		function clearSession() {
 			sessionStorage.clear();
 			onload();
@@ -26,7 +29,8 @@
 	<div class="container">
 		<div class="row">
 			<a class="btn btn-primary" href="#" onclick="test()">Test
-				Function</a> <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
+				Function</a> <a class="btn btn-primary" href="#"
+				onclick="clearSession()">Clear sessoin</a>
 		</div>
 	</div>
 	<div class="container">
@@ -41,16 +45,16 @@
 							<span class="input-group-text" id="inputFileDescription">Upload</span>
 						</div>
 						<input type="file" class="custom-file-input" id="inputFile"
-							aria-describedby="inputFileDescription"> <label class="custom-file-label"
-							for="inputFile">Choose file</label>
+							aria-describedby="inputFileDescription"> <label
+							class="custom-file-label" for="inputFile">Choose file</label>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="jumbotron" id="modalResult">
 			<a class="btn btn-primary" href="#" onclick="loadPerformances()">Load
-				Performances</a> <a class="btn btn-primary" href="#" onclick="insertPerfectMatches()">insert Perfect
-				Matches</a>
+				Performances</a> <a class="btn btn-primary" href="#"
+				onclick="insertPerfectMatches()">insert Perfect Matches</a>
 			<div id="inserteationOutput"></div>
 		</div>
 		<div class="row">
@@ -70,18 +74,18 @@
 				<h2>Disziplin</h2>
 				<div id="disziplinList"></div>
 			</div>
-			
+
 			<div class="col-sm-3">
 				<h2>Athlete</h2>
 				<div id="athleteList"></div>
 			</div>
-			
+
 			<div class="col-sm-3">
 				<h2>Performance</h2>
 				<div id="performanceInputDiv">
 					<div class="form-group">
-						<label>Performance</label> <input type="text" class="form-control" id="performanceInput"
-							placeholder="Enter Performance">
+						<label>Performance</label> <input type="text" class="form-control"
+							id="performanceInput" placeholder="Enter Performance">
 					</div>
 
 					<a class="btn btn-primary" href="#" onclick="insertPerformance()">
@@ -93,11 +97,12 @@
 					</div>
 
 					<div class="form-group">
-						<label> Wind</label> <input type="text" class="form-control" id="windInput" placeholder="">
+						<label> Wind</label> <input type="text" class="form-control"
+							id="windInput" placeholder="">
 					</div>
 					<div class="form-group">
-						<label> Rangking</label> <input type="text" class="form-control" id="rankingInput"
-							placeholder="">
+						<label> Rangking</label> <input type="text" class="form-control"
+							id="rankingInput" placeholder="">
 					</div>
 				</div>
 			</div>

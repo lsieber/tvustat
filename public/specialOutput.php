@@ -18,7 +18,7 @@ if ($resultsAthlete) {
     $athleteId = $_POST["athleteID"];
     $bl = new AthleteBestList($athleteId, $db);
     $bl->callDB();
-    $bl->formatBestList("ALL"); //TODO
+    $bl->formatBestList("ALL"); // TODO
     $bl->printTable();
 }
 

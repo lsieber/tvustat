@@ -13,7 +13,7 @@ class dbPerformanceSource
     public const NAME = "sourceName";
 
     public const LINK = "sourceLink";
-    
+
     public const SOURCETYPEID = "sourceTypeID";
 
     public static function sourceFromAssocArray($r)

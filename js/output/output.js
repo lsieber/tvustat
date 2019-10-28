@@ -92,6 +92,7 @@ function loadBestList() {
     var yearIDsStore = getSelectedCheckboxesValues(window.yearsCheckName);
     var yearStore = getValuesFromStorage(window.yearsStore);
     var years = yearIDsStore.map(sId => yearStore[sId]["YEAR(competitionDate)"]);
+    var yearsControl = getSelectedRadioButtonObject(window.yearControl);
 
     var e = document.getElementById("disziplins");
     var disziplin = e.options[e.selectedIndex].value;
@@ -106,6 +107,7 @@ function loadBestList() {
 
     var params = {
         years: years,
+        yearsControl: yearsControl.id,
         categories: categories,
         categoryControl: categoryControl.id,
         top: topNumber,

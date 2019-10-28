@@ -59,12 +59,12 @@ class dbCompetitionLocations extends dbTableDescription
             2 => $competitionLocation->getFacility()
         );
     }
-    
+
     public static function competitionLocationFromAsocArray($r, ConnectionPreloaded $conn)
     {
         return new CompetitionLocation( //
-            $r[self::VILLAGE], //
-            $r[self::FACILITY], //
-            $r[self::ID]);
+        $r[self::VILLAGE], //
+        $r[self::FACILITY], //
+        $r[self::ID]);
     }
 }

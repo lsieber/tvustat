@@ -18,10 +18,12 @@ $U18 = new AgeCategory("U18", "U18", 16, 17, 5);
 $Aktiv = new AgeCategory("aktiv", "aktiv", 23, 100, 8);
 
 $U16M = new Category($U16, $male, "U16M", "Jugend B", 0);
-$U18M = new Category($U18, $male, "Männer", "Jugend A", 0);
-$man = new Category($Aktiv, $male, "Männer", "Männer", 0);
+$U18M = new Category($U18, $male, "Mï¿½nner", "Jugend A", 0);
+$man = new Category($Aktiv, $male, "Mï¿½nner", "Mï¿½nner", 0);
 $categories = array(
-    $man, $U16M, $U18M
+    $man,
+    $U16M,
+    $U18M
 );
 
 $top = 5;

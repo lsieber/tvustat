@@ -2,16 +2,19 @@
 <html>
 
 <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-      <link rel="stylesheet" type="text/css" href="inc/style.css">
-      <!-- <link rel="stylesheet" href="http://www.tvunterseen.ch/fileadmin/templates/css/style.css"> -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="inc/style.css">
+<!-- <link rel="stylesheet" href="http://www.tvunterseen.ch/fileadmin/templates/css/style.css"> -->
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-      <script type=module src="../js/output/output.js"></script>
-      <script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type=module src="../js/output/output.js"></script>
+<script>
             function clearSession() {
                   sessionStorage.clear();
                   onload();
@@ -24,32 +27,31 @@
 </head>
 
 <body onload="onload()">
-      <!--    <div class="container">
+	<!--    <div class="container">
             <div class="row">
                   <a class="btn btn-primary" href="#" onclick="test()">Test Function</a>
                   <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
             </div>
       </div>  -->
-      <div id="content">
-            <h1>TVU Statistik Tool</h1>
-            <p></p>
+	<div id="content">
+		<h1>TVU Statistik Tool</h1>
+		<p></p>
 
 
-            <div class="row">
-                  <!--  <div class="col-sm-9">
+		<div class="row">
+			<!--  <div class="col-sm-9">
                         <div id="outputCategoryList"> </div>
                   </div>-->
-                  <div class="col-sm-6">
-                        <div id="categoryList"> </div>
-                  </div>
+			<div class="col-sm-6">
+				<div id="categoryList"></div>
+			</div>
 
-                  <div class="col-sm-6">
-                        <div id="yearsList">
-                        </div>
-                  </div>
-            </div>
+			<div class="col-sm-6">
+				<div id="yearsList"></div>
+			</div>
+		</div>
 
-            <!--      <div class="row">
+		<!--      <div class="row">
                   <div class="col-sm-12">
                         <h2>Disziplin</h2>
                         <div id="disziplinList"> </div>
@@ -57,124 +59,115 @@
                   </div>
             </div>-->
 
-            <div id="additionalSettings" class="collapse">
-                  <div class="row">
-                        <div class="col-sm-12">
-                              <!-- <a class="btn btn-setting" href="#" onclick="changeCatList()">Mehr Kategorien</a> -->
-                              <div class="checkbox-control">
-                                    <input type="checkbox" id="changeCategory" onclick="changeCatList()">
-                                    <label for="changeCategory">Mehr Kategorien</label>
-                              </div>
+		<div id="additionalSettings" class="collapse">
+			<div class="row">
+				<div class="col-sm-12">
+					<!-- <a class="btn btn-setting" href="#" onclick="changeCatList()">Mehr Kategorien</a> -->
+					<div class="checkbox-control">
+						<input type="checkbox" id="changeCategory"
+							onclick="changeCatList()"> <label for="changeCategory">Mehr
+							Kategorien</label>
+					</div>
 
-                        </div>
-                  </div>
-                  <div class="row">
-                        <div class="col-sm-3">
-                              <div class="form-group">
-                                    <label>
-                                          <h3>Anzahl Resultate</h3>
-                                    </label>
-                                    <input type="number" class="form-control" id="topNumber"
-                                          placeholder="Anzahl Resultate" min="1" max="10000" value=100>
-                                    <div id="topradios" class="">
-                                          <input type="radio" class="form-control" name="topVals" value="3" id="top3"
-                                                onclick="fillTopNumber(this)">
-                                          <label for="top3">3</label>
-                                          <input type="radio" class="form-control" name="topVals" value="10" id="top10"
-                                                onclick="fillTopNumber(this)">
-                                          <label for="top10">10</label>
-                                          <input type="radio" class="form-control" name="topVals" value="30" id="top30"
-                                                onclick="fillTopNumber(this)">
-                                          <label for="top30">30</label>
-                                          <input type="radio" class="form-control" name="topVals" value="100"
-                                                id="top100" onclick="fillTopNumber(this)" checked="true">
-                                          <label for="top100">100</label>
-                                          <input type="radio" class="form-control" name="topVals" value="500"
-                                                id="top500" onclick="fillTopNumber(this)">
-                                          <label for="top500">500</label>
-                                    </div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>
+							<h3>Anzahl Resultate</h3>
+						</label> <input type="number" class="form-control" id="topNumber"
+							placeholder="Anzahl Resultate" min="1" max="10000" value=100>
+						<div id="topradios" class="">
+							<input type="radio" class="form-control" name="topVals" value="3"
+								id="top3" onclick="fillTopNumber(this)"> <label
+								for="top3">3</label> <input type="radio" class="form-control"
+								name="topVals" value="10" id="top10"
+								onclick="fillTopNumber(this)"> <label for="top10">10</label>
+							<input type="radio" class="form-control" name="topVals"
+								value="30" id="top30" onclick="fillTopNumber(this)"> <label
+								for="top30">30</label> <input type="radio" class="form-control"
+								name="topVals" value="100" id="top100"
+								onclick="fillTopNumber(this)" checked="true"> <label
+								for="top100">100</label> <input type="radio"
+								class="form-control" name="topVals" value="500" id="top500"
+								onclick="fillTopNumber(this)"> <label for="top500">500</label>
+						</div>
 
-                              </div>
-                        </div>
+					</div>
+				</div>
 
-                        <div class="col-sm-3">
-                              <div class="form-group" id="disziplinSelection">
-
-                              </div>
-                        </div>
+				<div class="col-sm-3">
+					<div class="form-group" id="disziplinSelection"></div>
+				</div>
 
 
-                        <div class="col-sm-3">
-                              <div class="form-group">
-                                    <label>
-                                          <h3>Resultate Athleten</h3>
-                                    </label>
-                                    <div id="athleteResultsRadios">
-                                          <input type="radio" class="form-control" name="athleteResults" value="ALL"
-                                                id="allPerson">
-                                          <label for="allPerson">Alle eines Athleten</label>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>
+							<h3>Resultate Athleten</h3>
+						</label>
+						<div id="athleteResultsRadios">
+							<input type="radio" class="form-control" name="athleteResults"
+								value="ALL" id="allPerson"> <label for="allPerson">Alle
+								eines Athleten</label> <input type="radio" class="form-control"
+								name="athleteResults" value="YEARATHLETE" id="bestPerYearPerson">
+							<label for="bestPerYearPerson">Bestes je Jahr und Athlet
+								(SB)</label> <input type="radio" class="form-control"
+								name="athleteResults" value="ATHLETE" id="bestPerPerson"
+								checked="true"> <label for="bestPerPerson">Bestes
+								eines Athleten (PB)</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>
+							<h3>Resultate Teams</h3>
+						</label>
+						<div id="teamResultsRadios">
+							<input type="radio" class="form-control" name="teamResults"
+								value="ALL" id="allTeam"> <label for="allTeam">Alle
+								eines Teams</label> <input type="radio" class="form-control"
+								name="teamResults" value="YEARATHLETE" id="bestPerYearTeam"
+								checked="true"> <label for="bestPerYearTeam">Bestes
+								je Jahr und Team (SB)</label> <input type="radio" class="form-control"
+								name="teamResults" value="ATHLETE" id="bestPerTeam"> <label
+								for="bestPerTeam">Bestes eines Teams (PB)</label>
 
-                                          <input type="radio" class="form-control" name="athleteResults"
-                                                value="YEARATHLETE" id="bestPerYearPerson">
-                                          <label for="bestPerYearPerson">Bestes je Jahr und Athlet (SB)</label>
-
-                                          <input type="radio" class="form-control" name="athleteResults" value="ATHLETE"
-                                                id="bestPerPerson" checked="true">
-                                          <label for="bestPerPerson">Bestes eines Athleten (PB)</label>
-                                    </div>
-                              </div>
-                        </div>
-                        <div class="col-sm-3">
-                              <div class="form-group">
-                                    <label>
-                                          <h3>Resultate Teams</h3>
-                                    </label>
-                                    <div id="teamResultsRadios">
-                                          <input type="radio" class="form-control" name="teamResults" value="ALL"
-                                                id="allTeam">
-                                          <label for="allTeam">Alle eines Teams</label>
-
-                                          <input type="radio" class="form-control" name="teamResults"
-                                                value="YEARATHLETE" id="bestPerYearTeam" checked="true">
-                                          <label for="bestPerYearTeam">Bestes je Jahr und Team (SB)</label>
-
-                                          <input type="radio" class="form-control" name="teamResults" value="ATHLETE"
-                                                id="bestPerTeam">
-                                          <label for="bestPerTeam">Bestes eines Teams (PB)</label>
-
-                                    </div>
-                              </div>
-                        </div>
+						</div>
+					</div>
+				</div>
 
 
-                  </div>
-            </div>
+			</div>
+		</div>
 
-            <div class="row">
-                  <div class="col-sm-12">
+		<div class="row">
+			<div class="col-sm-12">
 
-                        <div class="checkbox-control ">
-                              <a class="btn btn-bestlist" href="#" onclick="loadBestList()">Bestenliste</a>
+				<div class="checkbox-control ">
+					<a class="btn btn-bestlist" href="#" onclick="loadBestList()">Bestenliste</a>
 
-                              <input type="checkbox" id="openSettings" data-toggle="collapse"
-                                    data-target="#additionalSettings">
-                              <label for="openSettings">Mehr Einstellungen</label>
-                        </div>
+					<input type="checkbox" id="openSettings" data-toggle="collapse"
+						data-target="#additionalSettings"> <label
+						for="openSettings">Mehr Einstellungen</label>
+				</div>
 
-                        <!-- <button class="btn btn-setting" data-toggle="collapse" data-target="#additionalSettings">Mehr
+				<!-- <button class="btn btn-setting" data-toggle="collapse" data-target="#additionalSettings">Mehr
                               Einstellungen</button> -->
-                  </div>
-            </div>
+			</div>
+		</div>
 
 
 
-            <div class="row">
-                  <div class="col-sm-12" id="bestList">
-                        <div id="categoryList"> </div>
-                  </div>
-            </div>
+		<div class="row">
+			<div class="col-sm-12" id="bestList">
+				<div id="categoryList"></div>
+			</div>
+		</div>
 
-      </div>
+	</div>
 </body>
 
 </html>

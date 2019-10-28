@@ -15,8 +15,8 @@ $result = array( //
     "sortings" => arrayOfSortings($conn), //
     "disziplinTypes" => arrayOfDisziplinTypes($conn), //
     "teamTypes" => arrayOfTeamTypes($conn), //
-    "pointSchemeNames" =>  $conn->getPointSchemeNames(), //
-    "pointSchemes" =>  $conn->getPointSchemes(), //
+    "pointSchemeNames" => $conn->getPointSchemeNames(), //
+    "pointSchemes" => $conn->getPointSchemes(), //
     "pointParameter" => $conn->getPointParameters()
 );
 
@@ -107,6 +107,5 @@ function arrayOfTeamType(TeamType $tT)
         "id" => $tT->getId()
     );
 }
-
 
 ?>

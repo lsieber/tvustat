@@ -1,18 +1,16 @@
 <?php
-
-
 namespace config;
 
-class dbOutputCategory {
-    
+class dbOutputCategory
+{
+
     public const DBNAME = "outputcategories";
-    
+
     public const ID = "outputCategoryID";
-    
+
     public const NAME = "outputCategoryName";
-    
+
     public const CATEGORYIDS = "categoryIDs";
-    
+
     public const ORDER = "ouptutCatOrder";
-    
 }

@@ -4,7 +4,6 @@ use config\dbPerformance;
 use config\dbBirthDateExeptions;
 require_once '../vendor/autoload.php';
 
-
 $db = new DBMaintainer();
 
 $athleteName = "Timo Fahrenbruch";
@@ -13,8 +12,6 @@ $birthDate = DateTime::createFromFormat("Y-m-d", "2002-11-30");
 $test = dbBirthDateExeptions::isAthleteException($athleteName, $birthDate, $db->getConn());
 
 echo "Result if Timo Exeption Exists = " . var_dump($test);
-
-
 
 // $_POST["type"] = "performance";
 

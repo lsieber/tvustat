@@ -20,8 +20,7 @@
     $competition_exists = ($_POST['type'] == 'competitionExists') ? TRUE : FALSE;
     $performancesDisAthComp = ($_POST['type'] == 'performancesDisAthComp') ? TRUE : FALSE;
     $performancesDisAthYear = ($_POST['type'] == 'performancesDisAthYear') ? TRUE : FALSE;
-    
-    
+
     $competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
     $athletesforCategory = ($_POST['type'] == 'athletesforCategory') ? TRUE : FALSE;
 
@@ -99,16 +98,16 @@
     if ($performancesDisAthYear) {
         $results = array();
         foreach ($_POST[dbPerformance::DISZIPLINID] as $dbStoreId => $diszipliId) {
-            $r =  $db->checkPerformanceAthleteYear($disziplinID, $_POST[dbPerformance::ATHLETEID], $_POST["year"]);
+            $r = $db->checkPerformanceAthleteYear($disziplinID, $_POST[dbPerformance::ATHLETEID], $_POST["year"]);
             if (sizeof($r) > 0) {
                 $results[$dbStoreId] = $r;
             }
         }
         echo json_encode($results);
     }
-    
+
     if ($competitionsInYear) {
-        
+
         echo json_encode($db->getCompetitionsForYear($_POST["years"]));
     }
 
@@ -155,9 +154,9 @@
     if ($athletesforCategory) {
         $year = $_POST["year"];
 
-        $sql = "SELECT * FROM " . dbAthletes::DBNAME; 
+        $sql = "SELECT * FROM " . dbAthletes::DBNAME;
         $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
-        $sql .=  " WHERE (";
+        $sql .= " WHERE (";
         $first = true;
         foreach ($_POST["categories"] as $id) {
             if (! $first) {

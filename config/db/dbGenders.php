@@ -1,14 +1,12 @@
 <?php
-
-
 namespace config;
 
-class dbGenders {
-    
+class dbGenders
+{
+
     public const DBNAME = "genders";
-    
+
     public const ID = "genderID";
-    
+
     public const TYPE = "genderType";
-    
 }

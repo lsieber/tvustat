@@ -21,7 +21,7 @@ require_once '../vendor/autoload.php';
 </head>
 
 <body onload="onload()">
-	
+
 	<a href="index.html">Zurück zur Bestenliste</a>
 	
     <?php

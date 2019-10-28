@@ -22,7 +22,7 @@ class dbCompetitionNames extends dbTableDescription
     {
         return self::ID;
     }
-    
+
     /**
      *
      * {@inheritdoc}
@@ -59,7 +59,7 @@ class dbCompetitionNames extends dbTableDescription
     public static function competitionNameFromAsocArray($r, ConnectionPreloaded $conn)
     {
         return new CompetitionName( //
-            $r[self::NAME], //
-            $r[self::ID]);
+        $r[self::NAME], //
+        $r[self::ID]);
     }
 }
