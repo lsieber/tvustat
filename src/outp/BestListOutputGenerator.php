@@ -3,8 +3,9 @@ namespace tvustat;
 
 interface BestListOutputGenerator
 {
+
     /**
-     * 
+     *
      * @param BestList $bestList
      * @return BestListOutput
      */

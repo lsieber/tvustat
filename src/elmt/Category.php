@@ -80,11 +80,11 @@ class Category extends DBTableEntry
     {
         return $this->gender;
     }
-    
+
     /**
-     * 
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 }

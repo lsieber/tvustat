@@ -38,7 +38,7 @@ class PointParameter
     }
 
     /**
-     * 
+     *
      * @param float $performance
      * @return NULL|int
      */

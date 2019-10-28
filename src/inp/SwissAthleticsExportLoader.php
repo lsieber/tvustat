@@ -40,10 +40,9 @@ class SwissAthleticsExportLoader extends PerformanceLoader
         }
     }
 
-    private function askUser($disziplinName) {
-        
-    }
-    
+    private function askUser($disziplinName)
+    {}
+
     public function getData()
     {}
 }

@@ -15,36 +15,35 @@ class BestListHandler
     private $teamSQL;
 
     /**
-     * 
+     *
      * @var DBMaintainer
      */
     private $db;
 
     /**
-     * 
+     *
      * @var BestList
      */
     private $bestList;
 
     /**
-     * 
+     *
      * @var BestListTitle
      */
     private $title;
 
-    public function __construct(array $years, string $categoryControl, array $categories, string $top, array $disziplins, DBMaintainer $db)
+    public function __construct(string $yearsControl, array $years, string $categoryControl, array $categories, string $top, array $disziplins, DBMaintainer $db)
     {
         $this->top = $top;
         $this->db = $db;
-        $this->sql = OutputSQL::create($categoryControl, $categories, $disziplins, $years);
-        $this->teamSQL = OutputSQL::createTeam($categoryControl, $categories, $disziplins, $years);
-        $this->title = new BestListTitleBasic($categoryControl, $categories, $years, $top, $disziplins);
+        $this->sql = OutputSQL::create($categoryControl, $categories, $disziplins, $years, $yearsControl);
+        $this->teamSQL = OutputSQL::createTeam($categoryControl, $categories, $disziplins, $years, $yearsControl);
+        $this->title = new BestListTitleBasic($categoryControl, $categories, $yearsControl, $years, $top, $disziplins);
         $this->bestList = BestList::empty();
     }
 
     public function callDB()
     {
-
         // Athletes
         // Create SQL, Call DB
         // echo $this->sql;
@@ -81,14 +80,14 @@ class BestListHandler
     {
         $categoryUtils = new CategoryUtils($this->db->getConn());
         $columnDefCatDetail = new ColumnDefinitionCatDetail($categoryUtils);
-        //         $columnDefDetail = new ColumnDefinitionDetail();
+        // $columnDefDetail = new ColumnDefinitionDetail();
         $columnDefCat = new ColumnDefinitionCategory($categoryUtils);
-        //         $columnDefBasic = new ColumnDefinitionBasic();
-        
+        // $columnDefBasic = new ColumnDefinitionBasic();
+
         if (sizeof($outputs) == 0) {
             array_push($outputs, "html");
         }
-        
+
         foreach ($outputs as $output) {
 
             if ($output == "html") {
@@ -104,7 +103,6 @@ class BestListHandler
                 echo "TEEEET";
             }
         }
-
     }
 
     // public function printHTMLCode()
@@ -114,14 +112,12 @@ class BestListHandler
     // $s = str_replace(">", "&gt;", $s);
     // echo ("<pre>" . $s . "</pre>" . "</br>" . "</br>");
     // }
-
     public function createTXT()
     {
         $txtGenerator = new TxtGenerator($this->title);
         $txtGenerator->createOutput($this->bestList);
     }
 
-  
     /**
      *
      * @return BestListTitle

@@ -20,7 +20,7 @@ class PointParameters
         $this->parameters = $parameters;
     }
 
-    public static  function load(Connection $conn)
+    public static function load(Connection $conn)
     {
         $r = $conn->executeSqlToArray(self::getSQL());
 
@@ -30,7 +30,7 @@ class PointParameters
             $dId = $v[dbPointParameters::DISZIPLINID];
             $sId = $v[dbPointParameters::SCHEMEID];
 
-            if (!array_key_exists($dId, $parameters)) {
+            if (! array_key_exists($dId, $parameters)) {
                 $parameters[$dId] = array();
             }
             assert(! array_key_exists($sId, $parameters[$dId]));
@@ -40,12 +40,12 @@ class PointParameters
     }
 
     /**
-     * 
+     *
      * @param int $disziplinId
      * @param int $schemeId
      * @return PointParameter|NULL
      */
-    public function getParameter(int $disziplinId,int $schemeId )
+    public function getParameter(int $disziplinId, int $schemeId)
     {
         if (array_key_exists($disziplinId, $this->parameters)) {
             if (array_key_exists($schemeId, $this->parameters[$disziplinId])) {

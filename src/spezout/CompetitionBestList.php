@@ -19,7 +19,7 @@ class CompetitionBestList
     {
         $this->db = $db;
         $this->sql = SpecialOutputSQL::createCompetition($competitionId);
-//         echo $this->sql;
+        // echo $this->sql;
         $competition = $db->getCompetition($competitionId);
         $this->title = "Resultate für Wettkampf: " . $competition->getName()->getCompetitionName() . //
         ", in: " . $competition->getLocation()->getVillage() . //
@@ -41,7 +41,7 @@ class CompetitionBestList
     {
         $this->bestList->sortPerformances();
         $this->bestList->sortDisziplinOrder();
-//         $this->bestList->keepBestPerformancePerPerson();
+        // $this->bestList->keepBestPerformancePerPerson();
     }
 
     public function printTable()

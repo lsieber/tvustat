@@ -7,11 +7,11 @@ class Connection
 {
 
     /**
-     * 
+     *
      * @var \mysqli
      */
     protected $conn;
-    
+
     public function __construct()
     {
         // Create connection
@@ -32,7 +32,7 @@ class Connection
     }
 
     /**
-     * 
+     *
      * @param string $sql
      * @return mixed
      */
@@ -50,6 +50,5 @@ class Connection
     {
         return $this->conn;
     }
-
 }
 ?>

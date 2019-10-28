@@ -1,6 +1,6 @@
 <?php
-
 namespace tvustat;
+
 class ColumnDefinitionBasic implements ColumnDefinition
 {
 
@@ -16,13 +16,15 @@ class ColumnDefinitionBasic implements ColumnDefinition
     }
 
     public function bestListElements(Performance $performance)
-    {        
+    {
         return array( //
             $performance->getFormatedPerformance(),
             $performance->getAthlete()->getFullName(),
             DateFormatUtils::formatBirthYearForBL($performance->getAthlete()->getDate()),
-            $performance->getCompetition()->getLocation()->getVillage(),
-            DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate()),
+            $performance->getCompetition()
+                ->getLocation()
+                ->getVillage(),
+            DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate())
         );
     }
 

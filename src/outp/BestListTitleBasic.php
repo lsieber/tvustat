@@ -2,6 +2,7 @@
 namespace tvustat;
 
 use config\CategoryControl;
+use config\YearsControl;
 
 class BestListTitleBasic implements BestListTitle
 {
@@ -15,6 +16,8 @@ class BestListTitleBasic implements BestListTitle
 
     private $category;
 
+    private $yearsControl;
+
     private $year;
 
     private $top;
@@ -26,10 +29,11 @@ class BestListTitleBasic implements BestListTitle
 
     private $titleParts;
 
-    public function __construct(string $categoryControl, array $category, array $year, $top, $disziplin)
+    public function __construct(string $categoryControl, array $category, string $yearsControl, array $year, $top, $disziplin)
     {
         $this->categoryControl = $categoryControl;
         $this->category = $category;
+        $this->yearsControl = $yearsControl;
         $this->year = $year;
         $this->top = $top;
         $this->disziplin = $disziplin;
@@ -42,9 +46,9 @@ class BestListTitleBasic implements BestListTitle
 
         array_push($this->titleParts, $this->getKatGenderString());
         array_push($this->titleParts, $this->getYearString());
-//         if ($this->getTopString() != "") {
-//             array_push($this->titleParts, $this->getTopString());
-//         }
+        // if ($this->getTopString() != "") {
+        // array_push($this->titleParts, $this->getTopString());
+        // }
         $this->title = implode(", ", $this->titleParts);
     }
 
@@ -79,7 +83,7 @@ class BestListTitleBasic implements BestListTitle
 
     private function getYearString()
     {
-        if ($this->year[0] == "all") {
+        if ($this->yearsControl == YearsControl::ALL) {
             return "Alle Jahre";
         }
         sort($this->year);

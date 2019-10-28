@@ -76,11 +76,11 @@ class ConnectionPreloaded
     protected $pointParameter = array();
 
     /**
-     * 
+     *
      * @var Connection
      */
     private $conn;
-    
+
     public function __construct()
     {
         $this->conn = new Connection();
@@ -182,9 +182,9 @@ class ConnectionPreloaded
     private function loadPointParameter()
     {
         $sql = "SELECT * From " . dbPointParameters::DBNAME;
-        $array = $this->conn->executeSqlToArray($sql);        
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $v) {
-            if (!array_key_exists($v[dbPointParameters::SCHEMEID], $this->pointParameter)) {
+            if (! array_key_exists($v[dbPointParameters::SCHEMEID], $this->pointParameter)) {
                 $this->pointParameter[$v[dbPointParameters::SCHEMEID]] = array();
             }
             $this->pointParameter[$v[dbPointParameters::SCHEMEID]][$v[dbPointParameters::DISZIPLINID]] = $v;
@@ -300,13 +300,12 @@ class ConnectionPreloaded
     {
         return $this->pointSchemes;
     }
-    
+
     public function getPointParameters()
     {
         return $this->pointParameter;
     }
-    
-    
+
     /**
      *
      * @param string $sql
@@ -316,7 +315,7 @@ class ConnectionPreloaded
     {
         return $this->conn->executeSqlToArray($sql);
     }
-    
+
     /**
      *
      * @return \mysqli

@@ -19,7 +19,7 @@ class SpecialOutputSQL
         $sql .= self::competition($competitionId);
         return $sql;
     }
-    
+
     public static function createAthlete(int $athleteId)
     {
         $sql = self::selectAndJoins();
@@ -27,7 +27,6 @@ class SpecialOutputSQL
         $sql .= self::athlete($athleteId);
         return $sql;
     }
-    
 
     /**
      * Returns only a sql if the category control is not ALL, Men, or Women.
@@ -55,7 +54,7 @@ class SpecialOutputSQL
     {
         return " " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . "=" . $competitionId;
     }
-    
+
     private static function athlete($athleteId)
     {
         return " " . dbAthletes::DBNAME . "." . dbAthletes::ID . "=" . $athleteId;

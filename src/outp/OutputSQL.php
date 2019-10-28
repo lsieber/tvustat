@@ -9,16 +9,17 @@ use config\dbCompetitionNames;
 use config\dbDisziplin;
 use config\dbPerformance;
 use config\dbPerformanceDetail;
+use config\YearsControl;
 
 class OutputSQL
 {
 
-    public static function create(string $categoryControl, array $categories, array $disziplins, array $years)
+    public static function create(string $categoryControl, array $categories, array $disziplins, array $years, string $yearsControl)
     {
         $sql = self::selectAndJoins();
         $sql .= " WHERE";
         $sql .= self::athletes($categories, $categoryControl);
-        $sql .= self::yearsSQL($years);
+        $sql .= self::yearsSQL($years, $yearsControl);
         $sql .= self::disziplins($disziplins);
         return $sql;
     }
@@ -31,7 +32,7 @@ class OutputSQL
      * @param array $categoryControl
      * @return string
      */
-    public static function createTeam(string $categoryControl, array $categories, array $disziplins, array $years)
+    public static function createTeam(string $categoryControl, array $categories, array $disziplins, array $years, string $yearsControl)
     {
         switch ($categoryControl) {
             case CategoryControl::ALL:
@@ -42,7 +43,7 @@ class OutputSQL
                 $sql = self::selectAndJoins();
                 $sql .= " WHERE";
                 $sql .= self::teams($categories, $categoryControl);
-                $sql .= self::yearsSQL($years);
+                $sql .= self::yearsSQL($years, $yearsControl);
                 $sql .= self::disziplins($disziplins);
                 return $sql;
         }
@@ -115,7 +116,7 @@ class OutputSQL
                     $sql .= " EXTRACT(YEAR FROM " . dbCompetition::DATE . ") - EXTRACT(YEAR FROM " . dbAthletes::DATE . ") <= " . $category->getAgeCategory()->getMaxAge();
                     $sql .= " ) ";
                 }
-                $sql .= ") AND ";
+                $sql .= ") ";
         }
         return $sql;
     }
@@ -133,18 +134,17 @@ class OutputSQL
             $firstCat = FALSE;
             $sql .= $category->getId() . "=" . dbAthletes::CATEGORY;
         }
-        $sql .= ") AND ";
+        $sql .= ") ";
 
         return $sql;
     }
 
-    private static function yearsSQL($years)
+    private static function yearsSQL($years, string $yearsControl)
     {
         $sql = "";
-        $AllYears = FALSE; // TODO here you can add a Statement when that all years should be considered
-        if (! $AllYears) {
+        if ($yearsControl != YearsControl::ALL) {
             $list = implode(",", $years);
-            $sql .= " EXTRACT(YEAR FROM " . dbCompetition::DATE . ") IN (" . $list . ")";
+            $sql .= " AND EXTRACT(YEAR FROM " . dbCompetition::DATE . ") IN (" . $list . ")";
         }
         return $sql;
     }

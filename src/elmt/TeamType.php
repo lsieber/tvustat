@@ -25,13 +25,13 @@ class TeamType extends DBTableEntry
         return $this->type;
     }
 
-//     /**
-//      *
-//      * @param string $teamType
-//      */
-//     public function setType($teamType)
-//     {
-//         $this->type = $teamType;
-//     }
+    // /**
+    // *
+    // * @param string $teamType
+    // */
+    // public function setType($teamType)
+    // {
+    // $this->type = $teamType;
+    // }
 }
 

@@ -32,7 +32,7 @@ class LoadByValues extends DbHandler
     {
         // $birthDateSql = (is_null($birthdate)) ? dbAthletes::DATE . " IS NULL" : dbAthletes::DATE . "='" . DateFormatUtils::formatDateForDB($birthdate) . "'";
         $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::FULLNAME . '="' . $athletename . '"'; /* '" AND ' . $birthDateSql; */
-//         echo "</br>" . $sql;
+        // echo "</br>" . $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbAthletes::athleteFromAsocArray($array[0], $this->conn);
     }
@@ -45,7 +45,7 @@ class LoadByValues extends DbHandler
     public function loadCompetitionNameByName(string $competitionName)
     {
         $sql = "SELECT * FROM " . dbCompetitionNames::getTableName() . " WHERE " . dbCompetitionNames::NAME . '="' . $competitionName . '"';
-//         echo $sql;
+        // echo $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbCompetitionNames::competitionNameFromAsocArray($array[0], $this->conn);
     }
@@ -58,7 +58,7 @@ class LoadByValues extends DbHandler
     public function loadCompetitionLocationByName(string $competitionLocation)
     {
         $sql = "SELECT * FROM " . dbCompetitionLocations::getTableName() . " WHERE " . dbCompetitionLocations::VILLAGE . '="' . $competitionLocation . '"';
-//         echo $sql;
+        // echo $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbCompetitionLocations::competitionLocationFromAsocArray($array[0], $this->conn);
     }
@@ -80,6 +80,4 @@ class LoadByValues extends DbHandler
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbCompetition::competitionFromAsocArray($array[0], $this->conn);
     }
-    
-        
 }

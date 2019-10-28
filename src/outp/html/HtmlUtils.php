@@ -3,12 +3,12 @@ namespace tvustat;
 
 trait HtmlUtils
 {
-    
+
     protected static function row(Performance $performance, ColumnDefinition $columDefinition)
     {
         return self::tr($columDefinition->bestListElements($performance));
     }
-    
+
     protected static function tr(array $elements)
     {
         $line = "<tr>";

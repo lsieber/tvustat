@@ -1,8 +1,6 @@
 <?php
 namespace tvustat;
 
-use config\Top;
-
 class DisziplinBestListRaw
 {
 
@@ -83,7 +81,7 @@ class DisziplinBestListRaw
      */
     public function getTopList(int $top = NULL)
     {
-//         echo "</br> TOP Parameter  = " . $top . " </br>";
+        // echo "</br> TOP Parameter = " . $top . " </br>";
         if ($top != NULL and $top > 0) {
             return array_slice($this->performances, 0, $top);
         }

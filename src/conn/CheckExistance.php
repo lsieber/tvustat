@@ -60,7 +60,8 @@ class CheckExistance extends DbHandler
             dbPerformance::COMPETITOINID,
             dbPerformance::PERFORMANCE,
             dbPerformance::WIND,
-            dbPerformance::PLACE);
+            dbPerformance::PLACE
+        );
         $values = array();
         foreach ($identifiers as $id) {
             $values[dbPerformance::getCollumNames()[$id]] = $post[$id];
@@ -206,7 +207,6 @@ class CheckExistance extends DbHandler
 
     private function checkValues(dbTableDescription $desc, array $values, array $identifiers)
     {
-
         $k = $desc->getCollumNames();
         $table = $desc->getTableName();
 
@@ -219,12 +219,13 @@ class CheckExistance extends DbHandler
             }
             $comp = $values[$k[$i]];
             if ($comp == NULL) {
-                $sql .= $i .  " IS NULL";
-            }else{
-                $sql .= $i . '="' . $comp . '"';}
+                $sql .= $i . " IS NULL";
+            } else {
+                $sql .= $i . '="' . $comp . '"';
+            }
             $isFirst = FALSE;
         }
-//         echo $sql;
+        // echo $sql;
         $result = $this->conn->getConn()->query($sql);
         $r = $result->fetch_all(MYSQLI_ASSOC);
         if ($r[0]["COUNT(1)"] == 0) {

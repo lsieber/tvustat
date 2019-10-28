@@ -381,7 +381,6 @@ class DBMaintainer
     {
         $sql = "DELETE FROM " . dbPerformance::DBNAME . " WHERE " . dbPerformance::ID . " = " . $id;
         return $this->conn->getConn()->query($sql);
-        
     }
 }
 

@@ -103,7 +103,6 @@ class Disziplin extends DBTableEntry
         return $this->sorting;
     }
 
-
     /**
      *
      * @return number
@@ -148,7 +147,7 @@ class Disziplin extends DBTableEntry
     {
         return $this->teamType;
     }
-    
+
     /**
      *
      * @return number

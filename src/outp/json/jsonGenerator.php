@@ -5,16 +5,17 @@ class JsonGenerator implements BestListOutputGenerator
 {
 
     private $columnDefinition;
-    
+
     private $json;
-    
-    function __construct( ColumnDefinition $columnDefinition) {
+
+    function __construct(ColumnDefinition $columnDefinition)
+    {
         $this->columnDefinition = $columnDefinition;
     }
-    
+
     /**
-     * 
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \tvustat\BestListOutputGenerator::createOutput()
      */
     public function createOutput(BestList $bestList, int $top = NULL)
@@ -23,7 +24,7 @@ class JsonGenerator implements BestListOutputGenerator
     }
 
     /**
-     * 
+     *
      * @param BestList $bestList
      * @param int $top
      * @return \tvustat\JsonOutput
@@ -48,10 +49,8 @@ class JsonGenerator implements BestListOutputGenerator
             "columnHeaders" => $columnDefinition->bestListHeaders(),
             "performances" => $disJson
         );
-        
-        array_push($this->json, $value);        
-    }
 
-   
+        array_push($this->json, $value);
+    }
 }
 

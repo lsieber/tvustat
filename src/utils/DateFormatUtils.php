@@ -60,7 +60,7 @@ class DateFormatUtils
     }
 
     /**
-     * 
+     *
      * @param \DateTime $date
      * @return NULL|string
      */

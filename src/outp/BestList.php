@@ -6,7 +6,7 @@ class BestList
 
     // mandatory varibales
     /**
-     * 
+     *
      * @var array[DisziplinBestList]
      */
     private $bestList = array();
@@ -57,8 +57,9 @@ class BestList
             $disBestList->sortPerformances();
         }
     }
-    
-    public function removeDublicatesFromTVUBuch(){
+
+    public function removeDublicatesFromTVUBuch()
+    {
         foreach ($this->bestList as $disBestList) {
             $disBestList->removeDublicatesFromTVUBuch();
         }

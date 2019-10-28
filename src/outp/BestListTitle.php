@@ -5,11 +5,13 @@ interface BestListTitle
 {
 
     /**
-    * @return string
-    */
+     *
+     * @return string
+     */
     public function getTitle();
 
     /**
+     *
      * @return string
      */
     public function getTxtFileTitle();

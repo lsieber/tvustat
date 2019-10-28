@@ -19,7 +19,7 @@ class CompetitionLocation extends DBTableEntry
     public function __construct(string $village, ?string $facility, string $id = NULL)
     {
         $this->village = $village;
-        $this->facility = is_null($facility)? "":$facility ;
+        $this->facility = is_null($facility) ? "" : $facility;
         if ($id != NULL)
             $this->setId($id);
     }
@@ -41,6 +41,4 @@ class CompetitionLocation extends DBTableEntry
     {
         return $this->facility;
     }
-
-
 }

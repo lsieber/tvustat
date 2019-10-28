@@ -3,6 +3,7 @@ namespace tvustat;
 
 class ColumnDefinitionDetail implements ColumnDefinition
 {
+
     public function bestListHeaders()
     {
         return array( //

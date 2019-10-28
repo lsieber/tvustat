@@ -41,10 +41,10 @@ class Athlete extends DBTableEntry
         if ($teamType->getId() == 1) {
             $this->date = $date;
             $this->teamCategory = NULL;
-            assert(!is_null($date), "For Team Type = 1 the Date has to be non null");
+            assert(! is_null($date), "For Team Type = 1 the Date has to be non null");
         } else {
             assert($gender->getId() == $teamCategory->getGender()->getId(), "The team Category Gender has to match the gender given in the constructor");
-            assert(!is_null($teamCategory), "For Team Type = 2 the teamCategory has to be non null");
+            assert(! is_null($teamCategory), "For Team Type = 2 the teamCategory has to be non null");
             $this->teamCategory = $teamCategory;
             $this->date = NULL;
         }

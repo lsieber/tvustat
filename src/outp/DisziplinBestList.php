@@ -74,34 +74,34 @@ class DisziplinBestList extends DisziplinBestListRaw
         }
     }
 
-    public function removeDublicatesFromTVUBuch(){
-        $removablekeys = array(); 
+    public function removeDublicatesFromTVUBuch()
+    {
+        $removablekeys = array();
         foreach ($this->performances as $key => $performance) {
-            if(SourceUtils::isFromTVUBuch($performance)){
-              // Upwards search
-              $index = $key;
-              while ($this->performances[$index]->getPerformance() == $performance->getPerformance()) {
-                  if($this->performances[$index]->getAthlete()->getId() == $performance->getAthlete()->getId() ){
-                      $removablekeys[$key] = true;
-                  }
-                  $index++;
-              }
-              $index = $key;
-              while ($this->performances[$index]->getPerformance() == $performance->getPerformance()) {
-                  if($this->performances[$index]->getAthlete()->getId() == $performance->getAthlete()->getId() ){
-                      $removablekeys[$key] = true;
-                  }
-                  $index--;
-              }
+            if (SourceUtils::isFromTVUBuch($performance)) {
+                // Upwards search
+                $index = $key;
+                while ($this->performances[$index]->getPerformance() == $performance->getPerformance()) {
+                    if ($this->performances[$index]->getAthlete()->getId() == $performance->getAthlete()->getId()) {
+                        $removablekeys[$key] = true;
+                    }
+                    $index ++;
+                }
+                $index = $key;
+                while ($this->performances[$index]->getPerformance() == $performance->getPerformance()) {
+                    if ($this->performances[$index]->getAthlete()->getId() == $performance->getAthlete()->getId()) {
+                        $removablekeys[$key] = true;
+                    }
+                    $index --;
+                }
             }
         }
-        
+
         foreach ($removablekeys as $key => $performance) {
             $this->removePerformanceById($key);
         }
-            
     }
-    
+
     public function keepBestPerformancePerPerson()
     {
         $bestPerfPerPerson = array();
@@ -126,12 +126,13 @@ class DisziplinBestList extends DisziplinBestListRaw
             $this->removePerformanceById($performanceToRemove);
         }
     }
-    
-    public function keepBestAthleteAndYear(){
+
+    public function keepBestAthleteAndYear()
+    {
         $bestPerfPerPerson = array();
         $performancesToRemove = array();
         $perfId2Key = array();
-        
+
         foreach ($this->performances as $key => $performance) {
             $perfId2Key[$performance->getId()] = $key;
             // Adding the year to the athlete id distinuishes the results of the different years.

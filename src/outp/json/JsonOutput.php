@@ -23,16 +23,15 @@ class JsonOutput implements BestListOutput
     {
         return $this->json;
     }
-    
+
     /**
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      * @see \tvustat\BestListOutput::toString()
      */
     public function toString()
     {
         return $this->getJson();
     }
-
 }
 

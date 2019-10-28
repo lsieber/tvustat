@@ -4,7 +4,6 @@ namespace tvustat;
 class CategoryUtils
 {
 
-    
     private $sortedCategories = array();
 
     public function __construct(ConnectionPreloaded $conn)
@@ -27,13 +26,15 @@ class CategoryUtils
     }
 
     /**
-     * 
+     *
      * @param Performance $performance
      * @return Category
      */
     public function categoryOf(Performance $performance)
     {
-        if ($performance->getAthlete()->getTeamType()->getId() == 2) {
+        if ($performance->getAthlete()
+            ->getTeamType()
+            ->getId() == 2) {
             return $performance->getAthlete()->getTeamCategory();
         }
         $genderId = $performance->getAthlete()
@@ -47,6 +48,5 @@ class CategoryUtils
     {
         return intval(DateFormatUtils::formatDateaAsYear($competition->getDate())) - intval(DateFormatUtils::formatDateaAsYear($athlete->getDate()));
     }
-    
 }
 
