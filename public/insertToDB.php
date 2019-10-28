@@ -15,6 +15,8 @@ use tvustat\QuerryOutcome;
 use tvustat\TimeUtils;
 use config\dbAthleteActiveYear;
 use tvustat\DateFormatUtils;
+use tvustat\CompetitionUtils;
+use tvustat\Performance;
 
 require_once '../vendor/autoload.php';
 
@@ -46,7 +48,6 @@ if ($insert_disziplin) {
     $c->getTeamType(intval($_POST[dbDisziplin::TEAMTYPEID])), //
     floatval($_POST[dbDisziplin::MINVAL]), //
     floatval($_POST[dbDisziplin::MAXVAL])); //
-                                            //
 
     /**
      * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
@@ -115,19 +116,44 @@ if ($insert_performance) {
 
         $disziplin = $db->getDisziplin($_POST[dbPerformance::DISZIPLINID]);
         $athlete = $db->getAthlete($_POST[dbPerformance::ATHLETEID]);
-
+        $competition = $db->getCompetition($_POST[dbPerformance::COMPETITOINID]);
+        
+        
         $perfModified = ($disziplin->isTime()) ? TimeUtils::time2seconds($_POST["performance"]) : $_POST["performance"];
 
         $minValueOk = $perfModified >= $disziplin->getMinValue();
         $maxValueOk = $perfModified <= $disziplin->getMaxValue();
-
         $teamTypeMatches = $athlete->getTeamType()->getId() == $disziplin->getTeamType()->getId();
-
         $forcedEntry = (isset($_POST['forced'])) ? $_POST['forced'] == "true" : FALSE;
 
         if (($minValueOk && $maxValueOk && $teamTypeMatches) || ($forcedEntry)) {
-            if (! $db->checkPerformanceByIds($_POST)) {
-                $result = $db->addPerformanceWithIdsOnly($_POST);
+            if (! $db->checkPerformanceByIds($_POST)) { 
+                $existingPerformances = $db->checkPerformanceAthleteYear($disziplin->getId(), $athlete->getId(), DateFormatUtils::formatDateaAsYear($competition->getDate()));
+                $performanceExists = false;
+                if (CompetitionUtils::isFromTVUBuch($competition)) {
+                    if (sizeof($r) > 0) {
+                        $result = new QuerryOutcome("The entered Performance does identically exist allready in A normal competition and not from The TVu Buch", false);
+                        $performanceExists = true;
+                    }
+                }
+                if(!$performanceExists){
+                    $result = $db->addPerformanceWithIdsOnly($_POST);
+                    $newPerf = $db->getPerformance($result->getCustomValue(dbPerformance::getIDString()));
+                    foreach ($existingPerformances as $performanceRaw) {
+                        if ($performanceRaw[dbPerformance::PERFORMANCE] == $newPerf->getPerformance()) {
+                            echo $performanceRaw[dbPerformance::COMPETITOINID];
+                            $compExisting = $db->getCompetition($performanceRaw[dbPerformance::COMPETITOINID]);
+                            echo $compExisting->getDate()->format("Y-m-d");
+                            echo "</br>";
+                            if (CompetitionUtils::isFromTVUBuch($compExisting)) {
+                                echo "hey4 ";
+                                $db->removePerformance($performanceRaw[dbPerformance::ID]);
+                                var_dump($performanceRaw);
+                                $result->putCustomValue("REMOVED SAME TVU BUCH ENTRY", $performanceRaw[dbPerformance::PERFORMANCE]);
+                            }
+                        }
+                    }
+                }
             } else {
                 $result = new QuerryOutcome("The entered Performance does identically exist allready", false);
             }

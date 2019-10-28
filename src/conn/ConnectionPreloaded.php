@@ -12,7 +12,7 @@ use config\dbPointSchemeNames;
 use config\dbPointSchemes;
 use config\dbPointParameters;
 
-class ConnectionPreloaded extends Connection
+class ConnectionPreloaded
 {
 
     /**
@@ -75,9 +75,15 @@ class ConnectionPreloaded extends Connection
      */
     protected $pointParameter = array();
 
+    /**
+     * 
+     * @var Connection
+     */
+    private $conn;
+    
     public function __construct()
     {
-        parent::__construct();
+        $this->conn = new Connection();
         $this->loadGenders();
         $this->loadTeamTypes();
         $this->loadDisziplinTypes();
@@ -93,7 +99,7 @@ class ConnectionPreloaded extends Connection
     private function loadGenders()
     {
         $sql = "SELECT * From " . dbGenders::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $value) {
             $this->genders[$value[dbGenders::ID]] = new Gender($value[dbGenders::TYPE], $value[dbGenders::TYPE], $value[dbGenders::ID]);
         }
@@ -102,7 +108,7 @@ class ConnectionPreloaded extends Connection
     private function loadTeamTypes()
     {
         $sql = "SELECT * From " . dbTeamTypes::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $value) {
             $this->teamTypes[$value[dbTeamTypes::ID]] = new TeamType($value[dbTeamTypes::TYPE], $value[dbTeamTypes::ID]);
         }
@@ -111,7 +117,7 @@ class ConnectionPreloaded extends Connection
     private function loadDisziplinTypes()
     {
         $sql = "SELECT * From " . dbDisziplinTypes::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $value) {
             $this->disziplinTypes[$value[dbDisziplinTypes::ID]] = new DisziplinType($value[dbDisziplinTypes::TYPE], $value[dbDisziplinTypes::ID]);
         }
@@ -120,7 +126,7 @@ class ConnectionPreloaded extends Connection
     private function loadSorting()
     {
         $sql = "SELECT * From " . dbSorting::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $value) {
             $this->sortings[$value[dbSorting::ID]] = new Sorting($value[dbSorting::DIRECTION], $value[dbSorting::SQL], $value[dbSorting::ID]);
         }
@@ -129,7 +135,7 @@ class ConnectionPreloaded extends Connection
     private function loadAgeCategories()
     {
         $sql = "SELECT * From " . dbAgeCategory::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $v) {
             $this->ageCategories[$v[dbAgeCategory::ID]] = new AgeCategory($v[dbAgeCategory::NAME], $v[dbAgeCategory::MINAGE], $v[dbAgeCategory::MAXAGE], $v[dbAgeCategory::ID]);
         }
@@ -138,7 +144,7 @@ class ConnectionPreloaded extends Connection
     private function loadCategories()
     {
         $sql = "SELECT * From " . dbCategory::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $v) {
             $ageCategory = $this->getAgeCategory($v[dbCategory::AGECATEGORYID]);
             $gender = $this->getGender($v[dbCategory::GENDERID]);
@@ -149,7 +155,7 @@ class ConnectionPreloaded extends Connection
     private function loadSources()
     {
         $sql = "SELECT * From " . dbPerformanceSource::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $v) {
             $this->sources[$v[dbPerformanceSource::ID]] = dbPerformanceSource::sourceFromAssocArray($v);
         }
@@ -158,7 +164,7 @@ class ConnectionPreloaded extends Connection
     private function loadPointSchemeNames()
     {
         $sql = "SELECT * From " . dbPointSchemeNames::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $v) {
             $this->pointSchemeNames[$v[dbPointSchemeNames::ID]] = $v;
         }
@@ -167,7 +173,7 @@ class ConnectionPreloaded extends Connection
     private function loadPointSchemes()
     {
         $sql = "SELECT * From " . dbPointSchemes::DBNAME;
-        $array = $this->executeSqlToArray($sql);
+        $array = $this->conn->executeSqlToArray($sql);
         foreach ($array as $v) {
             $this->pointSchemes[$v[dbPointSchemes::ID]] = $v;
         }
@@ -176,7 +182,7 @@ class ConnectionPreloaded extends Connection
     private function loadPointParameter()
     {
         $sql = "SELECT * From " . dbPointParameters::DBNAME;
-        $array = $this->executeSqlToArray($sql);        
+        $array = $this->conn->executeSqlToArray($sql);        
         foreach ($array as $v) {
             if (!array_key_exists($v[dbPointParameters::SCHEMEID], $this->pointParameter)) {
                 $this->pointParameter[$v[dbPointParameters::SCHEMEID]] = array();
@@ -250,7 +256,7 @@ class ConnectionPreloaded extends Connection
      * @param int $id
      * @return PerformanceSource | NULL
      */
-    public function getSource(int $id)
+    public function getSource(?int $id)
     {
         return (isset($this->sources[$id])) ? $this->sources[$id] : null;
     }
@@ -298,6 +304,26 @@ class ConnectionPreloaded extends Connection
     public function getPointParameters()
     {
         return $this->pointParameter;
+    }
+    
+    
+    /**
+     *
+     * @param string $sql
+     * @return mixed
+     */
+    public function executeSqlToArray(string $sql)
+    {
+        return $this->conn->executeSqlToArray($sql);
+    }
+    
+    /**
+     *
+     * @return \mysqli
+     */
+    public function getConn()
+    {
+        return $this->conn->getConn();
     }
 }
 

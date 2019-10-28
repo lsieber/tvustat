@@ -4,6 +4,12 @@ namespace tvustat;
 class CompetitionUtils
 {
 
+    public static function isFromTVUBuch(Competition $competition)
+    {
+        echo $competition->getDate()->format("n.j");
+        return $competition->getDate()->format("n.j") == "1.1";
+    }
+
     public static function checkCompetitionReadyForInsertion(Competition $competition)
     {
         return ($competition->getDate() != NULL && //
@@ -17,7 +23,7 @@ class CompetitionUtils
     {
         return (/*$competitionLocation->getFacility() != NULL && //*/
         $competitionLocation->getVillage() != NULL // for now we only consider the Village
-            );
+        );
     }
 
     public static function checkNameReadyForInsertion(CompetitionName $competitionName)

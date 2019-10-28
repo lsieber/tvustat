@@ -57,8 +57,7 @@ class DBMaintainer
         $sqlActive = "INSERT INTO " . dbAthleteActiveYear::DBNAME . " VALUES (" . $athleteID . "," . $athleteActiveYear . ")";
         return $this->conn->getConn()->query($sqlActive);
     }
-    
-    
+
     public function addDisziplin(Disziplin $disziplin)
     {
         return $this->add->disziplin($disziplin);
@@ -195,9 +194,31 @@ class DBMaintainer
         return $this->check->checkDisziplinIDExists($disziplinId);
     }
 
+    public function checkPerformanceAthleteYear(int $disziplinID, int $athleteID, int $year)
+    {
+        $sql = "SELECT * FROM " . dbPerformance::DBNAME;
+        $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
+        $sql .= " WHERE " . dbPerformance::ATHLETEID . " = " . $athleteID;
+        $sql .= " AND EXTRACT(YEAR FROM " . dbCompetition::DATE . ") = " . $year;
+        $sql .= " AND " . dbPerformance::DISZIPLINID . " = " . $disziplinID;
+        $sql .= " ORDER BY " . dbPerformance::PERFORMANCE;
+        return $this->getConn()->executeSqlToArray($sql);
+    }
+
     /**
      * GET BY ID
      */
+
+    /**
+     *
+     * @param int $id
+     * @return NULL|\tvustat\Performance
+     */
+    public function getPerformance(int $id)
+    {
+        return $this->getById->performance($id);
+    }
+
     public function getAthlete(int $id)
     {
         return $this->getById->athlete($id);
@@ -351,6 +372,16 @@ class DBMaintainer
         $sql = "SELECT * From " . dbPointSchemes::DBNAME;
         $sql .= " WHERE " . dbPointSchemes::GENDERID . "=" . $genderId . " AND " . dbPointSchemes::NAMEID . "=" . $pointSchemeNameId;
         return $this->conn->executeSqlToArray($sql);
+    }
+
+    /**
+     * REMOVE
+     */
+    function removePerformance(int $id)
+    {
+        $sql = "DELETE FROM " . dbPerformance::DBNAME . " WHERE " . dbPerformance::ID . " = " . $id;
+        return $this->conn->getConn()->query($sql);
+        
     }
 }
 

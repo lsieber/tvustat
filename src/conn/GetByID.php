@@ -6,12 +6,31 @@ use config\dbCompetition;
 use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbDisziplin;
+use config\dbPerformance;
+use config\dbPerformanceDetail;
 use config\dbTableDescription;
 
 class GetByID extends DbHandler
 {
 
     const select = "SELECT * FROM ";
+
+    public function performance(int $id)
+    {
+        $sql = "SELECT * FROM " . dbPerformance::DBNAME;
+
+        $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
+        $sql .= " INNER JOIN " . dbCompetitionLocations::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::LOCATIONID . " = " . dbCompetitionLocations::DBNAME . "." . dbCompetitionLocations::ID;
+        $sql .= " INNER JOIN " . dbCompetitionNames::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::NAMEID . " = " . dbCompetitionNames::DBNAME . "." . dbCompetitionNames::ID . " ";
+
+        $sql .= " INNER JOIN " . dbDisziplin::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
+        $sql .= " INNER JOIN " . dbAthletes::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::ATHLETEID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+
+        $sql .= " LEFT JOIN " . dbPerformanceDetail::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::ID . " = " . dbPerformanceDetail::DBNAME . "." . dbPerformanceDetail::PERFORMANCEID;
+        $sql .= " WHERE " . dbPerformance::DBNAME . "." . dbPerformance::ID . " = " . $id;
+        $r = $this->conn->executeSqlToArray($sql);
+        return ($r == NULL) ? NULL : dbPerformance::performanceFromAsocArray($r[0], $this->conn);
+    }
 
     public function athlete(int $id)
     {

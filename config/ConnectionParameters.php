@@ -6,9 +6,9 @@ class ConnectionParameters
 
     const SERVERNAME = "localhost";
 
-    const USERNAME = "root";
+    const USERNAME = "Input";
 
-    const PASSWORD = "";
+    const PASSWORD = "TvUInputBestList2019";
 
     const DATABASE = "tvustat";
 }

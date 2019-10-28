@@ -60,6 +60,9 @@ class DateFormatUtils
     }
 
     /**
+     * 
+     * @param \DateTime $date
+     * @return NULL|string
      */
     static function formatDateaAsYear(\DateTime $date = NULL)
     {

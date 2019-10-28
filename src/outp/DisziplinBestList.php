@@ -74,6 +74,34 @@ class DisziplinBestList extends DisziplinBestListRaw
         }
     }
 
+    public function removeDublicatesFromTVUBuch(){
+        $removablekeys = array(); 
+        foreach ($this->performances as $key => $performance) {
+            if(SourceUtils::isFromTVUBuch($performance)){
+              // Upwards search
+              $index = $key;
+              while ($this->performances[$index]->getPerformance() == $performance->getPerformance()) {
+                  if($this->performances[$index]->getAthlete()->getId() == $performance->getAthlete()->getId() ){
+                      $removablekeys[$key] = true;
+                  }
+                  $index++;
+              }
+              $index = $key;
+              while ($this->performances[$index]->getPerformance() == $performance->getPerformance()) {
+                  if($this->performances[$index]->getAthlete()->getId() == $performance->getAthlete()->getId() ){
+                      $removablekeys[$key] = true;
+                  }
+                  $index--;
+              }
+            }
+        }
+        
+        foreach ($removablekeys as $key => $performance) {
+            $this->removePerformanceById($key);
+        }
+            
+    }
+    
     public function keepBestPerformancePerPerson()
     {
         $bestPerfPerPerson = array();

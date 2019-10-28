@@ -16,10 +16,17 @@ class PerformanceSource extends DBTableEntry
      */
     private $link;
 
-    public function __construct(string $name, int $id, string $link = NULL)
+    /**
+     * 
+     * @var int
+     */
+    private $sourceTypeID;
+    
+    public function __construct(string $name, int $id, int $sourceTypeID, string $link = NULL)
     {
         $this->name = $name;
         $this->link = $link;
+        $this->sourceTypeID = $sourceTypeID;
         $this->setId($id);
     }
 
@@ -33,10 +40,20 @@ class PerformanceSource extends DBTableEntry
     }
 
     /**
+     * 
+     * @return string
      */
     public function getLink()
     {
         return $this->link;
+    }
+    
+    /**
+     * 
+     * @return int
+     */
+    public  function getSourceTypeID() {
+        return $this->sourceTypeID;
     }
 }
 

@@ -223,15 +223,27 @@ function onSelectionChange() {
   var dIDs = getDIDs();
   var a = getSelectedRadioButtonObject(INPUT.athleteInputName);
   var c = getSelectedRadioButtonObject(INPUT.competitionInputName);
+  var  competitionStoreID =  c.id.slice(INPUT.competitionPrefix.length);
+  var compDate = getValuesFromStorage(STORE.competitionStore)[competitionStoreID][DB.competitionDate];
   // var d = getSelectedRadioButtonObject(INPUT.disziplinInputName);
 
   if (a != null && c != null && dIDs != undefined && Object.keys(dIDs).length > 0) {
+    var dateParts = compDate.split(".");
+    var year = dateParts[2];
+    var month = dateParts[1];
+    var day = dateParts[0];
+
     var params = {
       type: "performancesDisAthComp",
       athleteID: a.value,
       competitionID: c.value,
       disziplinID: dIDs
     };
+
+    if (month == "01" && day == "01") {
+      params.type = "performancesDisAthYear";
+      params.year = year;
+    }
 
     if (params.athleteID != null && params.competitionID != null && params.disziplinID != null) {
       existingEntries.post(params, processExistingPerformances, "json");
@@ -241,7 +253,7 @@ function onSelectionChange() {
 }
 window.onSelectionChange = onSelectionChange
 
-function getDIDs(params) {
+function getDIDs() {
   var performances = document.getElementsByName(INPUT.performanceInputName);
   // pIds = [];
   var dIDs = {};

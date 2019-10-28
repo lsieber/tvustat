@@ -4,8 +4,6 @@ namespace config;
 use tvustat\ConnectionPreloaded;
 use tvustat\DateFormatUtils;
 use tvustat\Performance;
-use tvustat\TimeUtils;
-use tvustat\WindUtils;
 
 class dbPerformance extends dbTableDescription
 {
@@ -95,7 +93,7 @@ class dbPerformance extends dbTableDescription
         $r[self::PERFORMANCE], //
         $r[self::WIND], //
         $r[self::PLACE], //
-        $conn->getSource($r[self::SOURCE]), //
+        self::getSource($r[self::SOURCE], $conn), //
         $r[self::ID], //
         self::getDetail($r)); //
     }
@@ -106,5 +104,10 @@ class dbPerformance extends dbTableDescription
             return NULL;
         }
         return $r[dbPerformanceDetail::DETAIL];
+    }
+
+    private static function getSource($sourceId, ConnectionPreloaded $conn)
+    {
+        return (is_null($sourceId)) ? null : $conn->getSource($sourceId);
     }
 }
