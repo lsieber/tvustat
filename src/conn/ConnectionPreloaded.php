@@ -313,6 +313,7 @@ class ConnectionPreloaded
      */
     public function executeSqlToArray(string $sql)
     {
+//         echo "</br> ". $sql . "</br>";
         return $this->conn->executeSqlToArray($sql);
     }
 
@@ -323,6 +324,13 @@ class ConnectionPreloaded
     public function getConn()
     {
         return $this->conn->getConn();
+    }
+    
+    /**
+     * @return Connection
+     */
+    public function getConnection(){
+        return $this->conn;
     }
 }
 

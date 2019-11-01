@@ -87,8 +87,12 @@ $blh = new BestListHandler($yearsControl, $years, $categoryControl, $categories,
 
 $blh->callDB();
 $blh->formatBestList($keepAthlete, $keepYearAthlete);
-$blh->printTable("html");
-// $blh->createTXT();
+
+if(!array_key_exists("outputs", $_POST)){
+    $_POST["outputs"] = "html";
+}
+
+$blh->printTable($_POST["outputs"]);
 
 
 

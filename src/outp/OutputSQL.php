@@ -17,10 +17,22 @@ class OutputSQL
     public static function create(string $categoryControl, array $categories, array $disziplins, array $years, string $yearsControl)
     {
         $sql = self::selectAndJoins();
-        $sql .= " WHERE";
-        $sql .= self::athletes($categories, $categoryControl);
-        $sql .= self::yearsSQL($years, $yearsControl);
-        $sql .= self::disziplins($disziplins);
+        $whereParts = array();
+        $athletes = self::athletes($categories, $categoryControl);
+        if (! is_null($athletes)){
+            array_push($whereParts, $athletes);
+        }
+        $years = self::yearsSQL($years, $yearsControl);
+        if (! is_null($years)){
+            array_push($whereParts, $years);
+        }
+        $disziplins =  self::disziplins($disziplins);
+        if (! is_null($disziplins)){
+            array_push($whereParts, $disziplins);
+        }
+        if(sizeof($whereParts) > 0){
+            $sql .= " WHERE " . implode(" AND ", $whereParts);
+        }
         return $sql;
     }
 
@@ -41,10 +53,22 @@ class OutputSQL
                 break;
             default:
                 $sql = self::selectAndJoins();
-                $sql .= " WHERE";
-                $sql .= self::teams($categories, $categoryControl);
-                $sql .= self::yearsSQL($years, $yearsControl);
-                $sql .= self::disziplins($disziplins);
+                $whereParts = array();
+                $teams =  self::teams($categories, $categoryControl);
+                if (! is_null($teams)){
+                    array_push($whereParts, $teams);
+                }
+                $years = self::yearsSQL($years, $yearsControl);
+                if (! is_null($years)){
+                    array_push($whereParts, $years);
+                }
+                $disziplins =  self::disziplins($disziplins);
+                if (! is_null($disziplins)){
+                    array_push($whereParts, $disziplins);
+                }
+                if(sizeof($whereParts) > 0){
+                    $sql .= " WHERE " . implode(" AND ", $whereParts);
+                }
                 return $sql;
         }
         return NULL;
@@ -74,17 +98,17 @@ class OutputSQL
      */
     private static function athletes($categories, $categoryControl)
     {
-        $sql = "";
+        $sql = NULL;
         switch ($categoryControl) {
             case CategoryControl::ALL:
                 break;
             case CategoryControl::MEN:
                 $sql .= " (" . dbAthletes::GENDERID . " = " . 1 . " OR";
-                $sql .= " " . dbAthletes::GENDERID . " = " . 3 . " ) AND";
+                $sql .= " " . dbAthletes::GENDERID . " = " . 3 . " ) ";
                 break;
             case CategoryControl::WOMEN:
                 $sql .= " (" . dbAthletes::GENDERID . " = " . 2 . " OR";
-                $sql .= " " . dbAthletes::GENDERID . " = " . 3 . " ) AND";
+                $sql .= " " . dbAthletes::GENDERID . " = " . 3 . " ) ";
                 break;
             default:
                 $firstCat = TRUE;
@@ -123,7 +147,7 @@ class OutputSQL
 
     private static function teams($categories, $categoryControl)
     {
-        $sql = "";
+        $sql = NULL;
 
         $firstCat = TRUE;
         $sql .= " (";
@@ -141,21 +165,21 @@ class OutputSQL
 
     private static function yearsSQL($years, string $yearsControl)
     {
-        $sql = "";
+        $sql = NULL;
         if ($yearsControl != YearsControl::ALL) {
             $list = implode(",", $years);
-            $sql .= " AND EXTRACT(YEAR FROM " . dbCompetition::DATE . ") IN (" . $list . ")";
+            $sql .= " EXTRACT(YEAR FROM " . dbCompetition::DATE . ") IN (" . $list . ")";
         }
         return $sql;
     }
 
     private static function disziplins($disziplins)
     {
-        $sql = "";
-        $AllDisziplins = sizeof($disziplins) == 0; // TODO here you can add a Statement when that not all disziplin should be considered
+        $sql = NULL;
+        $AllDisziplins = sizeof($disziplins) == 0;
         if (! $AllDisziplins) {
             $list = implode(",", $disziplins);
-            $sql .= " AND " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " IN (" . $list . ")";
+            $sql .= dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " IN (" . $list . ")";
         }
 
         return $sql;

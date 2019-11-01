@@ -11,7 +11,7 @@ use config\dbPerformance;
 require_once '../vendor/autoload.php';
 
 $db = new DBMaintainer();
-$calculator = new PointCalculator($db->getConn());
+$calculator = new PointCalculator($db->getConn()->getConnection());
 
 // $_POST[dbDisziplin::ID] = 7;
 // $_POST[dbPerformance::PERFORMANCE] = 12.41;

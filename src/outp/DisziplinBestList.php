@@ -106,7 +106,6 @@ class DisziplinBestList extends DisziplinBestListRaw
     {
         $bestPerfPerPerson = array();
         $performancesToRemove = array();
-        // TODO might create a field from that;
         $perfId2Key = array();
         foreach ($this->performances as $key => $performance) {
             $perfId2Key[$performance->getId()] = $key;

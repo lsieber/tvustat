@@ -51,10 +51,9 @@ class CompetitionBestList
 
     private function createHTMLCode()
     {
-        $categoryUtils = new CategoryUtils($this->db->getConn());
-
         $html = "<div class='csc-header csc-header-n1'><h1 class='csc-firstHeader'>" . $this->title . "</h1></div>";
-        $html .= $this->bestList->createHTMLBestList($categoryUtils);
+        $htmlGenerator = new HtmlGeneratorBasic(new ColumnDefinitionCategory(new CategoryUtils($this->db->getConn())), new BestListTitleFromString("Results for Competition"));
+        $html .= $htmlGenerator->createOutput($this->bestList)->toString();
         return $html;
     }
 

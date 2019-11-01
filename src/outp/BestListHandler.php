@@ -32,7 +32,7 @@ class BestListHandler
      */
     private $title;
 
-    public function __construct(string $yearsControl, array $years, string $categoryControl, array $categories, string $top, array $disziplins, DBMaintainer $db)
+    public function __construct(string $yearsControl, array $years, string $categoryControl, array $categories, string $top = Null, array $disziplins, DBMaintainer $db)
     {
         $this->top = $top;
         $this->db = $db;
@@ -46,7 +46,7 @@ class BestListHandler
     {
         // Athletes
         // Create SQL, Call DB
-        // echo $this->sql;
+//         echo $this->sql;
         $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
 
         // Fill into Best List
@@ -102,20 +102,12 @@ class BestListHandler
                 echo $json->toString();
                 echo "TEEEET";
             }
+            
+            if($output == "txt"){
+                $txtGenerator = new TxtGenerator($this->title);
+                $txtGenerator->createOutput($this->bestList);
+            }
         }
-    }
-
-    // public function printHTMLCode()
-    // {
-    // $s = str_replace("&", "&amp;", $this->createHTMLCode());
-    // $s = str_replace("<", "&lt;", $s);
-    // $s = str_replace(">", "&gt;", $s);
-    // echo ("<pre>" . $s . "</pre>" . "</br>" . "</br>");
-    // }
-    public function createTXT()
-    {
-        $txtGenerator = new TxtGenerator($this->title);
-        $txtGenerator->createOutput($this->bestList);
     }
 
     /**

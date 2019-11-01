@@ -74,9 +74,9 @@
 			<div class="row">
 				<div class="col-sm-3">
 					<div class="form-group">
-						<label>
+						
 							<h3>Anzahl Resultate</h3>
-						</label> <input type="number" class="form-control" id="topNumber"
+						 <input type="number" class="form-control" id="topNumber"
 							placeholder="Anzahl Resultate" min="1" max="10000" value=100>
 						<div id="topradios" class="">
 							<input type="radio" class="form-control" name="topVals" value="3"
@@ -88,7 +88,7 @@
 								value="30" id="top30" onclick="fillTopNumber(this)"> <label
 								for="top30">30</label> <input type="radio" class="form-control"
 								name="topVals" value="100" id="top100"
-								onclick="fillTopNumber(this)" checked="true"> <label
+								onclick="fillTopNumber(this)" checked> <label
 								for="top100">100</label> <input type="radio"
 								class="form-control" name="topVals" value="500" id="top500"
 								onclick="fillTopNumber(this)"> <label for="top500">500</label>
@@ -104,9 +104,7 @@
 
 				<div class="col-sm-3">
 					<div class="form-group">
-						<label>
 							<h3>Resultate Athleten</h3>
-						</label>
 						<div id="athleteResultsRadios">
 							<input type="radio" class="form-control" name="athleteResults"
 								value="ALL" id="allPerson"> <label for="allPerson">Alle
@@ -115,22 +113,20 @@
 							<label for="bestPerYearPerson">Bestes je Jahr und Athlet
 								(SB)</label> <input type="radio" class="form-control"
 								name="athleteResults" value="ATHLETE" id="bestPerPerson"
-								checked="true"> <label for="bestPerPerson">Bestes
+								checked> <label for="bestPerPerson">Bestes
 								eines Athleten (PB)</label>
 						</div>
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
-						<label>
 							<h3>Resultate Teams</h3>
-						</label>
 						<div id="teamResultsRadios">
 							<input type="radio" class="form-control" name="teamResults"
 								value="ALL" id="allTeam"> <label for="allTeam">Alle
 								eines Teams</label> <input type="radio" class="form-control"
 								name="teamResults" value="YEARATHLETE" id="bestPerYearTeam"
-								checked="true"> <label for="bestPerYearTeam">Bestes
+								checked> <label for="bestPerYearTeam">Bestes
 								je Jahr und Team (SB)</label> <input type="radio" class="form-control"
 								name="teamResults" value="ATHLETE" id="bestPerTeam"> <label
 								for="bestPerTeam">Bestes eines Teams (PB)</label>
