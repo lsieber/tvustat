@@ -103,7 +103,7 @@ class dbDisziplin extends dbTableDescription
         );
     }
 
-    public static function disziplinFromAsocArray($r, ConnectionPreloaded $conn)
+    public static function array2Elmt($r, ConnectionPreloaded $conn)
     {
         return new Disziplin( //
         $r[self::NAME], //

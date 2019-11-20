@@ -6,7 +6,17 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry excluding="pts/" kind="src" path="config/db">
+	<buildpathentry kind="src" path="config/db/elmt">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="config/db/prld">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry excluding="elmt/|prld/|pts/" kind="src" path="config/db">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
@@ -16,7 +26,17 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="src/conn">
+	<buildpathentry kind="src" path="src/conn/get">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry excluding="get/|set/" kind="src" path="src/conn">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="src/conn/set">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>

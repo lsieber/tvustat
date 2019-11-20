@@ -46,12 +46,12 @@ class BestListHandler
     {
         // Athletes
         // Create SQL, Call DB
-//         echo $this->sql;
+        // echo $this->sql;
         $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
 
         // Fill into Best List
         foreach ($array_result as $entry) {
-            $performance = dbPerformance::performanceFromAsocArray($entry, $this->db->getConn());
+            $performance = dbPerformance::array2Elmt($entry, $this->db->getConn());
             $this->bestList->addPerformance($performance);
         }
 
@@ -62,7 +62,7 @@ class BestListHandler
 
             // Fill into Best List
             foreach ($team_result as $entry) {
-                $performance = dbPerformance::performanceFromAsocArray($entry, $this->db->getConn());
+                $performance = dbPerformance::array2Elmt($entry, $this->db->getConn());
                 $this->bestList->addPerformance($performance);
             }
         }
@@ -76,7 +76,11 @@ class BestListHandler
         $this->bestList->keepBestPerAthleteAndYear($keepYearAthlete);
     }
 
-    public function printTable(string ...$outputs)
+    /**
+     *
+     * @param array[string] $outputs
+     */
+    public function printTable(array $outputs)
     {
         $categoryUtils = new CategoryUtils($this->db->getConn());
         $columnDefCatDetail = new ColumnDefinitionCatDetail($categoryUtils);
@@ -93,7 +97,7 @@ class BestListHandler
             if ($output == "html") {
                 $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
                 $html = $htmlGenerator->createOutput($this->bestList, $this->top);
-                echo $html->getHtml();
+                echo $html->toString();
             }
 
             if ($output == "json") {
@@ -102,12 +106,27 @@ class BestListHandler
                 echo $json->toString();
                 echo "TEEEET";
             }
-            
-            if($output == "txt"){
+
+            if ($output == "txt") {
                 $txtGenerator = new TxtGenerator($this->title);
                 $txtGenerator->createOutput($this->bestList);
             }
+
+            if ($output == "printHtml") {
+                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
+                $html = $htmlGenerator->createOutput($this->bestList, $this->top);
+                echo "</br>" . $this->title->getTitle() . "</br>";
+                self::printHTMLCode($html->toString());
+            }
         }
+    }
+
+    private static function printHTMLCode(string $string)
+    {
+        $s = str_replace("&", "&amp;", $string);
+        $s = str_replace("<", "&lt;", $s);
+        $s = str_replace(">", "&gt;", $s);
+        echo ("<pre>" . $s . "</pre>" . "</br>" . "</br>");
     }
 
     /**

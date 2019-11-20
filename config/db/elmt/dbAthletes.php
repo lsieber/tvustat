@@ -76,16 +76,6 @@ class dbAthletes extends dbTableDescription
         );
     }
 
-    public static function athleteFromAsocArray($r, ConnectionPreloaded $conn)
-    {
-        return new Athlete( //
-        $r[self::FULLNAME], //
-        self::getDate($r[self::DATE], $conn), //
-        $conn->getGender($r[self::GENDERID]), //
-        $conn->getTeamType($r[self::TEAMTYPEID]), //
-        self::getTeamCategory($r[self::CATEGORY], $conn), //
-        $r[self::ID]);
-    }
 
     private static function getTeamCategory($dbValue, ConnectionPreloaded $conn)
     {
@@ -97,4 +87,22 @@ class dbAthletes extends dbTableDescription
         return is_null($dbValue) ? NULL : new \DateTime($dbValue); //
         ;
     }
+    
+    /**
+     * 
+     * @param array $columns
+     * @param ConnectionPreloaded $conn
+     * @return \tvustat\Athlete
+     */
+    public static function array2Elmt(array $columns, ConnectionPreloaded $conn)
+    {
+        return new Athlete( //
+            $columns[self::FULLNAME], //
+            self::getDate($columns[self::DATE], $conn), //
+            $conn->getGender($columns[self::GENDERID]), //
+            $conn->getTeamType($columns[self::TEAMTYPEID]), //
+            self::getTeamCategory($columns[self::CATEGORY], $conn), //
+            $columns[self::ID]);
+    }
+
 }

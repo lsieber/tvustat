@@ -56,7 +56,7 @@ class dbCompetitionNames extends dbTableDescription
         );
     }
 
-    public static function competitionNameFromAsocArray($r, ConnectionPreloaded $conn)
+    public static function array2Elmt($r, ConnectionPreloaded $conn)
     {
         return new CompetitionName( //
         $r[self::NAME], //

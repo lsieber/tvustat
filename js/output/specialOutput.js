@@ -4,6 +4,7 @@ import { getSelectedCheckboxesValues } from "../input/Selection.js"
 import { getValuesFromStorage } from "../input/SessionStorageHandler.js";
 
 window.specialOutputFile = "specialOutput.php"
+window.existingEntriesFile = "existing_entries.php"
 window.outputField = "output";
 window.competitionListField = "competitionList";
 window.competitionListModal = "performancesForCompetition";
@@ -14,7 +15,7 @@ function onload() {
 window.onload = onload
 
 function loadCompetitionList(competitionId) {
-    $.post(window.existingEntriesFile, { type: "competitionList", competitionID: competitionId }, function (data) {
+    $.post(window.specialOutputFile, { type: "competitionList", competitionID: competitionId }, function (data) {
         document.getElementById(window.competitionListField).innerHTML = data;
         $("#" + window.competitionListModal).modal(); // Open Modal
     }, "html");
@@ -26,7 +27,7 @@ function loadCompetitions() {
     var yearStore = getValuesFromStorage(window.yearsStore);
     var years = yearIDsStore.map(sId => yearStore[sId]["YEAR(competitionDate)"]);
 
-    $.post(window.specialOutputFile, { type: "competitionsForYears", years: years }, function (data) {
+    $.post(window.existingEntriesFile, { type: "competitionsForYears", years: years }, function (data) {
         // document.getElementById(window.outputField).innerHTML = JSON.stringify(data);
         var rowIdentifiers = {
             "competitionID": "ID",

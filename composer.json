@@ -4,6 +4,8 @@
 			"tvustat\\" : [
 				"src",
 				"src/conn",
+				"src/conn/get",
+				"src/conn/set",
 				"src/elmt",
 				"src/inp",
 				"src/outp",
@@ -18,6 +20,8 @@
 			"config\\" : [
 				"config",
 				"config/db",
+				"config/db/elmt",
+				"config/db/prld",
 				"config/db/pts"
 			],
 			"test\\" : [

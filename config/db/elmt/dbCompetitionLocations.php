@@ -60,7 +60,7 @@ class dbCompetitionLocations extends dbTableDescription
         );
     }
 
-    public static function competitionLocationFromAsocArray($r, ConnectionPreloaded $conn)
+    public static function array2Elmt($r, ConnectionPreloaded $conn)
     {
         return new CompetitionLocation( //
         $r[self::VILLAGE], //

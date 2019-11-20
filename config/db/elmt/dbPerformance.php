@@ -84,12 +84,12 @@ class dbPerformance extends dbTableDescription
         );
     }
 
-    public static function performanceFromAsocArray($r, ConnectionPreloaded $conn)
+    public static function array2Elmt($r, ConnectionPreloaded $conn)
     {
         return new Performance( //
-        dbDisziplin::disziplinFromAsocArray($r, $conn), //
-        dbAthletes::athleteFromAsocArray($r, $conn), //
-        dbCompetition::competitionFromAsocArray($r, $conn), //
+        dbDisziplin::array2Elmt($r, $conn), //
+        dbAthletes::array2Elmt($r, $conn), //
+        dbCompetition::array2Elmt($r, $conn), //
         $r[self::PERFORMANCE], //
         $r[self::WIND], //
         $r[self::PLACE], //

@@ -72,7 +72,7 @@ class dbCompetition extends dbTableDescription
         );
     }
 
-    public static function competitionFromAsocArray($r, ConnectionPreloaded $conn)
+    public static function array2Elmt($r, ConnectionPreloaded $conn)
     {
         return new Competition( //
         new CompetitionName($r[dbCompetitionNames::NAME], $r[self::NAMEID]), //
