@@ -126,10 +126,10 @@ if ($insert_performance) {
 
         if (($minValueOk && $maxValueOk && $teamTypeMatches) || ($forcedEntry)) {
             if (! $db->checkPerformanceByIds($_POST)) {
-                $existingPerformances = $db->checkPerformanceAthleteYear($disziplin->getId(), $athlete->getId(), DateFormatUtils::formatDateaAsYear($competition->getDate()));
+                $existingPerformances = $db->loadPerformanceAthleteYear($disziplin->getId(), $athlete->getId(), DateFormatUtils::formatDateaAsYear($competition->getDate()));
                 $performanceExists = false;
                 if (CompetitionUtils::isFromTVUBuch($competition)) {
-                    if (sizeof($r) > 0) {
+                    if (sizeof($existingPerformances) > 0) {
                         $result = new QuerryOutcome("The entered Performance does identically exist allready in A normal competition and not from The TVu Buch", false);
                         $performanceExists = true;
                     }

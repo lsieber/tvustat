@@ -98,7 +98,7 @@
     if ($performancesDisAthYear) {
         $results = array();
         foreach ($_POST[dbPerformance::DISZIPLINID] as $dbStoreId => $diszipliId) {
-            $r = $db->checkPerformanceAthleteYear($disziplinID, $_POST[dbPerformance::ATHLETEID], $_POST["year"]);
+            $r = $db->loadPerformanceAthleteYear($diszipliId, $_POST[dbPerformance::ATHLETEID], $_POST["year"]);
             if (sizeof($r) > 0) {
                 $results[$dbStoreId] = $r;
             }

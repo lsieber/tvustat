@@ -29,19 +29,19 @@ class GetByID extends DbHandler
         $sql .= " LEFT JOIN " . dbPerformanceDetail::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::ID . " = " . dbPerformanceDetail::DBNAME . "." . dbPerformanceDetail::PERFORMANCEID;
         $sql .= " WHERE " . dbPerformance::DBNAME . "." . dbPerformance::ID . " = " . $id;
         $r = $this->conn->executeSqlToArray($sql);
-        return ($r == NULL) ? NULL : dbPerformance::performanceFromAsocArray($r[0], $this->conn);
+        return ($r == NULL) ? NULL : dbPerformance::array2Elmt($r[0], $this->conn);
     }
 
     public function athlete(int $id)
     {
         $r = self::getQuerryResult($this->getTable(dbAthletes::class), $id);
-        return ($r == NULL) ? NULL : dbAthletes::athleteFromAsocArray($r, $this->conn);
+        return ($r == NULL) ? NULL : dbAthletes::array2Elmt($r, $this->conn);
     }
 
     public function disziplin(int $id)
     {
         $r = self::getQuerryResult($this->getTable(dbDisziplin::class), $id);
-        return ($r == NULL) ? NULL : dbDisziplin::disziplinFromAsocArray($r, $this->conn);
+        return ($r == NULL) ? NULL : dbDisziplin::array2Elmt($r, $this->conn);
     }
 
     /**
@@ -54,7 +54,7 @@ class GetByID extends DbHandler
         $join = " INNER JOIN " . dbCompetitionLocations::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::LOCATIONID . " = " . dbCompetitionLocations::DBNAME . "." . dbCompetitionLocations::ID;
         $join .= " INNER JOIN " . dbCompetitionNames::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::NAMEID . " = " . dbCompetitionNames::DBNAME . "." . dbCompetitionNames::ID . " ";
         $r = self::getQuerryResult($this->getTable(dbCompetition::class), $id, $join);
-        return ($r == NULL) ? NULL : dbCompetition::competitionFromAsocArray($r, $this->conn);
+        return ($r == NULL) ? NULL : dbCompetition::array2Elmt($r, $this->conn);
     }
 
     // private function copetitionFromAsocArray($r)

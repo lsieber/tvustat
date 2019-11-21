@@ -194,7 +194,7 @@ class DBMaintainer
         return $this->check->checkDisziplinIDExists($disziplinId);
     }
 
-    public function checkPerformanceAthleteYear(int $disziplinID, int $athleteID, int $year)
+    public function loadPerformanceAthleteYear(int $disziplinID, int $athleteID, int $year)
     {
         $sql = "SELECT * FROM " . dbPerformance::DBNAME;
         $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
