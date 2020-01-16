@@ -4,10 +4,36 @@ namespace tvustat;
 class CompetitionUtils
 {
 
+
+    
+    /**
+     * 
+     * @param CompetitionName $competitionName
+     * @return string
+     */
+    public static function formatCompetitionName(CompetitionName $competitionName)
+    {
+        return ($competitionName->getCompetitionName() == "k.A.")? "" : $competitionName->getCompetitionName();
+    }
+    
+    /**
+     * 
+     * @param CompetitionLocation $competitionLocation
+     * @return string
+     */
+    public static function formatCompetitionVillage(CompetitionLocation $competitionLocation)
+    {
+        return ($competitionLocation->getVillage() == "k.A.")? "" : $competitionLocation->getVillage();
+    }
+        
+    /**
+     * 
+     * @param Competition $competition
+     * @return boolean
+     */
     public static function isFromTVUBuch(Competition $competition)
     {
-        echo $competition->getDate()->format("n.j");
-        return $competition->getDate()->format("n.j") == "1.1";
+        return DateFormatUtils::onlyYearValid($competition->getDate());
     }
 
     public static function checkCompetitionReadyForInsertion(Competition $competition)

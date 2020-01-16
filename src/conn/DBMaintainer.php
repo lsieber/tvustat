@@ -17,6 +17,7 @@ use config\dbPointSchemeNames;
 use config\dbPointSchemes;
 use config\dbMultipleDisziplins;
 use config\dbAthleteActiveYear;
+use config\dbUnsureBirthDates;
 
 class DBMaintainer
 {
@@ -58,6 +59,15 @@ class DBMaintainer
         return $this->conn->getConn()->query($sqlActive);
     }
 
+    public function addUnsureBirthDate(int $athleteId, bool $isUnsureDate, bool $isUnsureYear, int $minYear = null, int $maxYear = null) {
+        $sqlUnsure = "INSERT INTO " . dbUnsureBirthDates::DBNAME . " VALUES (" . $athleteId . "," . intval($isUnsureDate) . "," .  intval($isUnsureYear). "," . self::nullToString($minYear) . "," .  self::nullToString($maxYear) . ")";
+        return $this->conn->getConn()->query($sqlUnsure);
+    }
+    
+    private static function nullToString($nullableValue = null){
+        return ($nullableValue == null) ? "null": $nullableValue;
+    }
+    
     public function addDisziplin(Disziplin $disziplin)
     {
         return $this->add->disziplin($disziplin);

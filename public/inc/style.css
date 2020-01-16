@@ -56,12 +56,12 @@ input[type=radio]+label, input[type=checkbox]+label {
 }
 
 input[type=radio]:hover+label, input[type=checkbox]:hover+label {
-	background-color: #ffcc008c;
+	background-color: #ffe57e;
 	color: #f5f5f5;
 }
 
 input[type=radio]:checked+label, input[type=checkbox]:checked+label {
-	background-color: #ffcc00de;
+	background-color: #ffcc00;
 	color: #3d1f10;
 }
 

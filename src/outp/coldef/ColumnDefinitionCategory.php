@@ -29,9 +29,8 @@ class ColumnDefinitionCategory implements ColumnDefinition
             $performance->getFormatedPerformance(),
             $performance->getAthlete()->getFullName(),
             DateFormatUtils::formatBirthYearForBL($performance->getAthlete()->getDate()),
-            $performance->getCompetition()
-                ->getLocation()
-                ->getVillage(),
+            CompetitionUtils::formatCompetitionVillage($performance->getCompetition()
+                ->getLocation()),
             DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate()),
             $this->categoryUtils->categoryOf($performance)->getName()
         );

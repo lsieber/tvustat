@@ -12,21 +12,6 @@ function loadOutputCategories() {
         for (const key in data) {
             var v = data[key];
             v["storeID"] = key;
-
-            // var categories = v["categoryIDs"].split(",");
-            // var catStore = getValuesFromStorage(window.categoryStore);
-            // var categoriesStoreIDs = {};
-
-
-            // categories.forEach(catID => {
-            //     for (let index = 0; index < catStore.length; index++) {
-            //         if (catStore[index]["categoryID"] == catID) {
-            //             categoriesStoreIDs[catID] = catStore[index]["categoryID"];
-            //         }
-            //     }
-            // });
-            // v["categoriesStoreIDs"] = categoriesStoreIDs;
-            // alert(Object.values(categoriesStoreIDs).join(","));
             addValueToArrayStorage(window.outputCategoryStore, key, v);
             window.sessionStorage.showOutputCat = true;
         }
@@ -39,9 +24,18 @@ function selectLastClickedCategory() {
     if (localStorage.lastClickedCategory != null) {
         if (document.getElementById(localStorage.lastClickedCategory) != null) {
             document.getElementById(localStorage.lastClickedCategory).checked = true;
+        }else{
+            selectDefault();
         }
+    }else{
+        selectDefault();
     }
 }
+
+function selectDefault(){
+    document.getElementById(1).checked = true;
+}
+
 function createOutputCategoryList(values) {
     var afterLabelHTML = createCategoryControl();
     var html = createCheckboxSelectorsHtml(values, "outputCategoryID", "categoryIDs", ["outputCategoryName"], window.categoryCheckName, "cat", "Kategorie", window.categoryChecksName, afterLabelHTML, 'onclick="selectCategoryControl(this)"');

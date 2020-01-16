@@ -12,9 +12,7 @@ class DisziplinBestList extends DisziplinBestListRaw
      */
     private $top;
 
-    private function __construct( //
-    Disziplin $disziplin, //
-    bool $topAllValues = DefaultSettings::TOPALLVAALUES) //
+    private function __construct(Disziplin $disziplin, bool $topAllValues = DefaultSettings::TOPALLVAALUES)
     {
         parent::__construct($disziplin);
         $this->top = $topAllValues;

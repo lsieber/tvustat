@@ -5,15 +5,28 @@ class DateFormatUtils
 {
 
     /**
+     * 
+     * @param \DateTime $date
+     * @return boolean
+     */
+    static function onlyYearValid(\DateTime $date){
+        return $date->format("n.j") == "1.1";
+    }
+    
+    /**
      *
      * @param \DateTime $date
      * @return string
      */
     static function formatDateForBL(\DateTime $date = NULL)
     {
-        return (is_null($date)) ? "" : $date->format("d.m.Y");
+        return (is_null($date)) ? "" : self::dateIfPossible($date);
     }
 
+    private static function dateIfPossible(\DateTime $date) {
+        return self::onlyYearValid($date) ? $date->format("Y") :$date->format("d.m.Y");
+    }
+    
     /**
      *
      * @param \DateTime $date

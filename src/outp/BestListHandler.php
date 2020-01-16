@@ -46,7 +46,7 @@ class BestListHandler
     {
         // Athletes
         // Create SQL, Call DB
-        // echo $this->sql;
+//         echo $this->sql;
         $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
 
         // Fill into Best List
@@ -58,6 +58,8 @@ class BestListHandler
         if (! is_null($this->teamSQL)) {
             // TEAMS
             // Create SQL, Call DB
+//             echo $this->teamSQL;
+            
             $team_result = $this->db->getConn()->executeSqlToArray($this->teamSQL);
 
             // Fill into Best List

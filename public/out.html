@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!--------------------------------->
+	<!--------- BOOTSTRAP CSS --------->
+	<!--------------------------------->
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">  -->
+	<link rel="stylesheet" href="inc/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+
+	<!--------------------------------->
+	<!----------- STYLESHEET ---------->
+	<!--------------------------------->
+	<link rel="stylesheet" type="text/css" href="inc/style.css">
+	<!-- <link rel="stylesheet" href="http://www.tvunterseen.ch/fileadmin/templates/css/style.css"> -->
+
+	<!--------------------------------->
+	<!------------ JQUERY ------------->
+	<!--------------------------------->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+	<script src="inc/jquery.js"></script>
+
+	<!--------------------------------->
+	<!--------- BOOTSTRAP JS ---------->
+	<!--------------------------------->
+	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+	<script src="inc/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+	<!--------------------------------->
+
+	<script type=module src="../js/out/out.js"></script>
+</head>
+
+<body onload="onload()">
+	<!--    <div class="container">
+            <div class="row">
+                  <a class="btn btn-primary" href="#" onclick="test()">Test Function</a>
+                  <a class="btn btn-primary" href="#" onclick="clearSession()">Clear sessoin</a>
+            </div>
+      </div>  -->
+	<div id="content">
+		<h1>TVU Statistik Tool (im Aufbau)</h1>
+		<p></p>
+
+
+		<div class="row">
+			<div class="col-sm-3">
+				<h3>Kategorie</h3>
+				<div id="categoryDiv"></div>
+			</div>
+
+			<div class="col-sm-3">
+				<h3>Jahr</h3>
+				<div id="yearDiv"></div>
+			</div>
+
+			<div class="col-sm-3">
+				<h3>disziplin</h3>
+				<div class="form-group" id="disziplinDiv"></div>
+			</div>
+
+			<div class="col-sm-3">
+				<div class="form-group">
+
+					<h3>Anzahl Resultate</h3>
+					<input type="number" class="form-control" id="topNumber" placeholder="Anzahl Resultate" min="1"
+						max="10000" value=30>
+					<div id="topradios" class="">
+						<input type="radio" class="form-control" name="topVals" value="3" id="top3"
+							onclick="fillTopNumber(this)"> <label for="top3">3</label> <input type="radio"
+							class="form-control" name="topVals" value="10" id="top10" onclick="fillTopNumber(this)">
+						<label for="top10">10</label>
+						<input type="radio" class="form-control" name="topVals" value="30" id="top30"
+							onclick="fillTopNumber(this)" checked> <label for="top30">30</label> <input type="radio"
+							class="form-control" name="topVals" value="100" id="top100" onclick="fillTopNumber(this)">
+						<label for="top100">100</label> <input type="radio" class="form-control" name="topVals"
+							value="500" id="top500" onclick="fillTopNumber(this)"> <label for="top500">500</label>
+					</div>
+
+				</div>
+			</div>
+
+
+
+		</div>
+
+
+		<div id="additionalSettings" class="collapse">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<h3>Resultate Athleten</h3>
+						<div id="athleteResultsRadios">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<h3>Resultate Teams</h3>
+						<div id="teamResultsRadios">
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<h3>More Settings Space</h3>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="checkbox-control ">
+					<a class="btn btn-bestlist" href="#" onclick="loadBestList()">Bestenliste</a>
+
+					<input type="checkbox" id="openSettings" data-toggle="collapse" data-target="#additionalSettings">
+					<label for="openSettings">Mehr Einstellungen</label>
+				</div>
+
+				<!-- <button class="btn btn-setting" data-toggle="collapse" data-target="#additionalSettings">Mehr
+                              Einstellungen</button> -->
+			</div>
+		</div>
+
+
+
+		<div class="row">
+			<div class="col-sm-12" id="bestList">
+				<div id="categoryList"></div>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+</html>

@@ -2,11 +2,11 @@
  * 
  */
 import { loadBasicData } from "./BasicDefinitions.js"
-import { loadCompetitions, loadCategories, loadDisziplins } from "./DataLoader.js"
+import { loadCompetitions, loadCategories, loadDisziplins, loadAthletes } from "./DataLoader.js"
 import { InsertToDB } from "../elmt/InsertToDB.js";
 import { ExistingEntries } from "../elmt/ExistingEntries.js";
 import { CalculatePoints } from "../elmt/CalculatePoints.js";
-
+import { AthleteInputForm} from "./AthleteInputForm.js";
 import { addValueToArrayStorage, getValuesFromStorage } from "./SessionStorageHandler.js";
 import { getSelectedRadioButtonObject } from "./Selection.js";
 
@@ -16,7 +16,7 @@ import * as FILES from "../config/serverFiles.js";
 import * as STORE from "../config/storageNames.js";
 import * as DB from "../config/dbColumnNames.js";
 
-
+const athleteForm = new AthleteInputForm(INPUT.athleteFormId);
 const insertToDb = new InsertToDB();
 const existingEntries = new ExistingEntries();
 const pointCalculator = new CalculatePoints();
@@ -38,6 +38,7 @@ function onload() {
   loadDisziplins();
   // loadAthletes();
   loadSources();
+  updateAthleteInput();
 }
 window.onload = onload
 
@@ -88,7 +89,7 @@ export function insertPerformanceField(perfId) {
 
 
   if (athleteIDStore == null || competitionIDStore == null || disziplinIDStore == null || performance.value == "") {
-    alert("Not Enough Information");
+    // alert("Not Enough Information");
   } else {
     var athlete = getValuesFromStorage(STORE.athleteStore)[athleteIDStore];
     var athleteID = athlete[DB.athleteID];
@@ -96,9 +97,8 @@ export function insertPerformanceField(perfId) {
     var disziplin = getValuesFromStorage(STORE.disziplinStore)[disziplinIDStore];
     var disziplinID = disziplin[DB.disziplinID];
     var detail = null;
-    if (disziplin[DB.multiIds] != null) {
+    if (disziplin[DB.multiIds] != null && document.getElementById(INPUT.detailInput) != null) {
       detail = document.getElementById(INPUT.detailInput).value;
-      alert(detail);
     }
 
     var performanceValue = performance.value;
@@ -141,6 +141,18 @@ function insertPerformanceWithData(params, athlete, disziplin) {
 
     }
   }
+}
+
+function processPerformanceData(data) {
+  var output = data.message;
+  if (data.success == true) {
+    output +=  "</br>" + data[DB.disziplinName]+ " "+data[DB.athleteName] + " " + data[DB.performance];
+    output +=  "</br><a onclick=deleteLastPerformance("+data[DB.performanceID]+")>" + "löschen </a>" ;
+    
+  }
+  document.getElementById(INPUT.insertionOutput).innerHTML = output;
+
+
 }
 
 function createMultipleDetail() {
@@ -197,41 +209,21 @@ function createDetailOf(disziplinDBID, schemeID, value) {
   return "";
 }
 
-function processPerformanceData(data) {
-  // if (data.success == "true") {
-  //   var length;
-  //   if (window.sessionStorage.getItem(window.insertionResultStore) === null) {
-  //     length = 0;
-  //   } else {
-  //     var length = getStorageLength(window.insertionResultStore);
-  //   }
-  //   addValueToArrayStorage(window.insertionResultStore, length, data);
 
-
-  // } else {
-  //   document.getElementById(window.inserteationOutput).innerHTML = "<p>" + data.message + "</p>"
-  // }
-  // if (data["fromFile"] != null) {
-  //   changeValueInArray(window.inputPerformanceStore, data["fromFile"], "inserted", true);
-  // }
-  // window.counter = window.counter + 1;;
-
-}
 
 function onSelectionChange() {
+
+  athleteForm.setActiveYear(document.getElementById(INPUT.yearInput).value);
 
   var dIDs = getDIDs();
   var a = getSelectedRadioButtonObject(INPUT.athleteInputName);
   var c = getSelectedRadioButtonObject(INPUT.competitionInputName);
-  var  competitionStoreID =  c.id.slice(INPUT.competitionPrefix.length);
-  var compDate = getValuesFromStorage(STORE.competitionStore)[competitionStoreID][DB.competitionDate];
+
   // var d = getSelectedRadioButtonObject(INPUT.disziplinInputName);
 
   if (a != null && c != null && dIDs != undefined && Object.keys(dIDs).length > 0) {
-    var dateParts = compDate.split(".");
-    var year = dateParts[2];
-    var month = dateParts[1];
-    var day = dateParts[0];
+    var  competitionStoreID =  c.id.slice(INPUT.competitionPrefix.length);
+    var compDate = getValuesFromStorage(STORE.competitionStore)[competitionStoreID][DB.competitionDate];
 
     var params = {
       type: "performancesDisAthComp",
@@ -239,10 +231,11 @@ function onSelectionChange() {
       competitionID: c.value,
       disziplinID: dIDs
     };
+    var dateParts = compDate.split(".");
 
-    if (month == "01" && day == "01") {
+    if (dateParts.length==1) {
       params.type = "performancesDisAthYear";
-      params.year = year;
+      params.year = compDate;
     }
 
     if (params.athleteID != null && params.competitionID != null && params.disziplinID != null) {
@@ -353,5 +346,45 @@ function showTandem(id) {
   document.getElementById(id).style = "none";
 }
 
+
+
+/******************************************************************************** */
+/****************************** Athlete Input *********************************** */
+/******************************************************************************** */
+
+
+function closeAthleteModal() {
+  $("#" + INPUT.athleteModalId).modal('hide');
+}
+window.closeAthleteModal = closeAthleteModal
+
+function insertAthlete() {
+  athleteForm.athleteToDB();
+  loadAthletes();
+}
+window.insertAthlete = insertAthlete
+
+function updateAthleteInput() {
+  athleteForm.updateModal();
+  var categories = getSelectedRadioButtonObject(INPUT.categoryInputName);
+  if(categories != null){
+    athleteForm.checkGender(getValuesFromStorage(STORE.categoryStore)[categories.value.split(",")[0]][DB.genderID]);
+  }
+
+  athleteForm.checkIndividual();
+}
+window.updateAthleteInput = updateAthleteInput
+
+function deleteLastPerformance(performanceId) {
+  
+      // insert into db
+      $.post('deleteElements.php', {
+          "ID": performanceId
+      }, function (data) {
+        document.getElementById(INPUT.insertionOutput).innerHTML = data.message;
+      }, "json");
+  
+}
+window.deleteLastPerformance = deleteLastPerformance
 
 

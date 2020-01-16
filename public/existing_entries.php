@@ -12,6 +12,7 @@
     use tvustat\DBMaintainer;
     use tvustat\DateFormatUtils;
     use tvustat\DisziplinNameOnly;
+use config\dbUnsureBirthDates;
 
     require_once '../vendor/autoload.php';
 
@@ -156,6 +157,8 @@
 
         $sql = "SELECT * FROM " . dbAthletes::DBNAME;
         $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        $sql .= " LEFT JOIN " . dbUnsureBirthDates::DBNAME . " ON " . dbUnsureBirthDates::DBNAME . "." . dbUnsureBirthDates::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        
         $sql .= " WHERE (";
         $first = true;
         foreach ($_POST["categories"] as $id) {
@@ -163,8 +166,8 @@
                 $sql .= " OR";
             }
             $category = $db->getConn()->getCategory($id);
-            $sql .= " (" . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DATE . ") >= " . $category->getAgeCategory()->getMinAge() . " AND";
-            $sql .= " " . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DATE . ") <= " . $category->getAgeCategory()->getMaxAge() . " AND ";
+            $sql .= " (" . $year . " - EXTRACT(YEAR FROM ". dbAthletes::DBNAME . "." . dbAthletes::DATE . ") >= " . $category->getAgeCategory()->getMinAge() . " AND";
+            $sql .= " " . $year . " - EXTRACT(YEAR FROM ". dbAthletes::DBNAME . "." . dbAthletes::DATE . ") <= " . $category->getAgeCategory()->getMaxAge() . " AND ";
             $sql .= dbAthletes::GENDERID . " = " . $category->getGender()->getId() . ")";
             $first = false;
         }

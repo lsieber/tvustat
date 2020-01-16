@@ -7,6 +7,10 @@ export const competitionID = "competitionID";
 export const competitionName = "competitionName";
 export const competitionVillage = "village";
 export const competitionDate = "competitionDate";
+export const year = "YEAR(competitionDate)";
+export const yearControlAll = "yall";
+export const yearControlMultiple = "ymultiple";
+export const yearControlSingle = "ysingle";
 
 // /**
 //  * CATEGORY
@@ -15,6 +19,11 @@ export const competitionDate = "competitionDate";
 export const outputCategoryName = "outputCategoryName";
 export const categoryIDs = "categoryIDs";
 export const categoryID = "categoryID";
+export const categoryControlAll = "all";
+export const categoryControlMen = "men";
+export const categoryControlWomen = "women";
+export const categoryControlMultiple = "multiple";
+export const categoryControlSingle = "single";
 
 // /**
 //  * DISZIPLIN
@@ -29,12 +38,17 @@ export const multiIds = "disziplinIDs"
 export const athleteID = "athleteID";
 export const athleteName = "fullName";
 export const activeYear = "activeYear";
+export const unsureDate = "unsureDate";
+export const unsureYear = "unsureYear";
+
 
 // /**
 //  * PERFORMANCE
 //  */
 export const performance = "performance";
 export const detailDescription = "detailDescription";
+export const performanceID = "ID";
+
 /**
  * GENDER
  */

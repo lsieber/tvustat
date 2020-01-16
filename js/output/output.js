@@ -5,6 +5,8 @@ import { getSelectedCheckboxesValues, selectAllValues, unselectAllValues, getSel
 import { getValuesFromStorage } from "../input/SessionStorageHandler.js";
 import { loadDisziplinList } from "./AdditionalSettings.js";
 
+import { createMultipleSelector} from "./SelectMultipleUtils.js"
+
 import "./outputSelection.js";
 import { loadAthletes } from "../input/ListingUtils.js";
 
@@ -51,6 +53,10 @@ window.yearsChecksName = "yearsOptions";
 
 function onload() {
     loadYears();
+
+    var html = createMultipleSelector(true);
+    document.getElementById("categorySelector").innerHTML = html;
+
     loadCategories();
     loadDisziplinList();
     window.refuseLIsting = true;

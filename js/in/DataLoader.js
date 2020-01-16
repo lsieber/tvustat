@@ -128,6 +128,7 @@ function processAthleteResult(data) {
     addToStorage(data, STORE.athleteStore);
     var html = createRadios(INPUT.athleteList, createRadioParamsAthlete(data));
     document.getElementById(INPUT.athleteDiv).innerHTML = html;
+    colorUnsureBirthDates(data);
 }
 
 function createRadioParamsAthlete(data) {
@@ -146,6 +147,25 @@ function createRadioParamsAthlete(data) {
     }
     return params;
 }
+
+function colorUnsureBirthDates(data) {
+    for (const key in data) {
+        const value = data[key];
+        var inputID = INPUT.athletePrefix + value[INPUT.storeIdentifier];
+
+         if (value[DB.unsureDate] != null){
+             if(value[DB.unsureDate] == 1){
+                $('label[for="'+inputID+'"]').css('color', 'blue');
+             }
+         }
+         if (value[DB.unsureYear] != null){
+             if(value[DB.unsureYear] == 1){
+                $('label[for="'+inputID+'"]').css('color', 'red');
+            }
+         }
+    }
+}
+
 
 /** ********************************************************
  * CREAT Source LISTING
@@ -190,20 +210,24 @@ function changePerformanceInput() {
     var dbdisziplin = getValuesFromStorage(STORE.disziplinStore)[disziplinStoreId];
     var multiIds = dbdisziplin[DB.multiIds];
 
-    if (multiIds == null) {
+    /******************************************************************************3 */
+    // AS Soon As we want the Multiple iput again you have to enable the following 20 lines:
+    /************************************************* */
+    
+    // if (multiIds == null) {
         document.getElementById(INPUT.performanceDiv).innerHTML = createPerformanceInput(dbdisziplin[INPUT.storeIdentifier], INPUT.performanceInputName, dbdisziplin[DB.disziplinName], "");
-    } else {
-        createPointSchemeNamesSelector();
-        const ids = multiIds.split(",");
-        var html = "";
-        for (let i = 0; i < ids.length; i++) {
-            const id = ids[i];
-            const singleDisziplin = findDisziplinInStore(id);
-            html += createPerformanceInput(singleDisziplin[INPUT.storeIdentifier], INPUT.performanceInputName, singleDisziplin[DB.disziplinName], " onInput=calcualtePoints(this)");
-        }
-        html += createPerformanceInput(dbdisziplin[INPUT.storeIdentifier], INPUT.performanceInputName, dbdisziplin[DB.disziplinName], "");
-        document.getElementById(INPUT.performanceDiv).innerHTML = html;
-    }
+    // } else {
+    //     createPointSchemeNamesSelector();
+    //     const ids = multiIds.split(",");
+    //     var html = "";
+    //     for (let i = 0; i < ids.length; i++) {
+    //         const id = ids[i];
+    //         const singleDisziplin = findDisziplinInStore(id);
+    //         html += createPerformanceInput(singleDisziplin[INPUT.storeIdentifier], INPUT.performanceInputName, singleDisziplin[DB.disziplinName], " onInput=calcualtePoints(this)");
+    //     }
+    //     html += createPerformanceInput(dbdisziplin[INPUT.storeIdentifier], INPUT.performanceInputName, dbdisziplin[DB.disziplinName], "");
+    //     document.getElementById(INPUT.performanceDiv).innerHTML = html;
+    // }
 }
 window.changePerformanceInput = changePerformanceInput;
 

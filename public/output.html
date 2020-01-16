@@ -13,6 +13,12 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+	<script >
+		$(document).ready(function() {
+			$('.mdb-select').materialSelect();
+		});
+	</script>
 <script type=module src="../js/output/output.js"></script>
 <script>
             function clearSession() {
@@ -35,7 +41,7 @@
       </div>  -->
 	<div id="content">
 		<h1>TVU Statistik Tool (im Aufbau)</h1>
-		<h1 style="color:red;">Daten sind komplet ab 2019. Ältere Daten nur von Swiss Athletics.</h1>
+		<h1 style="color:red;">Daten sind komplet ab 2006. Mehr Daten folgen laufend.</h1>
 		
 		<p></p>
 
@@ -52,6 +58,18 @@
 				<div id="yearsList"></div>
 			</div>
 		</div>
+
+
+		<div class="row">
+			<div class="col-sm-6">
+				<div id="categorySelector"></div>
+			</div>
+
+			<div class="col-sm-6">
+				<div id="yearsSelector"></div>
+			</div>
+		</div>
+
 
 		<!--      <div class="row">
                   <div class="col-sm-12">
@@ -87,10 +105,10 @@
 								name="topVals" value="10" id="top10"
 								onclick="fillTopNumber(this)"> <label for="top10">10</label>
 							<input type="radio" class="form-control" name="topVals"
-								value="30" id="top30" onclick="fillTopNumber(this)"> <label
+								value="30" id="top30" onclick="fillTopNumber(this)" checked> <label
 								for="top30">30</label> <input type="radio" class="form-control"
 								name="topVals" value="100" id="top100"
-								onclick="fillTopNumber(this)" checked> <label
+								onclick="fillTopNumber(this)" > <label
 								for="top100">100</label> <input type="radio"
 								class="form-control" name="topVals" value="500" id="top500"
 								onclick="fillTopNumber(this)"> <label for="top500">500</label>

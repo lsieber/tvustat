@@ -56,6 +56,13 @@ export const athletePrefix = "ath";
 export const athleteList = "athleteList";
 
 /**
+ * ATHLETE INPUT MODAL
+ */
+
+export const athleteModalId = "athleteModal";
+export const athleteFormId = "athleteForm";
+
+/**
  * PERFORMANCE
  */
 export const performanceDiv = "performanceDiv";
@@ -64,6 +71,7 @@ export const performanceInputPrefix = "perfInp";
 export const performanceInputName = "performanceInputFields";
 export const existingPerformances = "existingPerformances";
 export const lastPerformances = "lastPerformances";
+export const insertionOutput = "insertionOutput";
 
 /**
  * Details

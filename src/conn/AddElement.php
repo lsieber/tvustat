@@ -166,7 +166,7 @@ class AddElement extends DbHandler
         }
         $sql .= ")";
 
-        // echo $sql;
+//         echo $sql;
         $result = $this->conn->getConn()->query($sql);
         $new_id = $this->conn->getConn()->insert_id;
         $success = ($result == 1);
