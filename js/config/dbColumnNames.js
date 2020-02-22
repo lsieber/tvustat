@@ -25,21 +25,29 @@ export const categoryControlWomen = "women";
 export const categoryControlMultiple = "multiple";
 export const categoryControlSingle = "single";
 
+export const defaultMenValue = "1,2,3,4";
+export const defaultWomenValue = "13,14,15,16";
+
 // /**
 //  * DISZIPLIN
 //  */
 export const disziplinID = "disziplinID";
 export const disziplinName = "disziplinName";
 export const multiIds = "disziplinIDs"
+export const disziplinsAll = "all";
+
 
 // /**
 //  * ATHLETE
 //  */
 export const athleteID = "athleteID";
 export const athleteName = "fullName";
+export const atheletBirth = "date"
 export const activeYear = "activeYear";
 export const unsureDate = "unsureDate";
 export const unsureYear = "unsureYear";
+export const minYear = "minYear";
+export const maxYear = "maxYear";
 
 
 // /**

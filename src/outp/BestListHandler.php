@@ -85,9 +85,9 @@ class BestListHandler
     public function printTable(array $outputs)
     {
         $categoryUtils = new CategoryUtils($this->db->getConn());
-        $columnDefCatDetail = new ColumnDefinitionCatDetail($categoryUtils);
+        $columnDefCatDetail = new ColumnDefinitionCatDetailNameLink($categoryUtils);
         // $columnDefDetail = new ColumnDefinitionDetail();
-        $columnDefCat = new ColumnDefinitionCategory($categoryUtils);
+        $columnDefCat = new ColumnDefinitionCategoryNameLink($categoryUtils);
         // $columnDefBasic = new ColumnDefinitionBasic();
 
         if (sizeof($outputs) == 0) {

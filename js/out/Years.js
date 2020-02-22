@@ -16,7 +16,7 @@ export class Years {
     }
 
     getSelectedValues(){
-        return Select.getValue(OUT.categorySelectId).split(",");
+        return Select.getValue(OUT.yearSelectId).split(",");
     }
 
     getYearControl() {

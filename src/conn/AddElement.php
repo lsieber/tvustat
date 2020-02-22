@@ -179,7 +179,7 @@ class AddElement extends DbHandler
         return $querry;
     }
 
-    private static function sqlValue($v)
+    public static function sqlValue($v)
     {
         if (is_bool($v)) {
             return $v ? 1 : 0;

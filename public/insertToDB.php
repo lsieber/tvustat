@@ -88,7 +88,7 @@ if ($insert_athlete) {
     } else if (strlen($_POST[dbAthletes::DATE]) == 10) {
         $date = new DateTime($_POST[dbAthletes::DATE]);
     }
-//     echo DateFormatUtils::formatDateForBL($date);
+    // echo DateFormatUtils::formatDateForBL($date);
     $athlete = new Athlete( //
     $_POST[dbAthletes::FULLNAME], //
     $date, //
@@ -98,14 +98,14 @@ if ($insert_athlete) {
     /**
      * Adds The athlete to the Database and echos the json encoded Array of a message and success value
      */
-    
+
     $querry = $db->addAthlete($athlete);
 
     $querry->putCustomValue("m2", $isUnsureBirthDate);
     $querry->putCustomValue("m3", $isUnsureBirthYear);
     $querry->putCustomValue("minYear", $minYear);
     $querry->putCustomValue("maxYear", $maxYear);
-    
+
     if (array_key_exists(dbAthleteActiveYear::YEAR, $_POST) && $querry->getSuccess()) {
         $value = $db->addAthleteActiveYear($querry->getCustomValue(dbAthletes::getIDString()), intval($_POST[dbAthleteActiveYear::YEAR]));
         $querry->putCustomValue("active year Result", $value);
@@ -191,20 +191,22 @@ if ($insert_performance) {
                 }
                 if (! $performanceExists) {
                     $result = $db->addPerformanceWithIdsOnly($_POST);
-                    $newPerf = $db->getPerformance($result->getCustomValue(dbPerformance::getIDString()));
+                    if ($result->getSuccess()) {
+                        $newPerf = $db->getPerformance($result->getCustomValue(dbPerformance::getIDString()));
 
-                    $result->putCustomValue(dbAthletes::FULLNAME, $newPerf->getAthlete()
-                        ->getFullName());
-                    $result->putCustomValue(dbDisziplin::NAME, $newPerf->getDisziplin()
-                        ->getName());
-                    $result->putCustomValue(dbPerformance::PERFORMANCE, $newPerf->getPerformance());
+                        $result->putCustomValue(dbAthletes::FULLNAME, $newPerf->getAthlete()
+                            ->getFullName());
+                        $result->putCustomValue(dbDisziplin::NAME, $newPerf->getDisziplin()
+                            ->getName());
+                        $result->putCustomValue(dbPerformance::PERFORMANCE, $newPerf->getPerformance());
 
-                    foreach ($existingPerformances as $performanceRaw) {
-                        if ($performanceRaw[dbPerformance::PERFORMANCE] == $newPerf->getPerformance()) {
-                            $compExisting = $db->getCompetition($performanceRaw[dbPerformance::COMPETITOINID]);
-                            if (CompetitionUtils::isFromTVUBuch($compExisting)) {
-                                $db->removePerformance($performanceRaw[dbPerformance::ID]);
-                                $result->putCustomValue("REMOVED SAME TVU BUCH ENTRY", $performanceRaw[dbPerformance::PERFORMANCE]);
+                        foreach ($existingPerformances as $performanceRaw) {
+                            if ($performanceRaw[dbPerformance::PERFORMANCE] == $newPerf->getPerformance()) {
+                                $compExisting = $db->getCompetition($performanceRaw[dbPerformance::COMPETITOINID]);
+                                if (CompetitionUtils::isFromTVUBuch($compExisting)) {
+                                    $db->removePerformance($performanceRaw[dbPerformance::ID]);
+                                    $result->putCustomValue("REMOVED SAME TVU BUCH ENTRY", $performanceRaw[dbPerformance::PERFORMANCE]);
+                                }
                             }
                         }
                     }

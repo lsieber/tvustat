@@ -1,9 +1,12 @@
+
+import * as STORE from "../config/storageNames.js";
+
 export class InputForm {
 
-    constructor(formId){
+    constructor(formId) {
         this.formId = formId;
 
-        this.genderOptions = { 1: "Male", 2: "Female", 3:"Mixed" };
+        this.genderOptions = { 1: "Male", 2: "Female", 3: "Mixed" };
 
         this.sortOptions = { 1: "ascending", 2: "descending" };
 
@@ -58,7 +61,7 @@ export class InputForm {
     }
 
     updateBasicDefintion() {
-        var def = JSON.parse(window.sessionStorage.defs);
+        var def = JSON.parse(window.sessionStorage[STORE.definitionsStore]);
         var g = {};
         for (const key in def.genders) {
             g[key] = def.genders[key].name;

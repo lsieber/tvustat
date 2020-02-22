@@ -22,14 +22,12 @@ export class Disziplins {
 }
 
 function processDisziplinsResult(data) {
-    const all = Select.createValue("all", "Alle Kategorien");
-    const allMen = Select.createValue("men", "Alle Männer");
-    const allWomen = Select.createValue("women", "Alle Frauen");
-    var values = [all, allMen, allWomen];
+    const all = Select.createValue(DB.disziplinsAll, "Alle Disziplinen");
+    var values = [all];
 
     // Adding the values of the DB
     for (const key in data) {
-        values.push(Select.createValue(data[key][DB.categoryIDs], data[key][DB.outputCategoryName]));
+        values.push(Select.createValue(data[key][DB.disziplinID], data[key][DB.disziplinName]));
     }
     values.push(all);
 

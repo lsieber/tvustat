@@ -43,3 +43,8 @@ export const athleteResultsRadioName = "athleteResults";
 
 export const teamResultsDiv = "teamResultsRadios";
 export const teamResultsRadioName = "teamResults";
+
+/**
+ * TOP Number
+ */
+export const topNumberField = "topNumber";

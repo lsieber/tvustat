@@ -6,7 +6,7 @@ import { loadCompetitions, loadCategories, loadDisziplins, loadAthletes } from "
 import { InsertToDB } from "../elmt/InsertToDB.js";
 import { ExistingEntries } from "../elmt/ExistingEntries.js";
 import { CalculatePoints } from "../elmt/CalculatePoints.js";
-import { AthleteInputForm} from "./AthleteInputForm.js";
+import { AthleteInputForm } from "./AthleteInputForm.js";
 import { addValueToArrayStorage, getValuesFromStorage } from "./SessionStorageHandler.js";
 import { getSelectedRadioButtonObject } from "./Selection.js";
 
@@ -146,9 +146,9 @@ function insertPerformanceWithData(params, athlete, disziplin) {
 function processPerformanceData(data) {
   var output = data.message;
   if (data.success == true) {
-    output +=  "</br>" + data[DB.disziplinName]+ " "+data[DB.athleteName] + " " + data[DB.performance];
-    output +=  "</br><a onclick=deleteLastPerformance("+data[DB.performanceID]+")>" + "löschen </a>" ;
-    
+    output += "</br>" + data[DB.disziplinName] + " " + data[DB.athleteName] + " " + data[DB.performance];
+    output += "</br><a onclick=deleteLastPerformance(" + data[DB.performanceID] + ")>" + "löschen </a>";
+
   }
   document.getElementById(INPUT.insertionOutput).innerHTML = output;
 
@@ -222,7 +222,7 @@ function onSelectionChange() {
   // var d = getSelectedRadioButtonObject(INPUT.disziplinInputName);
 
   if (a != null && c != null && dIDs != undefined && Object.keys(dIDs).length > 0) {
-    var  competitionStoreID =  c.id.slice(INPUT.competitionPrefix.length);
+    var competitionStoreID = c.id.slice(INPUT.competitionPrefix.length);
     var compDate = getValuesFromStorage(STORE.competitionStore)[competitionStoreID][DB.competitionDate];
 
     var params = {
@@ -233,7 +233,7 @@ function onSelectionChange() {
     };
     var dateParts = compDate.split(".");
 
-    if (dateParts.length==1) {
+    if (dateParts.length == 1) {
       params.type = "performancesDisAthYear";
       params.year = compDate;
     }
@@ -367,7 +367,7 @@ window.insertAthlete = insertAthlete
 function updateAthleteInput() {
   athleteForm.updateModal();
   var categories = getSelectedRadioButtonObject(INPUT.categoryInputName);
-  if(categories != null){
+  if (categories != null) {
     athleteForm.checkGender(getValuesFromStorage(STORE.categoryStore)[categories.value.split(",")[0]][DB.genderID]);
   }
 
@@ -376,15 +376,103 @@ function updateAthleteInput() {
 window.updateAthleteInput = updateAthleteInput
 
 function deleteLastPerformance(performanceId) {
-  
-      // insert into db
-      $.post('deleteElements.php', {
-          "ID": performanceId
-      }, function (data) {
-        document.getElementById(INPUT.insertionOutput).innerHTML = data.message;
-      }, "json");
-  
+
+  // insert into db
+  $.post('deleteElements.php', {
+    "ID": performanceId
+  }, function (data) {
+    document.getElementById(INPUT.insertionOutput).innerHTML = data.message;
+  }, "json");
+
 }
 window.deleteLastPerformance = deleteLastPerformance
 
+function loadSimilarAthletes(inputField) {
+  var existingEntries = new ExistingEntries();
+  existingEntries.post({ type: "similarAthlete", athleteName: inputField.value }, processSimilarAthletes, "json");
+}
+window.loadSimilarAthletes = loadSimilarAthletes
 
+function processSimilarAthletes(data) {
+  var html = "";
+  for (const key in data) {
+    var athlete = data[key];
+    html += createAthleteChanger(athlete);
+  }
+  document.getElementById(INPUT.existingAthletesDiv).innerHTML = html;
+}
+
+
+const birthInd = "birth";
+const actInd = "act";
+const unsureDateInd = "unsureDate";
+const unsureYearInd = "unsureYear";
+const minYearInd = "minYear";
+const maxYearInd = "maxYear";
+
+function createAthleteChanger(athlete) {
+  var athleteId = athlete[DB.athleteID];
+
+
+  var name = athlete[DB.athleteName];
+  var birthDate = athlete[DB.atheletBirth].split("-")[0];
+
+  var html = '<div class="form-inline">';
+  html += p(name + ", " + birthDate);
+
+  html += col('<label for="' + birthInd + athleteId + '">Jahrgang</label><input type="number" class="form-control" value=' + birthDate + ' id="' + birthInd + athleteId + '" style="width: 5em"></input>');
+  var activeYear = athlete[DB.activeYear];
+  html += col('<label for="' + actInd + athleteId + '">Aktiv Jahr</label><input type="number" class="form-control" value=' + activeYear + ' id="' + actInd + athleteId + '" style="width: 5em"></input>');
+
+  var unsureDate = athlete[DB.unsureDate];
+  var unsureYear = athlete[DB.unsureYear];
+
+  var dateChecked = (unsureDate == 1) ? "checked" : "";
+  html += col('<input type="checkbox" id="' + unsureDateInd + athleteId + '" value="' + athleteId + '" name=unsureDate"' + athleteId + '" ' + dateChecked + '><label for="' + unsureDateInd + athleteId + '">' + "Geburtstag unklar" + '</label>');
+  var yearChecked = (unsureYear == 1) ? "checked" : "";
+  html += col('<input type="checkbox" id="' + unsureYearInd + athleteId + '" value="' + athleteId + '" name=unsureYear"' + athleteId + '" ' + yearChecked + '><label for="' + unsureYearInd + athleteId + '">' + "Jahrgang unklar" + '</label>');
+
+  var minYear = athlete[DB.minYear];
+  html += col('<label for="' + minYearInd + athleteId + '">Min Jahr</label><input type="number" class="form-control" value=' + minYear + ' id="' + minYearInd + athleteId + '" style="width: 5em"></input>');
+  var maxYear = athlete[DB.maxYear];
+  html += col('<label for="' + maxYearInd + athleteId + '">Max Jahr</label><input type="number" class="form-control" value=' + maxYear + ' id="' + maxYearInd + athleteId + '" style="width: 5em"></input>');
+
+
+  //  "<form>" + athleteDescription +unsureDate + unsureYear + minYear + maxYear + activeYear + "</form>";
+  html += col('<a class="btn btn-secondary" onclick="updateAthlete(' + athleteId + ')">Save</a>');
+
+  return html + '</div>'
+}
+
+function updateAthlete(athleteId) {
+  var birth = document.getElementById(birthInd + athleteId).value;
+  var activeYear = document.getElementById(actInd + athleteId).value;
+  var unsureDate = document.getElementById(unsureDateInd + athleteId).checked;
+  var unsureYear = document.getElementById(unsureYearInd + athleteId).checked;
+  var minYear = document.getElementById(minYearInd + athleteId).value;
+  var maxYear = document.getElementById(maxYearInd + athleteId).value;
+
+
+  var param = {};
+  param[DB.athleteID] = athleteId;
+  param[DB.activeYear] = activeYear;
+  param[DB.unsureDate] = unsureDate;
+  param[DB.unsureYear] = unsureYear;
+  param[DB.minYear] = minYear;
+  param[DB.maxYear] = maxYear;
+  param[DB.atheletBirth] = birth;
+
+  $.post('updateAthlete.php', param, function (data) {
+    console.log(data);
+  }, "json");
+
+}
+window.updateAthlete = updateAthlete
+
+function p(value) {
+  return '<p>' + value + '</p>';
+}
+
+function col(value) {
+  return '<div class="form-group">' + value + '</div>';
+}

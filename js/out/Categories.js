@@ -6,10 +6,12 @@ import * as STORE from "../config/storageNames.js";
 
 
 
+
 export class Categories {
 
     constructor() {
         this.existingEntries = new ExistingEntries();
+
     }
 
     createSelector() {
@@ -22,7 +24,12 @@ export class Categories {
     }
 
     getSelectedValues() {
-        return this.getSelectedValue().split(",");
+        var selected = this.getSelectedValue();
+        if (selected == DB.categoryControlAll || selected == DB.categoryControlMen || selected == DB.categoryControlWomen) {
+            return [0];
+        } else {
+            return selected.split(",");
+        }
     }
 
     getCategoryControl() {
@@ -52,6 +59,9 @@ function processOutputCategoriesResult(data) {
     // values.push(all);
 
     Select.create(values, OUT.categoryDiv, OUT.categorySelectId);
+    var valueToSelect = (Math.random() > 0.5) ? DB.defaultMenValue: DB.defaultWomenValue;
+
+    Select.selectValue(OUT.categorySelectId, valueToSelect);
 }
 
 

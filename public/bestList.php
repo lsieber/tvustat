@@ -58,6 +58,7 @@ foreach ($categoryIDs as $key => $id) {
 $top = $_POST["top"];
 
 $disziplins = (array_key_exists("disziplins", $_POST)) ? $_POST["disziplins"] : array();
+$disziplins = ($disziplins[0] == "all") ? array() : $disziplins;
 
 /*
  * Values:

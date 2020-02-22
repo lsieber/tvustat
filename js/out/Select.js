@@ -1,5 +1,5 @@
 
-export class Select{
+export class Select {
 
     static create(values, divName, selectId) {
         // <label for="sel1">Select list (select one):</label>
@@ -13,11 +13,11 @@ export class Select{
     }
 
     static createOneOption(oText, oValue) {
-        return '<option value="'+oValue+'">' + oText + '</option>';
+        return '<option value="' + oValue + '">' + oText + '</option>';
     }
 
     static createValue(id, displayValue) {
-        return { id: id, displayValue: displayValue};
+        return { id: id, displayValue: displayValue };
     }
 
     /**
@@ -25,10 +25,13 @@ export class Select{
      * @param {string} selectId 
      * @return {string} string representation of the value 
      */
-    static getValue(selectId){
+    static getValue(selectId) {
         var e = document.getElementById(selectId);
         return e.options[e.selectedIndex].value;
     }
 
-
+    static selectValue(selectId, valueToSelect) {
+        let element = document.getElementById(selectId);
+        element.value = valueToSelect;
+    }
 }

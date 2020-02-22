@@ -1,20 +1,21 @@
 import { InputForm } from "./InputForm.js";
 import { getSelectedRadioButton, selectElementByValue } from "./Selection.js";
 import { removeValueById, changeValueInArray, getAthlete } from "./SessionStorageHandler.js";
+import * as INPUT from "../config/inputNames.js";
 
 const bornYearIdentifier = "bornYear";
 const dateIdentifier = "date";
 
 function chageBirthInput() {
-    
+
     var dateField = document.getElementById(dateIdentifier);
-    if(dateField.type == "date"){
+    if (dateField.type == "date") {
         dateField.value = 2000;
-        dateField.type = "number";   
-        dateField.placeholder = "Enter Birth Year"; 
-    } else if(dateField.type == "number"){
+        dateField.type = "number";
+        dateField.placeholder = "Enter Birth Year";
+    } else if (dateField.type == "number") {
         dateField.value = new Date();
-        dateField.type = "date";    
+        dateField.type = "date";
         dateField.placeholder = "Enter Birth Date";
     }
 }
@@ -29,21 +30,23 @@ export class AthleteInputForm extends InputForm {
         this.nameIdentifier = "fullName";
         this.fullName = "";
 
+        this.existingAthletsDivName = INPUT.existingAthletesDiv;
+
         this.licenceIndentifier = "licence";
-        this.licence = this.textField("Licence Number", 'type="number" id="' + this.licenceIndentifier + '" class="form-control" placeholder="Enter licence Number"');
+        this.licence = this.textField("Lizenz Nummer (normal leer)", 'type="number" id="' + this.licenceIndentifier + '" class="form-control" placeholder="Enter licence Number"');
 
         // this.dateIdentifier = "date";
-        this.birthDate = "1999-02-03";
+        this.birthDate = "1988";
 
-        this.dateswitch = '<a class="btn btn-primary" onclick="chageBirthInput()">Birth Year Only</a>'
+        this.dateswitch = '<a class="btn btn-primary" onclick="chageBirthInput()">Genaues Geburtsdatum</a>'
 
-        this.bornYear = this.textField("Born Year", 'type="number" id="' + bornYearIdentifier + '" class="form-control" placeholder="Enter Born Year"');
+        this.bornYear = this.textField("Jahrgang", 'type="number" id="' + bornYearIdentifier + '" class="form-control" placeholder="Enter Born Year"');
 
         this.minYearIdentifier = "minYear";
         this.maxYearIdentifier = "maxYear";
-        this.unsureBirthDateIdentifier = "unsureBirthDate"
-        this.minYear = this.textField("Min Year", 'type="number" id="' + this.minYearIdentifier + '" class="form-control" placeholder="Enter Min Year"');
-        this.maxYear = this.textField("Max Year", 'type="number" id="' + this.maxYearIdentifier + '" class="form-control" placeholder="Enter Max Year"');
+        this.unsureBirthDateIdentifier = "unklarer Jahrgang"
+        this.minYear = this.textField("Min Jahr", 'type="number" id="' + this.minYearIdentifier + '" class="form-control" placeholder="Enter Min Year"');
+        this.maxYear = this.textField("Max Jahr", 'type="number" id="' + this.maxYearIdentifier + '" class="form-control" placeholder="Enter Max Year"');
 
 
         this.activeYearIdentifier = "activeYear";
@@ -56,18 +59,18 @@ export class AthleteInputForm extends InputForm {
     }
 
 
-    createUnsureBirthDate(){
-        var html = '<a class="btn btn-secondary" data-toggle="collapse" href="#collapseUnsureBirthDate">Unsure Birth Year</a>';
+    createUnsureBirthDate() {
+        var html = '<a class="btn btn-secondary" data-toggle="collapse" href="#collapseUnsureBirthDate">Unklarer Jahrgang!</a>';
         html += '<div id="collapseUnsureBirthDate" class="collapse out">';
 
-        html +=  this.textField("Min Year", 'type="number" id="' + this.minYearIdentifier + '" class="form-control" placeholder="Enter Max Year"');
-        html +=  this.textField("Max Year", 'type="number" id="' + this.maxYearIdentifier + '" class="form-control" placeholder="Enter Min Year"');
+        html += this.textField("Min Jahr", 'type="number" id="' + this.minYearIdentifier + '" class="form-control" placeholder="Enter Max Year"');
+        html += this.textField("Max Jahr", 'type="number" id="' + this.maxYearIdentifier + '" class="form-control" placeholder="Enter Min Year"');
 
         html += '</div>';
         return html;
     }
 
-    
+
 
     updateModal() {
         this.updateBasicDefintion();
@@ -75,19 +78,23 @@ export class AthleteInputForm extends InputForm {
     }
 
     createHTML() {
-        return this.getFullName() + this.getBirthDate() + this.dateswitch + this.createUnsureBirthDate()+ this.licence + this.getActiveYear() + this.getGender() + this.getTeamType();
+        return this.getFullName() + this.getExistingAthletesDiv() + this.getBirthDate() + this.dateswitch + this.createUnsureBirthDate() + this.licence + this.getActiveYear() + this.getGender() + this.getTeamType();
     }
 
     getFullName() {
-        return this.textField("Full Name", 'type="text" id="' + this.nameIdentifier + '" value="' + this.fullName + '" class="form-control" placeholder="Enter Full Name"');
+        return this.textField("Ganzer Name (Vorname Nachname)", 'type="text" id="' + this.nameIdentifier + '" value="' + this.fullName + '" class="form-control" placeholder="Vorname Nachname" oninput="loadSimilarAthletes(this)"');
     }
 
     setFullName(fullName) {
         this.fullName = fullName;
     }
 
+    getExistingAthletesDiv() {
+        return "<div id='" + this.existingAthletsDivName + "'></div>";
+    }
+
     getBirthDate() {
-        return this.textField("Birth Date", 'type="date" id="' + dateIdentifier + '" value="' + this.birthDate + '" class="form-control" placeholder="Enter Birth Date"');
+        return this.textField("Jahrgang", 'type="number" id="' + dateIdentifier + '" value="' + this.birthDate + '" class="form-control" placeholder="Geburtsdatum"');
     }
 
     setBirthDate(birthDate) {
@@ -98,24 +105,24 @@ export class AthleteInputForm extends InputForm {
         this.activeYear = activeYear;
     }
 
-    getActiveYear(){
-        return this.textField("Active Year", 'type="number" id="' + this.activeYearIdentifier + '" class="form-control" value=' + this.activeYear + ' placeholder="Enter Active Year"');
+    getActiveYear() {
+        return this.textField("Letztes Aktiv Jahr", 'type="number" id="' + this.activeYearIdentifier + '" class="form-control" value=' + this.activeYear + ' placeholder="Jahr"');
     }
 
     getGender() {
-        return this.getSimpleRadio("Gender", this.genderIdentifier, this.genderOptions);
+        return this.getSimpleRadio("Geschlecht", this.genderIdentifier, this.genderOptions);
     }
 
-    checkGender(genderID){
+    checkGender(genderID) {
         selectElementByValue(this.genderIdentifier, genderID);
     }
 
-    checkIndividual(){
+    checkIndividual() {
         selectElementByValue(this.teamTypeIdentifier, 1);
     }
 
     getTeamType() {
-        return this.getSimpleRadio("Athlete is", this.teamTypeIdentifier, this.teamTypeOptions);
+        return this.getSimpleRadio("Athlet ist: (normal ist individual)", this.teamTypeIdentifier, this.teamTypeOptions);
     }
 
     selectDefault() {

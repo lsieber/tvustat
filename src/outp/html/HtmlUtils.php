@@ -6,12 +6,13 @@ trait HtmlUtils
 
     protected static function row(Performance $performance, ColumnDefinition $columDefinition)
     {
-        return self::tr($columDefinition->bestListElements($performance));
+        return self::tr($columDefinition->bestListElements($performance), $performance->getId());
     }
 
-    protected static function tr(array $elements)
+    protected static function tr(array $elements, $trId = null)
     {
-        $line = "<tr>";
+        $id = (is_null($trId)) ? "" : " id='" . $trId . "'";
+        $line = "<tr" . $id . ">";
         foreach ($elements as $element) {
             $line .= self::td($element);
         }

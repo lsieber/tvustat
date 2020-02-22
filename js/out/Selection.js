@@ -17,11 +17,3 @@ export function getSelectedRadioButton(name) {
 	return null;
 }
 
-export function selectElementByValue(name, value) {
-	var element = document.getElementsByName(name);
-	for (var i = 0; i < element.length; i++) {
-		if (element[i].value == value) {
-			element[i].checked = true;
-		}
-	}
-}

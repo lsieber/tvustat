@@ -36,7 +36,7 @@ class AthleteBestList
         $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
         // Fill into Best List
         foreach ($array_result as $entry) {
-            $performance = dbPerformance::performanceFromAsocArray($entry, $this->db->getConn());
+            $performance = dbPerformance::array2Elmt($entry, $this->db->getConn());
             $this->bestList->addPerformance($performance);
         }
     }
@@ -60,9 +60,9 @@ class AthleteBestList
     public function printTable()
     {
         $categoryUtils = new CategoryUtils($this->db->getConn());
-        $columnDefCatDetail = new ColumnDefinitionCatDetail($categoryUtils);
+        $columnDefCatDetail = new ColumnDefinitionCatDetailNoName($categoryUtils);
         // $columnDefDetail = new ColumnDefinitionDetail();
-        $columnDefCat = new ColumnDefinitionCategory($categoryUtils);
+        $columnDefCat = new ColumnDefinitionCategoryNoName($categoryUtils);
         // $columnDefBasic = new ColumnDefinitionBasic();
 
         $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);

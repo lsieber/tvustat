@@ -1,7 +1,7 @@
 <?php
 namespace tvustat;
 
-class ColumnDefinitionCategory implements ColumnDefinition
+class ColumnDefinitionCategoryNameLink implements ColumnDefinition
 {
 
     private $categoryUtils;
@@ -27,9 +27,10 @@ class ColumnDefinitionCategory implements ColumnDefinition
     {
         return array( //
             $performance->getFormatedPerformance(),
-            $performance->getAthlete()->getFullName(),
+            ColDefUtils::athleteLink($performance->getAthlete()),
             DateFormatUtils::formatBirthYearForBL($performance->getAthlete()->getDate()),
-            CompetitionUtils::formatCompetitionVillage($performance->getCompetition()->getLocation()),
+            CompetitionUtils::formatCompetitionVillage($performance->getCompetition()
+                ->getLocation()),
             DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate()),
             $this->categoryUtils->categoryOf($performance)->getName()
         );
@@ -39,5 +40,6 @@ class ColumnDefinitionCategory implements ColumnDefinition
     {
         return sizeof(self::bestListHeaders());
     }
+    
 }
 

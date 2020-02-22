@@ -1,8 +1,5 @@
-
-// import * as INPUT from "../config/outNames.js";
-// import * as FILES from "../config/serverFiles.js";
-// import * as STORE from "../config/storageNames.js";
-// import * as DB from "../config/dbColumnNames.js";
+import * as OUT from "../config/outNames.js";
+import * as DB from "../config/dbColumnNames.js";
 
 import { createAthleteRadio, createTeamRadio, getAthleteValue, getTeamValue } from "./Results.js";
 import { Categories } from "./Categories.js";
@@ -27,46 +24,49 @@ window.onload = onload
 
 
 function fillTopNumber(selectedTopField) {
-    document.getElementById("topNumber").value = selectedTopField.value;
+    document.getElementById(OUT.topNumberField).value = selectedTopField.value;
     selectedTopField.selected = false;
 }
 window.fillTopNumber = fillTopNumber
 
 function loadBestList() {
-    console.log(categories.getCategoryControl);
-    console.log(categories.getSelectedValues());
-    console.log(disziplins.getSelectedValues());
-    console.log(years.getYearControl());
-    console.log(getAthleteValue());
-    console.log(getTeamValue());
-    console.log();
+
+    var topNumber = document.getElementById(OUT.topNumberField).value;
+
+    if (!(topNumber > 0 && topNumber < 10001)) {
+        alert("Bitte wähle eine Wert für die Anzahl Resultate zwischen 1 und 10000");
+        topNumber = 30;
+        document.getElementById(OUT.topNumberField).value = topNumber;
+    }
+
+    var catCont = categories.getCategoryControl();
+    var isLargeCategoryGroup = (catCont == DB.categoryControlAll || catCont == DB.categoryControlMen || catCont == DB.categoryControlWomen);
+    if (isLargeCategoryGroup && years.getYearControl() == DB.yearControlAll && disziplins.getSelectedValues()[0] == DB.disziplinsAll) {
+        alert("Zur Zeit können nicht gleichzeitig alle Kategorien, Jahre und Disziplinen gewählt werden. Dies übersteigt die Kapazität des Servers. Wir arbeiten an einer Lösung. Bitte wähle mindestens eine Option.")
+    }
 
     var params = {
         years: years.getSelectedValues(),
         yearsControl: years.getYearControl(),
         categories: categories.getSelectedValues(),
         categoryControl: categories.getCategoryControl(),
-        top: document.getElementById("topNumber").value,
+        top: topNumber,
         keepPerson: getAthleteValue(),
         keepTeam: getTeamValue(),
         disziplins: disziplins.getSelectedValues()
     };
-
-    if (years.length == 0) {
-        alert("Bitte wähle ein Jahr aus.");
-    }
-    if (topNumber <= 0 || topNumber > 10000) {
-        alert("Bitte wähle eine Wert für die Anzahl Resultate zwischen 1 und 10000");
-    }
-
 
     $.post("./bestList.php",
         params, function (html) {
             document.getElementById("bestList").innerHTML = html;
         }, "html");
 
-
-
-
 }
 window.loadBestList = loadBestList
+
+function openAthlete(athleteID){
+    localStorage.athleteIDResults = athleteID;
+    open("athletePage.html");
+}
+window.openAthlete = openAthlete;
+

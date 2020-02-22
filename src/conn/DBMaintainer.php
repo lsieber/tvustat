@@ -356,6 +356,7 @@ class DBMaintainer
     {
         $sql = "SELECT DISTINCT YEAR(" . dbCompetition::DATE . ") FROM " . dbPerformance::DBNAME;
         $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
+        $sql .= " ORDER BY YEAR(" . dbCompetition::DATE . ") DESC";
         return $this->conn->executeSqlToArray($sql);
     }
 

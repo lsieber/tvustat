@@ -24,7 +24,8 @@ use config\dbUnsureBirthDates;
 
     $competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
     $athletesforCategory = ($_POST['type'] == 'athletesforCategory') ? TRUE : FALSE;
-
+    $similarAthletes = ($_POST['type'] == "similarAthlete") ? TRUE: FALSE;
+    
     $allCompetitions = ($_POST['type'] == 'allCompetitions') ? TRUE : FALSE;
     $allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
     $allCompetitionLocations = ($_POST['type'] == 'allCompetitionLocations') ? TRUE : FALSE;
@@ -175,4 +176,16 @@ use config\dbUnsureBirthDates;
         echo json_encode($db->getConn()->executeSqlToArray($sql));
     }
 
+    if($similarAthletes){
+        $namepart = $_POST["athleteName"];
+        
+        $sql = "SELECT * FROM " . dbAthletes::DBNAME;
+        $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        $sql .= " LEFT JOIN " . dbUnsureBirthDates::DBNAME . " ON " . dbUnsureBirthDates::DBNAME . "." . dbUnsureBirthDates::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        
+        $sql .= " WHERE " . dbAthletes::FULLNAME . " LIKE '%" . $namepart . "%' ORDER BY " . dbAthletes::FULLNAME ;
+//         echo $sql;
+        echo json_encode($db->getConn()->executeSqlToArray($sql));
+        
+    }
     ?>

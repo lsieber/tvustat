@@ -1,7 +1,7 @@
 <?php
 namespace tvustat;
 
-class ColumnDefinitionCategory implements ColumnDefinition
+class ColumnDefinitionCatDetailNoName implements ColumnDefinition
 {
 
     private $categoryUtils;
@@ -15,11 +15,11 @@ class ColumnDefinitionCategory implements ColumnDefinition
     {
         return array( //
             "Resultat",
-            "Name",
-            "Jg",
-            "Ort",
             "Datum",
-            "Kategorie"
+            "Kategorie",
+            "Wettkampf",
+            "Ort",
+            "Detail"
         );
     }
 
@@ -27,11 +27,14 @@ class ColumnDefinitionCategory implements ColumnDefinition
     {
         return array( //
             $performance->getFormatedPerformance(),
-            $performance->getAthlete()->getFullName(),
-            DateFormatUtils::formatBirthYearForBL($performance->getAthlete()->getDate()),
-            CompetitionUtils::formatCompetitionVillage($performance->getCompetition()->getLocation()),
             DateFormatUtils::formatDateForBL($performance->getCompetition()->getDate()),
-            $this->categoryUtils->categoryOf($performance)->getName()
+            $this->categoryUtils->categoryOf($performance)->getName(),
+            CompetitionUtils::formatCompetitionName($performance->getCompetition()
+                ->getName()),
+            CompetitionUtils::formatCompetitionVillage($performance->getCompetition()
+                ->getLocation()),
+
+            $performance->getDetail()
         );
     }
 

@@ -9,6 +9,13 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 	<!-- <script type=module src="../js/output/output.js"></script> -->
+
+	<script>
+		function openAthlete(athleteID){
+			localStorage.athleteIDResults = athleteID;
+			open("athletePage.html");
+		}
+	</script>
 </head>
 
 <body onload="onload()">
@@ -22,6 +29,9 @@
 				Output</a> <a class="btn btn-primary" href="test.php"> TEST PHP</a> <a class="btn btn-primary"
 				href="pointCalculator.php"> Points</a>
 
+				<a class="btn btn-primary"
+				href="athletePage.html"> Athleten Seite</a>
+
 		</div>
 	</div>
 	<div class="jumbotron" id="modalResult">
@@ -29,7 +39,12 @@
 			Tool</a>
 		<a class="btn btn-primary" href="out.html"> Output New</a>
 
+		<a class="btn btn-primary" onclick="openAthlete(14)"
+		href="#"> Athlet</a>
+
 	</div>
+
+
 
 
 </body>

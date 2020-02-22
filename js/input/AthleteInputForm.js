@@ -6,15 +6,15 @@ const bornYearIdentifier = "bornYear";
 const dateIdentifier = "date";
 
 function chageBirthInput() {
-    
+
     var dateField = document.getElementById(dateIdentifier);
-    if(dateField.type == "date"){
+    if (dateField.type == "date") {
         dateField.value = 2000;
-        dateField.type = "number";   
-        dateField.placeholder = "Enter Birth Year"; 
-    } else if(dateField.type == "number"){
+        dateField.type = "number";
+        dateField.placeholder = "Enter Birth Year";
+    } else if (dateField.type == "number") {
         dateField.value = new Date();
-        dateField.type = "date";    
+        dateField.type = "date";
         dateField.placeholder = "Enter Birth Date";
     }
 }
