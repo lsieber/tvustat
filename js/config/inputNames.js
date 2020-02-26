@@ -79,7 +79,7 @@ export const insertionOutput = "insertionOutput";
  */
 export const detailDiv = "detailDiv";
 export const detailInput = "detailInput";
-
+export const manualTimingInput = "manualTimingInput";
 
 /**
  * POINTS

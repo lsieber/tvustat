@@ -96,17 +96,21 @@
 				<h2>Performance</h2>
 				<div id="performanceDivAll">
 					<div class="form-group" id="insertionOutput"></div>
-
+					
+					<div class="form-group" id="manualTimingDiv">
+						<input type="checkbox" class="form-control" id="manualTimingInput" name="manualTimingInput" value="manual">	
+						<label for="manualTimingInput">HandStoppung</label>
+					</div>
 
 					<div class="form-group" id="performanceDiv"></div>
-
-					<div class="form-group" id="detailDiv"></div>
 
 					<a class="btn btn-primary" href="#" onclick="insertPerformance()">
 						Register</a>
 
-
-
+					<div class="form-group">
+						<label> Detail</label>
+						<div class="form-group" id="detailDiv"></div>
+					</div>
 					<div class="form-group">
 						<label> Wind</label> <input type="text" class="form-control" id="windInput" placeholder="">
 					</div>

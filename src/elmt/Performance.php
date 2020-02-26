@@ -22,6 +22,12 @@ class Performance extends DBTableEntry
      * @var string
      */
     private $ranking;
+    
+    /**
+     *
+     * @var boolean
+     */
+    private $manualTiming;
 
     /**
      *
@@ -53,11 +59,12 @@ class Performance extends DBTableEntry
      */
     private $source;
 
-    public function __construct(Disziplin $disziplin, Athlete $athlete, Competition $competition, float $performance, float $wind = NULL, string $ranking = NULL, PerformanceSource $source = NULL, int $id = NULL, string $detail = NULL)
+    public function __construct(Disziplin $disziplin, Athlete $athlete, Competition $competition, float $performance, float $wind = NULL, string $ranking = NULL, bool $manualTiming = FALSE, PerformanceSource $source = NULL, int $id = NULL, string $detail = NULL)
     {
         $this->performance = $performance;
         $this->wind = $wind;
         $this->ranking = $ranking;
+        $this->manualTiming = $manualTiming;
         $this->disziplin = $disziplin;
         $this->athlete = $athlete;
         $this->competition = $competition;
@@ -82,6 +89,11 @@ class Performance extends DBTableEntry
 
         if ($this->disziplin->isTime()) {
             $formatedPerformance = TimeUtils::second2time($formatedPerformance);
+        }
+        
+        if ($this->manualTiming) {
+            // TODO no magic constant
+            $formatedPerformance = $formatedPerformance . " h";
         }
 
         return $formatedPerformance;
@@ -143,6 +155,15 @@ class Performance extends DBTableEntry
     public function getPlacement()
     {
         return $this->ranking;
+    }
+    
+    /**
+     *
+     * @return bool
+     */
+    public function getManualTiming()
+    {
+        return $this->manualTiming;
     }
 
     /**

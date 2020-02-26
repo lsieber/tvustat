@@ -27,11 +27,13 @@ class AddElement extends DbHandler
         $values = array();
         $arrayAssociative[dbPerformance::LASTCHANGE] = DateFormatUtils::nowForDB();
         $arrayAssociative[dbPerformance::PERFORMANCE] = TimeUtils::time2seconds($arrayAssociative[dbPerformance::PERFORMANCE]);
+        $arrayAssociative[dbPerformance::MANUALTIME] = self::stringTruefalseToTrueFalse($arrayAssociative[dbPerformance::MANUALTIME]);
         $collumns = dbPerformance::getCollumNames();
         foreach ($collumns as $key => $dbPosition) {
             $values[$dbPosition] = isset($arrayAssociative[$key]) ? $arrayAssociative[$key] : NULL;
-        }
+        }   
         $querry = $this->addValues($values, $this->getTable(dbPerformance::class));
+        
         if (array_key_exists(dbPerformanceDetail::DETAIL, $arrayAssociative)) {
             $detail = $arrayAssociative[dbPerformanceDetail::DETAIL];
             if ($detail != NULL && $detail != "") {
@@ -44,6 +46,12 @@ class AddElement extends DbHandler
         return $querry;
     }
 
+    private function stringTruefalseToTrueFalse(string $stringBoolean){
+        if ($stringBoolean == "true") return TRUE;
+        elseif ($stringBoolean == "false") return FALSE;
+        else return null;
+    }
+    
     /**
      *
      * @param Performance $performance

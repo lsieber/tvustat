@@ -25,6 +25,8 @@ class dbPerformance extends dbTableDescription
     public const WIND = "wind";
 
     public const PLACE = "placement";
+    
+    public const MANUALTIME = "manualTiming";
 
     public const LASTCHANGE = "lastChange";
 
@@ -41,8 +43,9 @@ class dbPerformance extends dbTableDescription
         self::PERFORMANCE => 4,
         self::WIND => 5,
         self::PLACE => 6,
-        self::SOURCE => 7,
-        self::LASTCHANGE => 8
+        self::MANUALTIME => 7,
+        self::SOURCE => 8,
+        self::LASTCHANGE => 9
     );
 
     /**
@@ -79,8 +82,9 @@ class dbPerformance extends dbTableDescription
             4 => $performance->getPerformance(),
             5 => $performance->getWind(),
             6 => $performance->getPlacement(),
-            7 => $performance->getSource()->getId(),
-            8 => DateFormatUtils::formatDateForDB(new \DateTime())
+            7 => $performance->getManualTiming(),
+            8 => $performance->getSource()->getId(),
+            9 => DateFormatUtils::formatDateForDB(new \DateTime())
         );
     }
 
@@ -93,11 +97,17 @@ class dbPerformance extends dbTableDescription
         $r[self::PERFORMANCE], //
         $r[self::WIND], //
         $r[self::PLACE], //
+        self::manualTiming($r[self::MANUALTIME]), //    
         self::getSource($r[self::SOURCE], $conn), //
         $r[self::ID], //
         self::getDetail($r)); //
     }
 
+    private static function manualTiming($dbValue) {
+        return ($dbValue == NULL || $dbValue == 0)? FALSE : TRUE;
+    }
+    
+    
     private static function getDetail($r)
     {
         if (! array_key_exists(dbPerformanceDetail::DETAIL, $r)) {

@@ -39,6 +39,7 @@ function onload() {
   // loadAthletes();
   loadSources();
   updateAthleteInput();
+  // document.getElementById(INPUT.detailDiv).innerHTML = '<input type="text" class="form-control" id=' + INPUT.detailInput + '><label for='+INPUT.detailInput+'>Detail</label>';
 }
 window.onload = onload
 
@@ -86,7 +87,7 @@ export function insertPerformanceField(perfId) {
   if (sourceID == "NULL") {
     sourceID = null;
   }
-
+  var manualTiming = document.getElementById("manualTimingInput").checked;
 
   if (athleteIDStore == null || competitionIDStore == null || disziplinIDStore == null || performance.value == "") {
     // alert("Not Enough Information");
@@ -97,7 +98,7 @@ export function insertPerformanceField(perfId) {
     var disziplin = getValuesFromStorage(STORE.disziplinStore)[disziplinIDStore];
     var disziplinID = disziplin[DB.disziplinID];
     var detail = null;
-    if (disziplin[DB.multiIds] != null && document.getElementById(INPUT.detailInput) != null) {
+    if ( /*disziplin[DB.multiIds] != null && */document.getElementById(INPUT.detailInput) != null && document.getElementById(INPUT.detailInput).value != "") {
       detail = document.getElementById(INPUT.detailInput).value;
     }
 
@@ -111,10 +112,14 @@ export function insertPerformanceField(perfId) {
       wind: wind.value, //
       placement: ranking.value, //
       sourceID: sourceID, // 
-      detailDescription: detail
+      detailDescription: detail, //
+      manualTiming: manualTiming
     }
 
-    insertPerformanceWithData(data, athlete, disziplin)
+    insertPerformanceWithData(data, athlete, disziplin);
+
+    document.getElementById(INPUT.detailInput).value = "";
+
   }
 }
 window.insertPerformance = insertPerformance;
@@ -303,13 +308,15 @@ function calcualtePoints(field) {
   pointCalculator.calculate(field);
 
   var detail = createMultipleDetail();
-  var html = '<input type="text" class="form-control" id=' + INPUT.detailInput + '>';
-  document.getElementById(INPUT.detailDiv).innerHTML = html;
+  createDetailInputHtm();
   document.getElementById(INPUT.detailInput).value = detail;
 
 }
 window.calcualtePoints = calcualtePoints
 
+function createDetailInputHtml(){
+  document.getElementById(INPUT.detailDiv).innerHTML = '<input type="text" class="form-control" id=' + INPUT.detailInput + '>';
+}
 
 /**
  * Disziplin Filter

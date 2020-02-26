@@ -208,6 +208,8 @@ function createPointSchemeNamesSelector() {
 function changePerformanceInput() {
     var disziplinStoreId = getSelectedRadioButtonObject(INPUT.disziplinInputName).id.slice(INPUT.disziplinPrefix.length);
     var dbdisziplin = getValuesFromStorage(STORE.disziplinStore)[disziplinStoreId];
+
+    document.getElementById(INPUT.detailDiv).innerHTML = '<input type="text" class="form-control" id=' + INPUT.detailInput + ' placeholder="Detail">';
     var multiIds = dbdisziplin[DB.multiIds];
 
     /******************************************************************************3 */
@@ -230,6 +232,7 @@ function changePerformanceInput() {
     // }
 }
 window.changePerformanceInput = changePerformanceInput;
+
 
 function findDisziplinInStore(dbId) {
     const storeDiszs = getValuesFromStorage(STORE.disziplinStore);
