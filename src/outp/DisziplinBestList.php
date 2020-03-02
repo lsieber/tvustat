@@ -100,33 +100,79 @@ class DisziplinBestList extends DisziplinBestListRaw
         }
     }
 
-    public function keepBestPerformancePerPerson()
+    public function keepBestPerformancePerPerson(string $manualTiming)
     {
-        $bestPerfPerPerson = array();
+        $bestElectricalPerPerson = array();
+        $bestManualPerPerson = array();
         $performancesToRemove = array();
         $perfId2Key = array();
         foreach ($this->performances as $key => $performance) {
             $perfId2Key[$performance->getId()] = $key;
-            if (array_key_exists($performance->getAthlete()->getId(), $bestPerfPerPerson)) {
-                $bestPerformance = $bestPerfPerPerson[$performance->getAthlete()->getId()];
-                if (DisziplinBestList::cmp($bestPerformance, $performance) > 0) {
-                    array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
-                    $bestPerfPerPerson[$performance->getAthlete()->getId()] = $performance;
+
+            if ($performance->getManualTiming()) {
+                if (array_key_exists($performance->getAthlete()->getId(), $bestManualPerPerson)) {
+                    $bestPerformance = $bestManualPerPerson[$performance->getAthlete()->getId()];
+                    if (DisziplinBestList::cmp($bestPerformance, $performance) > 0) {
+                        array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                        $bestManualPerPerson[$performance->getAthlete()->getId()] = $performance;
+                    } else {
+                        array_push($performancesToRemove, $key);
+                    }
                 } else {
-                    array_push($performancesToRemove, $key);
+                    $bestManualPerPerson[$performance->getAthlete()->getId()] = $performance;
                 }
             } else {
-                $bestPerfPerPerson[$performance->getAthlete()->getId()] = $performance;
+                if (array_key_exists($performance->getAthlete()->getId(), $bestElectricalPerPerson)) {
+                    $bestPerformance = $bestElectricalPerPerson[$performance->getAthlete()->getId()];
+                    if (DisziplinBestList::cmp($bestPerformance, $performance) > 0) {
+                        array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                        $bestElectricalPerPerson[$performance->getAthlete()->getId()] = $performance;
+                    } else {
+                        array_push($performancesToRemove, $key);
+                    }
+                } else {
+                    $bestElectricalPerPerson[$performance->getAthlete()->getId()] = $performance;
+                }
             }
         }
+
+        switch ($manualTiming) {
+            case "E":
+                foreach ($bestManualPerPerson as $bestPerformance) {
+                    array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                }
+                break;
+            case "EORH":
+                foreach ($bestManualPerPerson as $m) {
+                    if (array_key_exists($m->getAthlete()->getId(), $bestElectricalPerPerson)) {
+                        $e = $bestElectricalPerPerson[$m->getAthlete()->getId()];
+                        if (DisziplinBestList::cmp($m, $e) > 0) {
+                            array_push($performancesToRemove, $perfId2Key[$m->getId()]);
+                        } else {
+                            array_push($performancesToRemove, $perfId2Key[$e->getId()]);
+                        }
+                    }
+                }
+                break;
+            case "H":
+                foreach ($bestElectricalPerPerson as $bestPerformance) {
+                    array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                }
+                break;
+            case "EANDH":
+            default:
+                break;
+        }
+
         foreach ($performancesToRemove as $performanceToRemove) {
             $this->removePerformanceById($performanceToRemove);
         }
     }
 
-    public function keepBestAthleteAndYear()
+    public function keepBestAthleteAndYear(string $manualTiming)
     {
-        $bestPerfPerPerson = array();
+        $bestElectricalPerPerson = array();
+        $bestManualPerPerson = array();
         $performancesToRemove = array();
         $perfId2Key = array();
 
@@ -134,24 +180,82 @@ class DisziplinBestList extends DisziplinBestListRaw
             $perfId2Key[$performance->getId()] = $key;
             // Adding the year to the athlete id distinuishes the results of the different years.
             $athYearId = strval($performance->getAthlete()->getId()) . DateFormatUtils::formatDateaAsYear($performance->getCompetition()->getDate());
-            if (array_key_exists($athYearId, $bestPerfPerPerson)) {
-                $bestPerformance = $bestPerfPerPerson[$athYearId];
-                // If there exists no other result which is as good as the current one and in the same year
-                if (DisziplinBestList::cmp($bestPerformance, $performance) > 0) {
-                    array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
-                    $bestPerfPerPerson[$athYearId] = $performance;
-                    // If there exists already a better result for that athlete in this year
+            if ($performance->getManualTiming()) {
+                if (array_key_exists($athYearId, $bestManualPerPerson)) {
+                    $bestPerformance = $bestManualPerPerson[$athYearId];
+                    // If there exists no other result which is as good as the current one and in the same year
+                    if (DisziplinBestList::cmp($bestPerformance, $performance) > 0) {
+                        array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                        $bestManualPerPerson[$athYearId] = $performance;
+                        // If there exists already a better result for that athlete in this year
+                    } else {
+                        array_push($performancesToRemove, $key);
+                    }
+                    // If there exists no result for this athlete in this year
                 } else {
-                    array_push($performancesToRemove, $key);
+                    $bestManualPerPerson[$athYearId] = $performance;
                 }
-                // If there exists no result for this athlete in this year
             } else {
-                $bestPerfPerPerson[$athYearId] = $performance;
+                if (array_key_exists($athYearId, $bestElectricalPerPerson)) {
+                    $bestPerformance = $bestElectricalPerPerson[$athYearId];
+                    if (DisziplinBestList::cmp($bestPerformance, $performance) > 0) {
+                        array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                        $bestElectricalPerPerson[$athYearId] = $performance;
+                    } else {
+                        array_push($performancesToRemove, $key);
+                    }
+                } else {
+                    $bestElectricalPerPerson[$athYearId] = $performance;
+                }
             }
         }
+        switch ($manualTiming) {
+            case "E":
+                foreach ($bestManualPerPerson as $bestPerformance) {
+                    array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                }
+                break;
+            case "EORH":
+                foreach ($bestManualPerPerson as $key => $m) {
+                    if (array_key_exists($key, $bestElectricalPerPerson)) {
+                        $e = $bestElectricalPerPerson[$key];
+                        if (DisziplinBestList::cmp($m, $e) > 0) {
+                            array_push($performancesToRemove, $perfId2Key[$m->getId()]);
+                        } else {
+                            array_push($performancesToRemove, $perfId2Key[$e->getId()]);
+                        }
+                    }
+                }
+                break;
+            case "H":
+                foreach ($bestElectricalPerPerson as $bestPerformance) {
+                    array_push($performancesToRemove, $perfId2Key[$bestPerformance->getId()]);
+                }
+                break;
+            case "EANDH":
+            default:
+                break;
+        }
+
         // remove all the supperficial results
         foreach ($performancesToRemove as $performanceToRemove) {
             $this->removePerformanceById($performanceToRemove);
+        }
+    }
+    
+    public function keepOnlyElectrical() {
+        foreach ($this->performances as $key => $performance) {
+            if ($performance->getManualTiming()) {
+                $this->removePerformanceById($key);
+            }
+        }
+    }
+    
+    public function keepOnlyManual() {
+        foreach ($this->performances as $key => $performance) {
+            if (!$performance->getManualTiming()) {
+                $this->removePerformanceById($key);
+            }
         }
     }
 

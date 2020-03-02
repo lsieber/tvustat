@@ -81,41 +81,67 @@ class BestList
         return ($a->getDisziplin()->getOrderNumber() < $b->getDisziplin()->getOrderNumber()) ? - 1 : 1;
     }
 
-    public function keepBestPerformancePerPerson(array $teamTypes)
+    public function keepBestPerformancePerPerson(array $teamTypes, string $manualTiming)
     {
         if (sizeof($teamTypes) > 0) {
             foreach ($this->bestList as $disBestList) {
-                $this->keepBestPerformance($disBestList, $teamTypes);
+                $this->keepBestPerformance($disBestList, $teamTypes, $manualTiming);
             }
         }
     }
 
-    private function keepBestPerformance(DisziplinBestList $disBestList, array $teamTypes)
+    private function keepBestPerformance(DisziplinBestList $disBestList, array $teamTypes, string $manualTiming)
     {
         if (in_array($disBestList->getDisziplin()
             ->getTeamType()
             ->getId(), $teamTypes)) {
-            $disBestList->keepBestPerformancePerPerson();
+            $disBestList->keepBestPerformancePerPerson($manualTiming);
         }
     }
 
-    public function keepBestPerAthleteAndYear(array $teamTypes)
+    public function keepBestPerAthleteAndYear(array $teamTypes, string $manualTiming)
     {
         if (sizeof($teamTypes) > 0) {
             foreach ($this->bestList as $disBestList) {
-                $this->keepBestAthleteAndYear($disBestList, $teamTypes);
+                $this->keepBestAthleteAndYear($disBestList, $teamTypes, $manualTiming);
             }
         }
     }
 
-    private function keepBestAthleteAndYear(DisziplinBestList $disBestList, array $teamTypes)
+    private function keepBestAthleteAndYear(DisziplinBestList $disBestList, array $teamTypes, string $manualTiming)
     {
         if (in_array($disBestList->getDisziplin()
             ->getTeamType()
             ->getId(), $teamTypes)) {
-            $disBestList->keepBestAthleteAndYear();
+            $disBestList->keepBestAthleteAndYear($manualTiming);
         }
     }
+
+    public function keppOnlyElectrical()
+    {
+        foreach ($this->bestList as $disBestList) {
+            $this->keppOnlyElectricalDisziplin($disBestList);
+        }
+    }
+
+    private function keppOnlyElectricalDisziplin(DisziplinBestList $disBestList)
+    {
+        $disBestList->keepOnlyElectrical();
+    }
+    
+    public function keepOnlyManual()
+    {
+        foreach ($this->bestList as $disBestList) {
+            $this->keepOnlyManualDisziplin($disBestList);
+        }
+    }
+    
+    private function keepOnlyManualDisziplin(DisziplinBestList $disBestList)
+    {
+        $disBestList->keepOnlyManual();
+    }
+    
+    
 
     // ****************
     // GETTERS AND SETTERS

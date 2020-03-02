@@ -3,6 +3,22 @@ import { Radio } from "./Radio.js";
 import * as OUT from "../config/outNames.js";
 import { getSelectedRadioButton, getSelectedRadioButtonObject } from "./Selection.js";
 
+
+export function createManualTimingRadio() {
+    const electrical = Radio.createValue("E", "Nur Elektronisch");
+    const electricalOrHand = Radio.createValue("EORH", "Bestes Ergebnis Elektroinisch oder Hand");
+    const electriclAndHand = Radio.createValue("EANDH", "Beide Ergebnisse Elektronisch und Hand");
+    const hand = Radio.createValue("H", "Nur Handstoppung");
+
+    var values = { electrical, electricalOrHand, electriclAndHand, hand };
+    Radio.create(OUT.manualTimingDiv, OUT.manualTimingRadioName, values);
+    Radio.selectDefault(OUT.manualTimingRadioName, electricalOrHand);
+}
+
+export function getManualTimingValue() {
+    return getSelectedRadioButton(OUT.manualTimingRadioName);
+}
+
 export function createAthleteRadio() {
     const all = Radio.createValue("ALL", "Alle eines Athleten");
     const sb = Radio.createValue("YEARATHLETE", "Bestes je Jahr und Athlet (SB)");
@@ -32,3 +48,5 @@ export function createTeamRadio() {
 export function getTeamValue() {
     return getSelectedRadioButton(OUT.teamResultsRadioName);
 }
+
+

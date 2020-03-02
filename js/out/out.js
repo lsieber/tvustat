@@ -1,7 +1,7 @@
 import * as OUT from "../config/outNames.js";
 import * as DB from "../config/dbColumnNames.js";
 
-import { createAthleteRadio, createTeamRadio, getAthleteValue, getTeamValue } from "./Results.js";
+import { createAthleteRadio, createTeamRadio, getAthleteValue, getTeamValue, createManualTimingRadio, getManualTimingValue } from "./Results.js";
 import { Categories } from "./Categories.js";
 import { Disziplins } from "./Disziplins.js";
 import { Years } from "./Years.js";
@@ -14,11 +14,12 @@ const disziplins = new Disziplins();
 const years = new Years();
 
 function onload() {
-    createAthleteRadio();
-    createTeamRadio();
     categories.createSelector();
     disziplins.createSelector();
     years.createSelector();
+    createAthleteRadio();
+    createTeamRadio();
+    createManualTimingRadio();
 }
 window.onload = onload
 
@@ -53,6 +54,7 @@ function loadBestList() {
         top: topNumber,
         keepPerson: getAthleteValue(),
         keepTeam: getTeamValue(),
+        manualTiming: getManualTimingValue(),
         disziplins: disziplins.getSelectedValues()
     };
 

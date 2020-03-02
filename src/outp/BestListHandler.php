@@ -70,12 +70,19 @@ class BestListHandler
         }
     }
 
-    public function formatBestList(array $keepAthlete, array $keepYearAthlete)
+    public function formatBestList(array $keepAthlete, array $keepYearAthlete, string $manualTiming)
     {
         $this->bestList->sortPerformances();
         $this->bestList->sortDisziplinOrder();
-        $this->bestList->keepBestPerformancePerPerson($keepAthlete);
-        $this->bestList->keepBestPerAthleteAndYear($keepYearAthlete);
+        $this->bestList->keepBestPerformancePerPerson($keepAthlete, $manualTiming);
+        $this->bestList->keepBestPerAthleteAndYear($keepYearAthlete, $manualTiming);
+        if ($manualTiming == "H") {
+            $this->bestList->keepOnlyManual();
+        } else if ($manualTiming == "E") {
+            $this->bestList->keppOnlyElectrical();
+        }
+        
+        
     }
 
     /**

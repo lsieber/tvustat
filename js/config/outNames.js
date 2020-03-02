@@ -45,6 +45,12 @@ export const teamResultsDiv = "teamResultsRadios";
 export const teamResultsRadioName = "teamResults";
 
 /**
+ * Manual Timing
+ */
+export const manualTimingDiv = "manualTimingRadios";
+export const manualTimingRadioName = "manualTiming"
+
+/**
  * TOP Number
  */
 export const topNumberField = "topNumber";

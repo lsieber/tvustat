@@ -36,6 +36,7 @@ $db = new DBMaintainer();
  *
  * keepTeam: (string) {YEARATHLETE, ATHLETE, ALL} ALL: all performances per team are presented, ATHLETE: one performance per Team is presented, YEARATHLETE: one performance per team and year is presented
  * keepPerson: (string) {YEARATHLETE, ATHLETE, ALL} ALL: all performances per athlete are presented, ATHLETE: one performance per athlete is presented, YEARATHLETE: one performance per athlete and year is presented
+ * manualTiming: (string) {E, EORH, EANDH H} E: electrical only, EORH Electrical or Hand, only the better is shown per Athlete, EANDH : both the Electrical and Hand value per Athlete is shown, H: Hand Stoppung only
  *
  * outputs: (array(string) | string {html, json, txt} defines which outputs are made. if no value is set the the default is html.
  */
@@ -97,6 +98,11 @@ switch ($keepTeam) {
         break;
 }
 
+$manualTiming = $_POST["manualTiming"];
+if ($manualTiming == NULL) {
+    $manualTiming = "EORH";
+}
+
 /*
  * BEST LIST BUILD
  *
@@ -105,7 +111,7 @@ switch ($keepTeam) {
 $blh = new BestListHandler($yearsControl, $years, $categoryControl, $categories, $top, $disziplins, $db);
 
 $blh->callDB();
-$blh->formatBestList($keepAthlete, $keepYearAthlete);
+$blh->formatBestList($keepAthlete, $keepYearAthlete, $manualTiming);
 
 $outputsArray = array();
 if (! array_key_exists("outputs", $_POST)) {
