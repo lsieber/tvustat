@@ -3,9 +3,6 @@ namespace tvustat;
 
 class CompetitionUtils
 {
-
-
-    
     /**
      * 
      * @param CompetitionName $competitionName

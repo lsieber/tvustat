@@ -81,8 +81,6 @@ class BestListHandler
         } else if ($manualTiming == "E") {
             $this->bestList->keppOnlyElectrical();
         }
-        
-        
     }
 
     /**

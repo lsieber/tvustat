@@ -41,7 +41,7 @@ class AthleteBestList
         }
     }
 
-    public function formatBestList(string $keep)
+    public function formatBestList(string $keep, string $manualTiming)
     {
         $this->bestList->sortPerformances();
         $this->bestList->sortDisziplinOrder();
@@ -49,9 +49,9 @@ class AthleteBestList
             $this->athlete->getTeamType()->getId()
         );
         if ($keep == "ATHLETE") {
-            $this->bestList->keepBestPerformancePerPerson($teamType);
+            $this->bestList->keepBestPerformancePerPerson($teamType, $manualTiming);
         } elseif ($keep == "YEARATHLETE") {
-            $this->bestList->keepBestPerAthleteAndYear($teamType);
+            $this->bestList->keepBestPerAthleteAndYear($teamType, $manualTiming);
         } else {
             assert($keep == "ALL");
         }
