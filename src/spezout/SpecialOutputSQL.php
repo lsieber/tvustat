@@ -20,11 +20,11 @@ class SpecialOutputSQL
         return $sql;
     }
 
-    public static function createAthlete(int $athleteId)
+    public static function createAthlete(array $athleteIds)
     {
         $sql = self::selectAndJoins();
         $sql .= " WHERE";
-        $sql .= self::athlete($athleteId);
+        $sql .= self::athlete($athleteIds);
         return $sql;
     }
 
@@ -55,9 +55,10 @@ class SpecialOutputSQL
         return " " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . "=" . $competitionId;
     }
 
-    private static function athlete($athleteId)
+    private static function athlete(array $athleteIds)
     {
-        return " " . dbAthletes::DBNAME . "." . dbAthletes::ID . "=" . $athleteId;
+        $list = implode(",", $athleteIds);
+        return " " . dbAthletes::DBNAME . "." . dbAthletes::ID  . " IN (" . $list . ")";
     }
 }
 

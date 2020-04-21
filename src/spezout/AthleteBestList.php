@@ -15,20 +15,27 @@ class AthleteBestList
 
     private $title;
 
-    private $athlete;
+    private $athletes;
 
     private $top;
 
-    public function __construct(int $athleteId, DBMaintainer $db, int $top = 30)
+    public function __construct(array $athleteIds, DBMaintainer $db, int $top = 30)
     {
         $this->db = $db;
         $this->top = $top;
-        $this->sql = SpecialOutputSQL::createAthlete($athleteId);
+        $this->sql = SpecialOutputSQL::createAthlete($athleteIds);
         // echo $this->sql;
-        $this->athlete = $db->getAthlete($athleteId);
-        $this->title = new BestListTitleFromString("Resultate für: " . $this->athlete->getFullName() . //
-        ", Geburtstag: " . DateFormatUtils::formatDateForBL($this->athlete->getDate()));
+        $this->athletes = $db->getAthletes($athleteIds);
+        $this->title = new BestListTitleFromString("Resultate für: " . $this->getAthleteNames());
         $this->bestList = BestList::empty();
+    }
+    
+    private function getAthleteNames(){
+        $names = array();
+        foreach ($this->athletes as $athlete) {
+            array_push($names, $athlete->getFullName()." (".DateFormatUtils::formatDateForBL($athlete->getDate()).")");
+        }
+        return implode(", ", $names);
     }
 
     public function callDB()
@@ -45,9 +52,12 @@ class AthleteBestList
     {
         $this->bestList->sortPerformances();
         $this->bestList->sortDisziplinOrder();
-        $teamType = array(
-            $this->athlete->getTeamType()->getId()
-        );
+        $teamType = array();
+        foreach ($this->athletes as $athlete){
+            if (!in_array($athlete->getTeamType()->getId(), $teamType)){
+                array_push($teamType, $athlete->getTeamType()->getId());
+            }
+        }
         if ($keep == "ATHLETE") {
             $this->bestList->keepBestPerformancePerPerson($teamType, $manualTiming);
         } elseif ($keep == "YEARATHLETE") {
@@ -57,14 +67,11 @@ class AthleteBestList
         }
     }
 
-    public function printTable()
+    public function printTable(bool $withName)
     {
         $categoryUtils = new CategoryUtils($this->db->getConn());
-        $columnDefCatDetail = new ColumnDefinitionCatDetailNoName($categoryUtils);
-        // $columnDefDetail = new ColumnDefinitionDetail();
-        $columnDefCat = new ColumnDefinitionCategoryNoName($categoryUtils);
-        // $columnDefBasic = new ColumnDefinitionBasic();
-
+        $columnDefCatDetail = $withName ? new ColumnDefinitionCatDetail($categoryUtils) : new ColumnDefinitionCatDetailNoName($categoryUtils);
+        $columnDefCat = $withName ? new ColumnDefinitionCategory($categoryUtils) : new ColumnDefinitionCategoryNoName($categoryUtils);
         $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
         $html = $htmlGenerator->createOutput($this->bestList, $this->top);
         echo $html->getHtml();

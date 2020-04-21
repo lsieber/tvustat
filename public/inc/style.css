@@ -207,3 +207,22 @@ input[type=text] {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }       	
+
+.nameContainer{
+	overflow: hidden;
+}
+
+.selectedAthleteName {
+	background-color: white;
+	color: #000000;
+	float: left;
+	position: relative;
+}
+
+.removeAthlete{
+	background-color: white;
+	color: brown;
+	float: left;
+	padding-left: 5px;
+	position: relative;
+}

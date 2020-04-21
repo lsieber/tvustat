@@ -7,12 +7,12 @@ use tvustat\AthleteBestList;
 use tvustat\DBMaintainer;
 use config\dbAthletes;
 $db = new DBMaintainer();
-$athleteId = $_POST[dbAthletes::ID];
+$athleteIds = $_POST["athleteIDs"];
 $keepPerson = $_POST["keepPerson"];
-$bl = new AthleteBestList($athleteId, $db);
+$bl = new AthleteBestList($athleteIds, $db);
 $bl->callDB();
 $bl->formatBestList($keepPerson, "EANDH"); // TODO
-$bl->printTable();
+$bl->printTable(sizeof($athleteIds) > 1);
 
 
 

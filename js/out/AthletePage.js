@@ -1,7 +1,9 @@
 import * as OUT from "../config/outNames.js";
 import * as DB from "../config/dbColumnNames.js";
+import * as STORE from "../config/storageNames.js";
+
 import { getValuesFromStorage, addValueToStorage, addValueToArrayStorage } from "../in/SessionStorageHandler.js";
-import { createAthleteRadio, getAthleteValue } from "./Results.js"
+import { getAthleteValue } from "./Results.js"
 
 function onload() {
     onResultsClick(document.getElementById(OUT.athleteResultsDiv));
@@ -14,23 +16,26 @@ function onload() {
             var athlete = data[key];
             var visibleName = athlete[DB.athleteName] + " " + athlete[DB.atheletBirth];
             athletes.push(visibleName);
-            addValueToArrayStorage("athletes", visibleName, athlete[DB.athleteID])
+            addValueToArrayStorage("athletes", visibleName, athlete[DB.athleteID]);
         }
+        writeSelectedNames();
+
         autocomplete(document.getElementById("athleteSearchField"), athletes);
     }, "json");
+
 }
 window.onload = onload
 
 function loadBestList() {
-    var athleteID = localStorage.athleteIDResults;
+    var athleteIDs = getValuesFromStorage("athleteIDResults");
 
     var params = {
-        athleteID: athleteID,
+        athleteIDs: athleteIDs,
         keepPerson: getAthleteValue(),
         disziplinId: "all",
         year: "all"
     }
-    if (athleteID != null) {
+    if (athleteIDs != null) {
         $.post("./athleteResults.php",
             params, function (html) {
                 document.getElementById("athleteBestList").innerHTML = html;
@@ -44,8 +49,39 @@ function onResultsClick(inp) {
         localStorage.keepAthleteResults = getAthleteValue();
         window.loadBestList()
     });
-
 }
+
+function writeSelectedNames() {
+    var athleteNames = "";
+    var selectedIds = getValuesFromStorage(STORE.selectedAthletesStore);
+    var allAthletes = getValuesFromStorage("athletes");
+    for (const key in selectedIds) {
+        for (const keyAthletes in allAthletes) {
+            if (selectedIds[key] == allAthletes[keyAthletes]) {
+                athleteNames += '<div class="nameContainer">';
+                athleteNames += '<div class="selectedAthleteName"><p>' + keyAthletes + '</p></div>';
+                athleteNames += '<div class="removeAthlete"> <a onclick="unselectAthlete(' + selectedIds[key] + ')">löschen</a> </div></div>';
+            }
+        }
+    }
+    document.getElementById("selectedNames").innerHTML = athleteNames;
+}
+window.writeSelectedNames = writeSelectedNames
+
+function unselectAthlete(athleteId) {
+    var selectedIds = getValuesFromStorage(STORE.selectedAthletesStore);
+    const index = selectedIds.indexOf(athleteId);
+    if (index > -1) {
+        selectedIds.splice(index, 1);
+    }
+    window.sessionStorage.removeItem(STORE.selectedAthletesStore);
+    for (const key in selectedIds) {
+        addValueToStorage(STORE.selectedAthletesStore, selectedIds[key]);
+    }
+    writeSelectedNames();
+    loadBestList();
+}
+window.unselectAthlete = unselectAthlete
 
 function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,
@@ -83,8 +119,11 @@ function autocomplete(inp, arr) {
                     (or any other open lists of autocompleted values:*/
                     closeAllLists();
                     /**Add the value to the session Storage */
-                    localStorage.athleteIDResults = parseInt(getValuesFromStorage("athletes")[inp.value]);
-                    window.loadBestList()
+                    addValueToStorage(STORE.selectedAthletesStore, parseInt(getValuesFromStorage("athletes")[inp.value]));
+                    window.loadBestList();
+                    window.writeSelectedNames();
+
+                    inp.value = "";
                 });
                 a.appendChild(b);
             }

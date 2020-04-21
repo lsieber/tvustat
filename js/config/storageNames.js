@@ -21,3 +21,6 @@ export const insertionResultStore = "insertionResultStore";
 window.insertionResultStore = insertionResultStore;
 export const performanceStore = "inputPerformanceStore";
 window.performanceStore = performanceStore;
+
+export const selectedAthletesStore = "athleteIDResults"; // storage to store athleteIds which are then displayed on the AThlete Page
+

@@ -229,6 +229,16 @@ class DBMaintainer
         return $this->getById->performance($id);
     }
 
+    
+    public function getAthletes(array $ids)
+    {
+        $athletes = array();
+        foreach ($ids as $id) {
+            array_push($athletes, $this->getAthlete($id));
+        }
+        return $athletes;
+    }
+    
     public function getAthlete(int $id)
     {
         return $this->getById->athlete($id);

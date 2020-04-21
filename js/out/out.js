@@ -1,6 +1,8 @@
 import * as OUT from "../config/outNames.js";
 import * as DB from "../config/dbColumnNames.js";
+import * as STORE from "../config/storageNames.js";
 
+import { addValueToStorage } from "../in/SessionStorageHandler.js";
 import { createAthleteRadio, createTeamRadio, getAthleteValue, getTeamValue, createManualTimingRadio, getManualTimingValue } from "./Results.js";
 import { Categories } from "./Categories.js";
 import { Disziplins } from "./Disziplins.js";
@@ -66,8 +68,9 @@ function loadBestList() {
 }
 window.loadBestList = loadBestList
 
-function openAthlete(athleteID){
-    localStorage.athleteIDResults = athleteID;
+function openAthlete(athleteID) {
+    window.sessionStorage.removeItem("athleteIDResults");
+    addValueToStorage(STORE.selectedAthletesStore, parseInt(athleteID));
     open("athletePage.html");
 }
 window.openAthlete = openAthlete;
