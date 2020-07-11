@@ -8,10 +8,14 @@ use tvustat\DBMaintainer;
 use tvustat\Performance;
 use tvustat\TimeUtils;
 use tvustat\DateFormatUtils;
+echo "Welcome for the import of local Swiss athletics Data";
 
-$year = 2006;
+$year = 2020;
 
-$path = '../data/' . $year . '/resultsByAthlete/';
+$datafolder = '../data/';
+// $datafolder = 'C:/xampp/htdocs/statistik_tool_tvu/tvustat/data';
+
+$path = $datafolder . $year . '/resultsByAthlete/';
 // $files = scandir($path);
 $files = glob($path . '*.{csv}', GLOB_BRACE);
 

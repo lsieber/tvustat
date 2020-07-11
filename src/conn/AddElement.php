@@ -192,10 +192,10 @@ class AddElement extends DbHandler
         if (is_bool($v)) {
             return $v ? 1 : 0;
         }
-        if ($v == "") {
+        if (strval($v) == "") {
             return "NULL";
         }
-        if ($v == NULL) {
+        if (is_null($v)) {
             return "NULL";
         }
         if (is_string($v)) {

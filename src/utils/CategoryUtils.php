@@ -35,7 +35,7 @@ class CategoryUtils
         if ($performance->getAthlete()
             ->getTeamType()
             ->getId() == 2) {
-            return $performance->getAthlete()->getTeamCategory();
+                return $performance->getAthlete()->getTeamCategory();
         }
         $genderId = $performance->getAthlete()
             ->getGender()
