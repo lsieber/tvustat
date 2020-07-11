@@ -49,8 +49,7 @@ class Competition extends DBTableEntry
     {
         return DateFormatUtils::formatDateForBL($this->date);
     }
-    
-    
+
     /**
      *
      * @return string
@@ -59,6 +58,7 @@ class Competition extends DBTableEntry
     {
         return DateFormatUtils::formatDateForDB($this->date);
     }
+
     // *********************
     // GETTERS AND SETTERS
     // *********************

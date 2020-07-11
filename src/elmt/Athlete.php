@@ -28,13 +28,26 @@ class Athlete extends DBTableEntry
      */
     protected $date;
 
-    public function __construct(string $fullName, \DateTime $date, Gender $gender, TeamType $teamType, int $id = null)
+    /**
+     */
+    protected $teamCategory;
+
+    public function __construct(string $fullName, \DateTime $date = NULL, Gender $gender, TeamType $teamType, Category $teamCategory = NULL, int $id = null)
     {
         $this->fullName = $fullName;
         $this->name = $this->getFullName();
-        $this->date = $date;
         $this->gender = $gender;
         $this->teamType = $teamType;
+        if ($teamType->getId() == 1) {
+            $this->date = $date;
+            $this->teamCategory = NULL;
+            assert(! is_null($date), "For Team Type = 1 the Date has to be non null");
+        } else {
+            assert($gender->getId() == $teamCategory->getGender()->getId(), "The team Category Gender has to match the gender given in the constructor");
+            assert(! is_null($teamCategory), "For Team Type = 2 the teamCategory has to be non null");
+            $this->teamCategory = $teamCategory;
+            $this->date = NULL;
+        }
         if ($id != null)
             $this->setId($id);
     }
@@ -59,15 +72,6 @@ class Athlete extends DBTableEntry
 
     /**
      *
-     * @return Category
-     */
-    function getCategory($year)
-    {
-        return null; // FIXME
-    }
-
-    /**
-     *
      * @return \tvustat\TeamType
      */
     public function getTeamType()
@@ -82,6 +86,15 @@ class Athlete extends DBTableEntry
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     *
+     * @return Category
+     */
+    public function getTeamCategory()
+    {
+        return $this->teamCategory;
     }
 
     /**

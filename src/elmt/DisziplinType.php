@@ -24,7 +24,5 @@ class DisziplinType extends DBTableEntry
     {
         return $this->type;
     }
-
-
 }
 

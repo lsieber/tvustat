@@ -1,89 +1,91 @@
 import { FileReaderInternal, parse } from "./FileReaderInternal.js";
-import { addValueToStorage, removeValueById, getValuesFromStorage } from "./SessionStorageHandler.js";
+import { addValueToArrayStorage, getValuesFromStorage, getAthlete, addValueToStorage, getStorageLength } from "./SessionStorageHandler.js";
 
 export class FileReaderAthlete extends FileReaderInternal {
 
-    /**
-     * 
-     * @param {string} fileFieldId 
-     */
-    constructor(fileFieldId, athleteTableId, athleteStorageName) {
-        super(fileFieldId);
-        this.athleteTableId = athleteTableId;
-        this.store = athleteStorageName;
-    }
-
     loadData() {
+
         var reader = this.getReaderFromFile();
         reader.onload = function (e) {
+            var htmlhead = '<table><tbody>'
+            var html = htmlhead; //           
+
             var text = reader.result;
             var array = parse(text);
+
             var nameIndex = -1; // this throws an exeption if not changed before usage
-            
-            for (let index = 0; index < array.length; index++) {
+            var dateIndex = -1;
+            for (let index = 0; index < array.length - 1; index++) {
                 const element = array[index];
                 if (element[0] === "Nr") { // This is the criteria that the current Line Contains a Header
                     for (const key in element) {
-                            const e = element[key];
-                            if(e == "Name"){
-                                nameIndex = key;
-                            }
-                    }
-                } else{
-                    if(nameIndex != -1){
-                        var fullName = element[nameIndex];
-                        if(fullName != "") {
-                            $.post('existing_entries.php', { type: "athleteExists", fullName: fullName },
-                            function (data) {
-                                var a = JSON.parse(data);
-                                if (a.athleteExists == "false") {
-                                    addValueToStorage("athStore", a.fullName);
-                                }
-                            });
+                        const e = element[key];
+                        if (e == "Name") {
+                            nameIndex = key;
                         }
-                    } 
+                        if (e.substring(0, 4) == "Geb.") {
+                            dateIndex = key;
+                        }
+                    }
+                } else {
+                    if (nameIndex != -1) {
+
+                        var fullName = element[nameIndex];
+                        var date = element[dateIndex];
+                        if (fullName != "") {
+                            var newAthlete = { fullName: fullName, date: date, inserted: false };
+                            var athlete = getAthlete(newAthlete);
+                            if (athlete == null) {
+                                var storeIndex = getStorageLength(window.athleteStore);
+                                newAthlete.storeID = storeIndex;
+                                addValueToArrayStorage(window.athleteStore, storeIndex, newAthlete)
+                                html += "<tr onclick='openModalWithAthlete(" + storeIndex + ")'><td>" + storeIndex + " </td><td>" + newAthlete.fullName + " </td><td>" + newAthlete.date + " </td></tr> ";
+                            } else {
+                                // if ("inserted" in athlete) {
+                                //     if (athlete["inserted"] == false) {
+                                //         html += "<tr onclick='openModalWithAthlete(" + athlete.storeID + ")'><td>" + athlete.storeID + " </td><td>" + athlete.fullName + " </td><td>" + athlete.date + " </td></tr> ";
+                                //     }
+                                // }
+                            }
+                        }
+
+                    }
                 }
-               
+
+            }
+
+            if (htmlhead == html) {
+                document.getElementById(window.modalResultId).innerHTML = "<h3> ALL Athletes are in the Data Base</h3>";
+            } else {
+                document.getElementById(window.athleteTableId).innerHTML = html + '</tbody> </table>';
             }
         }
     }
 
-    createAthleteTable() {
-        var notExistingAthletes = getValuesFromStorage(this.store);
-        var string = '<table class="table table-condensed"><tbody>';
-        for (const athleteId in notExistingAthletes) {
-            var newS = "<tr onclick='openModalWithAthlete(" + athleteId + ")'><td> " + athleteId + "</td><td>" + notExistingAthletes[athleteId] + " </td></tr> ";
-            string = string + newS;
-        }
-        document.getElementById(this.athleteTableId).innerHTML = string + '</tbody> </table>';
-    }
 
-    openModalWithAthlete(id, athleteModalId) {
+    openModalWithAthlete(storeID) {
         // First the Athlete Name has to be added to the modal
-        this.addAthleteToFrom(getValuesFromStorage(this.store)[id]);
+        var athlete = getValuesFromStorage(window.athleteStore)[storeID];
+        this.addAthleteToFrom(athlete);
+        window.athleteInModalStoreID = storeID;
         // Second: Open the modal
-        $("#" + athleteModalId).modal(); // Open Modal
+        $("#" + window.athleteModalId).modal(); // Open Modal
         // Make Sure To Call the Remove function after the insertation
-        // TODO should be done in the insert Method
-        removeAthleteFromList(id);
     }
 
-    removeAthleteFromList(id) {
-        removeValueById(this.store, id);
-        this.createAthleteTable(this.athleteTableId);
-    }
 
-    addAthleteToFrom(athletName) {
-        window.athForm.setAthleteName(athleteName);
+    addAthleteToFrom(athlete) {
+        window.athForm.setFullName(athlete.fullName);
+        window.athForm.setBirthDate(this.parseDate(athlete.date).toString());
         window.athForm.updateModal();
-        window.athForm.selectAthleteBased(athleteName)
+        window.athForm.selectDefault();
     }
 
+    parseDate(input) {
+        var parts = input.match(/(\d+)/g);
+        // note parts[1]-1
+        // return new Date(parts[2], parts[1]-1, parts[0]);
+        return parts[2] + "-" + parts[1] + "-" + parts[0];
+    }
 }
-
-
-
-
-
-
 

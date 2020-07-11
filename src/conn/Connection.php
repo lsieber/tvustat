@@ -7,22 +7,22 @@ class Connection
 {
 
     /**
-     * 
+     *
      * @var \mysqli
      */
     protected $conn;
-    
+
     public function __construct()
     {
         // Create connection
         $this->conn = new \mysqli(ConnectionParameters::SERVERNAME, ConnectionParameters::USERNAME, ConnectionParameters::PASSWORD, ConnectionParameters::DATABASE);
         // Check connection
         if ($this->conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+            die("Connection failed: " . $this->conn->connect_error);
         }
 
         if (! $this->conn->set_charset("utf8")) {
-            printf("Error loading character set utf8: %s\n", $conn->error);
+            printf("Error loading character set utf8: %s\n", $this->conn->error);
             exit();
         }
 
@@ -32,7 +32,7 @@ class Connection
     }
 
     /**
-     * 
+     *
      * @param string $sql
      * @return mixed
      */
@@ -50,14 +50,5 @@ class Connection
     {
         return $this->conn;
     }
-
-//     /**
-//      *
-//      * @param mixed $conn
-//      */
-//     public function setConn($conn)
-//     {
-//         $this->conn = $conn;
-//     }
 }
 ?>

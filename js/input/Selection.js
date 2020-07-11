@@ -24,6 +24,17 @@ export function selectAllValues(name) {
 	}
 }
 
+/**Works for checkboxes */
+export function areAllValuesSelected(name) {
+	var checkboxes = document.getElementsByName(name);
+	for (var i = 0; i < checkboxes.length; i++) {
+		if(!checkboxes[i].checked){
+			return false;
+		}
+	}
+	return true;
+}
+
 export function getSelectedRadioButton(name) {
 	var object = getSelectedRadioButtonObject(name);
 	if (object != null) {
@@ -54,4 +65,17 @@ export function getSelectedCheckboxes(name) {
 		}
 	}
 	return ids;
+}
+
+export function getSelectedCheckboxesValues(name) {
+	var objects = [];
+	var checkboxes = document.getElementsByName(name);
+	var currentID = 0;
+	for (var i = 0; i < checkboxes.length; i++) {
+		if (checkboxes[i].checked) {
+			objects[currentID] = checkboxes[i].value;
+			currentID++;
+		}
+	}
+	return objects;
 }

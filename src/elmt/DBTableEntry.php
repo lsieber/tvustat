@@ -3,8 +3,11 @@ namespace tvustat;
 
 abstract class DBTableEntry
 {
+
     private $id;
+
     /**
+     *
      * @return int
      */
     public function getId()
@@ -13,13 +16,12 @@ abstract class DBTableEntry
     }
 
     /**
+     *
      * @param int $id
      */
-    protected  function setId(int $id)
+    protected function setId(int $id)
     {
         $this->id = $id;
     }
-
-    
 }
 

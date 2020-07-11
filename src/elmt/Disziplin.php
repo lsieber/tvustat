@@ -147,7 +147,7 @@ class Disziplin extends DBTableEntry
     {
         return $this->teamType;
     }
-    
+
     /**
      *
      * @return number

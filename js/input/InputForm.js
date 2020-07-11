@@ -61,7 +61,7 @@ export class InputForm {
         var def = JSON.parse(window.sessionStorage.defs);
         var g = {};
         for (const key in def.genders) {
-            g[key] = def.genders[key].genderType;
+            g[key] = def.genders[key].name;
         }
         this.setGenderOptions(g);
 

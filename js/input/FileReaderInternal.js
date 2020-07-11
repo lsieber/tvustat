@@ -1,13 +1,9 @@
 
 export class FileReaderInternal {
 
-    //'inputGroupFile01'
-    constructor(fileFieldId){
-        this.fileFieldId = fileFieldId;
-    }
 
     getReaderFromFile() {
-        var input = document.getElementById(this.fileFieldId);
+        var input = document.getElementById(window.inputFileFieldId);
         if (!input) {
             alert("Um, couldn't find the imgfile element.");
         }
@@ -36,5 +32,6 @@ export function parse(text) {
     for (let index = 0; index < lines.length; index++) {
         array[index] = lines[index].split(";");
     }
+    // return array.slice(0,-1); // Remove the last line as it is empty
     return array;
 }

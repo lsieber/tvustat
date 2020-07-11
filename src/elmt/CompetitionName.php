@@ -31,6 +31,5 @@ class CompetitionName extends DBTableEntry
     {
         return $this->competitionName;
     }
-    
 }
 

@@ -16,10 +16,10 @@ class CompetitionLocation extends DBTableEntry
      */
     private $facility;
 
-    public function __construct(string $village, string $facility, string $id = NULL)
+    public function __construct(string $village, ?string $facility, string $id = NULL)
     {
         $this->village = $village;
-        $this->facility = $facility;
+        $this->facility = is_null($facility) ? "" : $facility;
         if ($id != NULL)
             $this->setId($id);
     }

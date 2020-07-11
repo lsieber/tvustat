@@ -3,9 +3,9 @@ namespace config;
 
 class DefaultSettings
 {
-    const DATEFORMAT = 'j.n.Y';
-    const FORMATTIME = TRUE;
-    const FORMATDECIMALTWODIGIT = TRUE;
+
+    const DATEFORMAT = 'd.n.Y';
+
     const TOPALLVAALUES = "all";
 }
 

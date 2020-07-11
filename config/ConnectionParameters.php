@@ -1,14 +1,22 @@
 <?php
-
 namespace config;
+
 class ConnectionParameters
 {
 
     const SERVERNAME = "localhost";
 
-    const USERNAME = "root";
+    // DEV
+    const USERNAME = "Input";
 
-    const PASSWORD = "";
+    const PASSWORD = "TvUInputBestList2019";
 
     const DATABASE = "tvustat";
+
+    // WEB
+//     const USERNAME = "tvulive_output";
+
+//     const PASSWORD = "eagzzP5MkLHURaNV";
+
+//     const DATABASE = "tvulive_tvustat";
 }

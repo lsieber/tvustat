@@ -1,33 +1,28 @@
-export function loadBasicData(phpFile){
-    $.post(phpFile, {}, function(data) {
+import { addValueToArrayStorage } from "./SessionStorageHandler.js";
+
+export function loadBasicData(phpFile) {
+    $.post(phpFile, {}, function (data) {
         window.sessionStorage.defs = data;
     });
 }
 
 
+export function loadCompetitionNames(phpFile) {
+    $.post(phpFile, { type: "allCompetitionNames" },
+        function (data) {
+            for (const key in data) {
+                // alert(key + data[key].name);
+                addValueToArrayStorage(window.competitionNameStorage, key, data[key]);
 
+            }
+        }, "json");
+}
 
-// import {Gender} from "../elmt/Gender.js";
+export function loadCompetitionLocations(phpFile) {
+    $.post(phpFile, { type: "allCompetitionLocations" }, function (data) {
+        for (const key in data) {
+            addValueToArrayStorage(window.competitionLocationStorage, key, data[key]);
+        }
+    }, "json");
+}
 
-// export class BasicDefinitions{
-//     constructor(){
-//         this.phpFile = './BasicDefinitions.php'; 
-//         this.genders = [];
-//         this.loadData();
-//     }
-
-//     loadData(){
-//         $.post(this.phpFile, {}, function(data) {
-
-//             this.json = JSON.parse(data);
-//             window.sessionStorage.user = JSON.stringify(this.json);
-//             // alert(data);
-//             // var gen = this.json.genders;
-//             // for(var key in gen) {
-//             //     var g = gen[key];
-//             //     this.genders[g.id] = new Gender(g.id, g.name, g.shortName);
-//             // }
-//             alert("saved to")
-//         });
-//     }
-// }

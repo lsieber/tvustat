@@ -13,10 +13,10 @@ class dbConfig
             new dbCompetition(),
             new dbCompetitionNames(),
             new dbCompetitionLocations(),
-            new dbDisziplin()
+            new dbDisziplin(),
+            new dbPerformance()
         ));
     }
-
 
     private function loadDBTableDescriptions(array $tableDecriptions)
     {
@@ -40,7 +40,7 @@ class dbConfig
     }
 
     /**
-     * 
+     *
      * @param string $className
      * @return NULL|dbTableDescription
      */

@@ -4,13 +4,25 @@
 			"tvustat\\" : [
 				"src",
 				"src/conn",
+				"src/conn/get",
+				"src/conn/set",
 				"src/elmt",
 				"src/inp",
+				"src/outp",
+				"src/outp/coldef",
+				"src/outp/html",
+				"src/outp/json",
+				"src/outp/txt",
+				"src/pts",
+				"src/spezout",
 				"src/utils"
 			],
 			"config\\" : [
 				"config",
-				"config/db"
+				"config/db",
+				"config/db/elmt",
+				"config/db/prld",
+				"config/db/pts"
 			],
 			"test\\" : [
 				"tests",

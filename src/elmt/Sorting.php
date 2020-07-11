@@ -22,7 +22,9 @@ class Sorting extends DBTableEntry
         $this->sortingDirectionSQL = $sortingDirectionSQL;
         $this->setId($id);
     }
+
     /**
+     *
      * @return string
      */
     public function getSortingDirection()
@@ -31,6 +33,7 @@ class Sorting extends DBTableEntry
     }
 
     /**
+     *
      * @return string
      */
     public function getSortingDirectionSQL()
@@ -38,21 +41,25 @@ class Sorting extends DBTableEntry
         return $this->sortingDirectionSQL;
     }
 
-//     /**
-//      * @param string $sortingDirection
-//      */
-//     public function setSortingDirection($sortingDirection)
-//     {
-//         $this->sortingDirection = $sortingDirection;
-//     }
+    public function sortASC()
+    {
+        return $this->sortingDirectionSQL == "ASC";
+    }
 
-//     /**
-//      * @param string $sortingDirectionSQL
-//      */
-//     public function setSortingDirectionSQL($sortingDirectionSQL)
-//     {
-//         $this->sortingDirectionSQL = $sortingDirectionSQL;
-//     }
- 
+    // /**
+    // * @param string $sortingDirection
+    // */
+    // public function setSortingDirection($sortingDirection)
+    // {
+    // $this->sortingDirection = $sortingDirection;
+    // }
+
+    // /**
+    // * @param string $sortingDirectionSQL
+    // */
+    // public function setSortingDirectionSQL($sortingDirectionSQL)
+    // {
+    // $this->sortingDirectionSQL = $sortingDirectionSQL;
+    // }
 }
 
