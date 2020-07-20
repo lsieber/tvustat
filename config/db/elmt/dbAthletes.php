@@ -71,7 +71,7 @@ class dbAthletes extends dbTableDescription
             2 => $athlete->getGender()->getId(),
             3 => $athlete->getTeamType()->getId(),
             4 => $athlete->getDateForDB(),
-            5 => NULL,
+            5 => $athlete->getLicenseNumber(),
             6 => $athlete->getTeamCategory()
         );
     }
@@ -102,7 +102,8 @@ class dbAthletes extends dbTableDescription
             $conn->getGender($columns[self::GENDERID]), //
             $conn->getTeamType($columns[self::TEAMTYPEID]), //
             self::getTeamCategory($columns[self::CATEGORY], $conn), //
-            $columns[self::ID]);
+            $columns[self::ID], 
+            $columns[self::lICENCE]);
     }
 
 }

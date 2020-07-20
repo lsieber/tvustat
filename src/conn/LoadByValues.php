@@ -36,7 +36,19 @@ class LoadByValues extends DbHandler
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
     }
-
+    /**
+     *
+     * @param int $licenseNumber
+     * @return NULL|\tvustat\Athlete
+     */
+    public function loadAthleteByLicense(int $licenseNumber)
+    {
+        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::lICENCE . '=' . $licenseNumber; 
+        echo "</br>" . $sql;
+        $array = $this->conn->executeSqlToArray($sql);
+        return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+    }
+    
     /**
      *
      * @param string $competitionName
