@@ -167,6 +167,7 @@ if (is_null($disziplin)) {
         $querryInsertation = $db->addPerformance($preformance);
         $querry->putCustomValue("message", $querryInsertation->getMessage());
         $querryInsertation->getSuccess() ? $querry->putCustomValue(STATUS, SUCCESSFULL_INSERTATION_RETURN) : $querry->putCustomValue(STATUS, PERFORMANCE_EXISTS_RETURN);
+        $querry->putCustomValue("performance", $preformance->getPerformance());
         $querry->putCustomValue("insertationJSOn", json_encode($querryInsertation->getJSONArray()));
     }
 }

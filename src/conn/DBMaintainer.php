@@ -59,15 +59,17 @@ class DBMaintainer
         return $this->conn->getConn()->query($sqlActive);
     }
 
-    public function addUnsureBirthDate(int $athleteId, bool $isUnsureDate, bool $isUnsureYear, int $minYear = null, int $maxYear = null) {
-        $sqlUnsure = "INSERT INTO " . dbUnsureBirthDates::DBNAME . " VALUES (" . $athleteId . "," . intval($isUnsureDate) . "," .  intval($isUnsureYear). "," . self::nullToString($minYear) . "," .  self::nullToString($maxYear) . ")";
+    public function addUnsureBirthDate(int $athleteId, bool $isUnsureDate, bool $isUnsureYear, int $minYear = null, int $maxYear = null)
+    {
+        $sqlUnsure = "INSERT INTO " . dbUnsureBirthDates::DBNAME . " VALUES (" . $athleteId . "," . intval($isUnsureDate) . "," . intval($isUnsureYear) . "," . self::nullToString($minYear) . "," . self::nullToString($maxYear) . ")";
         return $this->conn->getConn()->query($sqlUnsure);
     }
-    
-    private static function nullToString($nullableValue = null){
-        return ($nullableValue == null) ? "null": $nullableValue;
+
+    private static function nullToString($nullableValue = null)
+    {
+        return ($nullableValue == null) ? "null" : $nullableValue;
     }
-    
+
     public function addDisziplin(Disziplin $disziplin)
     {
         return $this->add->disziplin($disziplin);
@@ -105,18 +107,7 @@ class DBMaintainer
      */
     public function addPerformance(Performance $performance)
     {
-        $ids = array(
-            dbPerformance::ATHLETEID => $performance->getAthlete()->getId(),
-            dbPerformance::DISZIPLINID => $performance->getDisziplin()->getId(),
-            dbPerformance::COMPETITOINID => $performance->getCompetition()->getId(),
-            dbPerformance::PERFORMANCE => $performance->getPerformance(),
-            dbPerformance::WIND => $performance->getWind(),
-            dbPerformance::PLACE => $performance->getPlacement()
-        );
-        if (! $this->check->performanceByIds($ids)) {
-            return $this->add->performance($performance);
-        }
-        return new QuerryOutcome("Value Already Exists", false);
+        return (! $this->check->performanceByIds($performance)) ? $this->add->performance($performance) : new QuerryOutcome("Value Already Exists", false);
     }
 
     /**
@@ -171,7 +162,7 @@ class DBMaintainer
      */
     public function checkPerformanceByIds(array $post)
     {
-        return $this->check->performanceByIds($post);
+        return $this->check->performanceByIdsArray($post);
     }
 
     /**
@@ -206,13 +197,7 @@ class DBMaintainer
 
     public function loadPerformanceAthleteYear(int $disziplinID, int $athleteID, int $year)
     {
-        $sql = "SELECT * FROM " . dbPerformance::DBNAME;
-        $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
-        $sql .= " WHERE " . dbPerformance::ATHLETEID . " = " . $athleteID;
-        $sql .= " AND EXTRACT(YEAR FROM " . dbCompetition::DATE . ") = " . $year;
-        $sql .= " AND " . dbPerformance::DISZIPLINID . " = " . $disziplinID;
-        $sql .= " ORDER BY " . dbPerformance::PERFORMANCE;
-        return $this->getConn()->executeSqlToArray($sql);
+        return $this->loadbyValues->loadPerformanceAthleteYear($disziplinID, $athleteID, $year);
     }
 
     /**
@@ -229,7 +214,6 @@ class DBMaintainer
         return $this->getById->performance($id);
     }
 
-    
     public function getAthletes(array $ids)
     {
         $athletes = array();
@@ -238,7 +222,7 @@ class DBMaintainer
         }
         return $athletes;
     }
-    
+
     public function getAthlete(int $id)
     {
         return $this->getById->athlete($id);
