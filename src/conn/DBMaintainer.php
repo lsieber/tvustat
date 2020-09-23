@@ -65,7 +65,7 @@ class DBMaintainer
         return $this->conn->getConn()->query($sqlUnsure);
     }
 
-<<<<<<< HEAD
+
     public function addSaIdToAthlete(Athlete $athlete, string $saId)
     {
         $athleteId = $athlete->getId();
@@ -93,13 +93,6 @@ class DBMaintainer
         return ($nullableValue == null) ? "null" : $nullableValue;
     }
 
-=======
-    private static function nullToString($nullableValue = null)
-    {
-        return ($nullableValue == null) ? "null" : $nullableValue;
-    }
-
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
     public function addDisziplin(Disziplin $disziplin)
     {
         return $this->add->disziplin($disziplin);
