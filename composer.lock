@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
     "content-hash": "a7a51b510c78aafb951342467ed6ebde",
-=======
-    "content-hash": "103940b54fb5ae5dc88c141e56756fe0",
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
     "packages": [],
     "packages-dev": [
         {
@@ -65,7 +61,6 @@
                 "constructor",
                 "instantiate"
             ],
-<<<<<<< HEAD
             "support": {
                 "issues": "https://github.com/doctrine/instantiator/issues",
                 "source": "https://github.com/doctrine/instantiator/tree/1.3.x"
@@ -84,8 +79,7 @@
                     "type": "tidelift"
                 }
             ],
-=======
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
+
             "time": "2020-05-29T17:27:14+00:00"
         },
         {
@@ -134,7 +128,6 @@
                 "object",
                 "object graph"
             ],
-<<<<<<< HEAD
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
                 "source": "https://github.com/myclabs/DeepCopy/tree/1.x"
@@ -215,44 +208,19 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/phar-io/manifest/zipball/85265efd3af7ba3ca4b2a2c34dbfc5788dd29133",
                 "reference": "85265efd3af7ba3ca4b2a2c34dbfc5788dd29133",
-=======
-            "time": "2020-06-29T13:22:24+00:00"
-        },
-        {
-            "name": "phar-io/manifest",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phar-io/manifest.git",
-                "reference": "7761fcacf03b4d4f16e7ccb606d4879ca431fcf4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/manifest/zipball/7761fcacf03b4d4f16e7ccb606d4879ca431fcf4",
-                "reference": "7761fcacf03b4d4f16e7ccb606d4879ca431fcf4",
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-phar": "*",
-<<<<<<< HEAD
                 "ext-xmlwriter": "*",
                 "phar-io/version": "^3.0.1",
                 "php": "^7.2 || ^8.0"
-=======
-                "phar-io/version": "^2.0",
-                "php": "^5.6 || ^7.0"
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-<<<<<<< HEAD
                     "dev-master": "2.0.x-dev"
-=======
-                    "dev-master": "1.0.x-dev"
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
                 }
             },
             "autoload": {
