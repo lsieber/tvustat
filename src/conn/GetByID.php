@@ -15,6 +15,11 @@ class GetByID extends DbHandler
 
     const select = "SELECT * FROM ";
 
+    /**
+     * 
+     * @param int $id
+     * @return NULL|\tvustat\Performance
+     */
     public function performance(int $id)
     {
         $sql = "SELECT * FROM " . dbPerformance::DBNAME;
@@ -32,12 +37,22 @@ class GetByID extends DbHandler
         return ($r == NULL) ? NULL : dbPerformance::array2Elmt($r[0], $this->conn);
     }
 
+    /**
+     * 
+     * @param int $id
+     * @return NULL|\tvustat\Athlete
+     */
     public function athlete(int $id)
     {
         $r = self::getQuerryResult($this->getTable(dbAthletes::class), $id);
         return ($r == NULL) ? NULL : dbAthletes::array2Elmt($r, $this->conn);
     }
 
+    /**
+     * 
+     * @param int $id
+     * @return NULL|\tvustat\Disziplin
+     */
     public function disziplin(int $id)
     {
         $r = self::getQuerryResult($this->getTable(dbDisziplin::class), $id);
@@ -57,15 +72,6 @@ class GetByID extends DbHandler
         return ($r == NULL) ? NULL : dbCompetition::array2Elmt($r, $this->conn);
     }
 
-    // private function copetitionFromAsocArray($r)
-    // {
-    // return new Competition( //
-    // $r[dbAthletes::FULLNAME], //
-    // $r[dbAthletes::LASTNAME], //
-    // new \DateTime($r[dbAthletes::DATE]), //
-    // $this->conn->getGender($r[dbAthletes::GENDERID]), //
-    // $this->conn);
-    // }
     private function getQuerryResult(dbTableDescription $desc, int $id, $innerJoins = NULL)
     {
         $idString = $desc->getIDString();

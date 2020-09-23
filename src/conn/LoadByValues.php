@@ -6,6 +6,7 @@ use config\dbCompetition;
 use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbDisziplin;
+use config\dbPerformance;
 
 class LoadByValues extends DbHandler
 {
@@ -33,6 +34,35 @@ class LoadByValues extends DbHandler
         // $birthDateSql = (is_null($birthdate)) ? dbAthletes::DATE . " IS NULL" : dbAthletes::DATE . "='" . DateFormatUtils::formatDateForDB($birthdate) . "'";
         $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::FULLNAME . '="' . $athletename . '"'; /* '" AND ' . $birthDateSql; */
         // echo "</br>" . $sql;
+        $array = $this->conn->executeSqlToArray($sql);
+        return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+    }
+
+<<<<<<< HEAD
+    /**
+     *
+     * @param string $saId
+     * @return NULL|\tvustat\Athlete
+     */
+    public function loadAthleteBySaId(string $saId)
+    {
+        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::SAID . '="' . $saId . '"';
+        //echo "</br>" . $sql;
+        $array = $this->conn->executeSqlToArray($sql);
+        return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+    }
+    
+=======
+>>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
+    /**
+     *
+     * @param int $licenseNumber
+     * @return NULL|\tvustat\Athlete
+     */
+    public function loadAthleteByLicense(int $licenseNumber)
+    {
+        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::lICENCE . '=' . $licenseNumber;
+        echo "</br>" . $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
     }
@@ -79,5 +109,16 @@ class LoadByValues extends DbHandler
         // echo "</br>" . $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbCompetition::array2Elmt($array[0], $this->conn);
+    }
+
+    public function loadPerformanceAthleteYear(int $disziplinID, int $athleteID, int $year)
+    {
+        $sql = "SELECT * FROM " . dbPerformance::DBNAME;
+        $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
+        $sql .= " WHERE " . dbPerformance::ATHLETEID . " = " . $athleteID;
+        $sql .= " AND EXTRACT(YEAR FROM " . dbCompetition::DATE . ") = " . $year;
+        $sql .= " AND " . dbPerformance::DISZIPLINID . " = " . $disziplinID;
+        $sql .= " ORDER BY " . dbPerformance::PERFORMANCE;
+        return $this->conn->executeSqlToArray($sql);
     }
 }

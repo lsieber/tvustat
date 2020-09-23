@@ -31,9 +31,9 @@ class AddElement extends DbHandler
         $collumns = dbPerformance::getCollumNames();
         foreach ($collumns as $key => $dbPosition) {
             $values[$dbPosition] = isset($arrayAssociative[$key]) ? $arrayAssociative[$key] : NULL;
-        }   
+        }
         $querry = $this->addValues($values, $this->getTable(dbPerformance::class));
-        
+
         if (array_key_exists(dbPerformanceDetail::DETAIL, $arrayAssociative)) {
             $detail = $arrayAssociative[dbPerformanceDetail::DETAIL];
             if ($detail != NULL && $detail != "") {
@@ -46,12 +46,16 @@ class AddElement extends DbHandler
         return $querry;
     }
 
-    private function stringTruefalseToTrueFalse(string $stringBoolean){
-        if ($stringBoolean == "true") return TRUE;
-        elseif ($stringBoolean == "false") return FALSE;
-        else return null;
+    private function stringTruefalseToTrueFalse(string $stringBoolean)
+    {
+        if ($stringBoolean == "true")
+            return TRUE;
+        elseif ($stringBoolean == "false")
+            return FALSE;
+        else
+            return null;
     }
-    
+
     /**
      *
      * @param Performance $performance
@@ -59,28 +63,27 @@ class AddElement extends DbHandler
      */
     public function performance(Performance $performance)
     {
-        $disziplin = $performance->getDisziplin();
-
-        $perfModified = ($disziplin->isTime()) ? TimeUtils::time2seconds($performance->getPerformance()) : $performance->getPerformance();
-        $minValueOk = $perfModified >= $disziplin->getMinValue();
-        $maxValueOk = $perfModified <= $disziplin->getMaxValue();
-        $teamTypeMatches = $performance->getAthlete()
-            ->getTeamType()
-            ->getId() == $disziplin->getTeamType()->getId();
-        if (($minValueOk && $maxValueOk && $teamTypeMatches)) {
+        if (DBInputUtils::validPerformanceForInput($performance)) {
             $querry = $this->addElement($performance, $this->getTable(dbPerformance::class));
-            // echo "Detail: " . $performance->getDetail();
-            if (! is_null($performance->getDetail())) {
-                $perfId = $querry->getCustomValue(dbPerformance::getIDString());
-                $sqlDetail = "INSERT INTO " . dbPerformanceDetail::DBNAME . ' VALUES (Null, ' . $perfId . ',"' . $performance->getDetail() . '")';
-                // echo $sqlDetail;
-                $result = $this->conn->getConn()->query($sqlDetail);
-                // var_dump($result);
+            if (!is_null($performance->getDetail())) {
+                $performanceID = $querry->getCustomValue(dbPerformance::getIDString());
+                $result = $this->performanceDetail($performanceID, $performance->getDetail());
                 $querry->putCustomValue("DetailInsertion", ($result == 1));
             }
             return $querry;
         }
         return new QuerryOutcome("The entry of the Performance failed, the specifications are not met!", false);
+    }
+    
+    /**
+     * 
+     * @param int $performanceID
+     * @param string $detail
+     * @return boolean
+     */
+    public function performanceDetail(int $performanceID, string $detail){
+        $sqlDetail = "INSERT INTO " . dbPerformanceDetail::DBNAME . ' VALUES (Null, ' . $performanceID . ',"' . $detail . '")';
+        return $this->conn->getConn()->query($sqlDetail);
     }
 
     /**
@@ -174,7 +177,7 @@ class AddElement extends DbHandler
         }
         $sql .= ")";
 
-//         echo $sql;
+        // echo $sql;
         $result = $this->conn->getConn()->query($sql);
         $new_id = $this->conn->getConn()->insert_id;
         $success = ($result == 1);

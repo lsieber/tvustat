@@ -13,8 +13,9 @@ use tvustat\QuerryOutcome;
  * ******************************************************************************************
  * THIS script inserts a given Performance from the Post variable into the DB
  * The Post Variable has to include the following Variables the keys can be found in the variable declaration below:
- * string Athlete Name
- * int Athlete Birth Year
+ * (string Athlete Name
+ * int Athlete Birth Year)
+ *  or (string Athlete saId) where if the saId is given and the athlete is found with the id this athlete is chosen
  * string Competition Name
  * string (yyyy-mm-dd) Competition Date
  * string Competition Location
@@ -38,8 +39,7 @@ use tvustat\QuerryOutcome;
  * If the performance was inserted, the return value is "INSERTATION_SUCCESSFULL"
  * ***************************************************************************************
  */
-// var_dump($_POST);
-
+//var_dump($_POST);
 const STATUS = "STATUS";
 
 const NO_DISZIPLIN_RETURN = "NO_DISZIPLIN";
@@ -53,6 +53,10 @@ const SUCCESSFULL_INSERTATION_RETURN = "INSERTATION_SUCCESSFULL";
 /**
  * THE FOLLOWING VARIABLES DEFINE THE KEYS TO USE IN THE $_POST Variable
  */
+const KEY_ATHLETE_LICENCE = "athleteLicense";
+
+const KEY_ATHLETE_SAID = "athleteSaId";
+
 const KEY_ATHLETE_NAME = "athleteName";
 
 const KEY_ATHLETE_YEAR = "athleteYear";
@@ -78,8 +82,12 @@ const KEY_SOURCE = "source";
 /**
  * Check that the POST Variables are fine to use and have the correct format
  */
-$athleteName = assertString($_POST[KEY_ATHLETE_NAME], "Error The Value of the Athlete Name has to be of type string");
-$athleteYear = assertInt(intval($_POST[KEY_ATHLETE_YEAR]), "Error The Value of the Athlete Birth Year has to be of type int");
+$licenseExists = array_key_exists(KEY_ATHLETE_LICENCE, $_POST);
+$athleteLicense = $licenseExists ? assertInt(intval($_POST[KEY_ATHLETE_LICENCE]), "Error The Value of the Athlete License Number Year has to be of type int", TRUE) : NULL;
+$saIdExists = array_key_exists(KEY_ATHLETE_SAID, $_POST);
+$athleteSaId = $saIdExists ? assertString(strval($_POST[KEY_ATHLETE_SAID]), "Error The Value of the Athlete Swiss Athletics ID has to be of type string", TRUE) : NULL;
+$athleteName = $licenseExists ? NULL : assertString($_POST[KEY_ATHLETE_NAME], "Error The Value of the Athlete Name has to be of type string", $licenseExists);
+$athleteYear = $licenseExists ? NULL : assertInt(intval($_POST[KEY_ATHLETE_YEAR]), "Error The Value of the Athlete Birth Year has to be of type int", $licenseExists);
 $cName = assertString($_POST[KEY_COMPETITION_NAME], "Error The Value of the Competition Name has to be of type string");
 $village = assertString($_POST[KEY_COMPETITION_LOCATION], "Error The Value of the Competition Location has to be of type string");
 $cDate = assertDate($_POST[KEY_COMPETITION_Date], "Error The Value of the Competition Date has to be of type string with format yyyy-mm-dd");
@@ -89,9 +97,10 @@ $postwind = isset($_POST[KEY_WIND]) && $_POST[KEY_WIND] != "" ? doubleval($_POST
 $wind = assertDouble($postwind, "Error The Value of the Athlete Birth Year has to be of type int", true);
 $postranking = isset($_POST[KEY_RANKING]) ? $_POST[KEY_RANKING] : NULL;
 $ranking = assertString($postranking, "Error The Value of the Ranking has to be of type string", true);
-$postdetail = isset($_POST[KEY_DETAIL])&& $_POST[KEY_DETAIL] != ""  ? doubleval($_POST[KEY_DETAIL]) : NULL;
+$postdetail = isset($_POST[KEY_DETAIL]) && $_POST[KEY_DETAIL] != "" ? strval($_POST[KEY_DETAIL]) : NULL;
 $detail = assertString($postdetail, "Error The Value of the Detail has to be of type string", true);
-$sourceID = isset($_POST[KEY_SOURCE]) && $_POST[KEY_SOURCE] != "" ? assertInt($_POST(KEY_SOURCE), "Source has to be an int") : 1;
+$postSource = isset($_POST[KEY_SOURCE]) && $_POST[KEY_SOURCE] != "" ? intval($_POST[KEY_SOURCE]) : NULL;
+$sourceID = assertInt($postSource, "Source has to be an int");
 
 /**
  * LOAD DB
@@ -111,12 +120,30 @@ if (is_null($disziplin)) {
     /**
      * Athlete
      */
-    $athlete = $db->loadbyValues->loadAthleteByName($athleteName, $athleteYear);
-    if (is_null($athlete)) {
-        $querry->putCustomValue("message", "Athlete " . $athleteName . " nicht gefunden");
-        $querry->putCustomValue(STATUS, NO_ATHLETE_RETURN);
+    $athlete = null;
+    if ($saIdExists) {
+        $athlete = $db->loadbyValues->loadAthleteBySaId($athleteSaId);
+    } elseif ($licenseExists){
+        $athlete = $db->loadbyValues->loadAthleteByLicense($athleteLicense);
     } else {
-
+        $athlete = $db->loadbyValues->loadAthleteByName($athleteName);
+    }
+    if (is_null($athlete)) {
+        $athlete = $db->loadbyValues->loadAthleteByName($athleteName);
+        if (is_null($athlete)){
+            $querry->putCustomValue("message", "Athlete " . $athleteName . " nicht gefunden");
+            $querry->putCustomValue(STATUS, NO_ATHLETE_RETURN);
+        } else {
+            if ($saIdExists) {
+                $db->addSaidToAthlete($athlete, $athleteSaId);
+            }
+            if ($licenseExists) {
+                $db->addLicenseToAthlete($athlete, $licenseNumber);
+            }
+        }
+    } 
+    
+    if (!is_null($athlete)) {
         /**
          * Competition Name
          */
@@ -162,6 +189,7 @@ if (is_null($disziplin)) {
         $querryInsertation = $db->addPerformance($preformance);
         $querry->putCustomValue("message", $querryInsertation->getMessage());
         $querryInsertation->getSuccess() ? $querry->putCustomValue(STATUS, SUCCESSFULL_INSERTATION_RETURN) : $querry->putCustomValue(STATUS, PERFORMANCE_EXISTS_RETURN);
+        $querry->putCustomValue("performance", $preformance->getPerformance());
         $querry->putCustomValue("insertationJSOn", json_encode($querryInsertation->getJSONArray()));
     }
 }

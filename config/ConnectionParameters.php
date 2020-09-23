@@ -11,7 +11,7 @@ class ConnectionParameters
 
     const PASSWORD = "TvUInputBestList2019";
 
-    const DATABASE = "tvustat";
+    const DATABASE = "tvulive_tvustat";
 
     // WEB
 //     const USERNAME = "tvulive_output";

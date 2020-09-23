@@ -270,10 +270,6 @@ window.registerPerformance = registerPerformance
  * GENERAL FUNCTIONS
  * ***********************************/
 
-// function yearOfDate(dbDate) {
-//     return dbDate.slice(-4);
-// }
-
 function getSelectedCategories() {
     return getSelectedRadioButtonObject(INPUT.categoryInputName).value.split(",");
 }
