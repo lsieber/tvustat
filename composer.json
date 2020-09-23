@@ -36,8 +36,14 @@
 	},
 	"autoload-dev" : {
 		"psr-4" : {
+<<<<<<< HEAD
 			"tvustat\\" : [
 				"tests",
+=======
+			"tvustat" : [
+				"tests",
+				"tests/elmt",
+>>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
 				"tests/unit"
 			]
 		}
