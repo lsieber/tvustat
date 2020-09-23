@@ -39,7 +39,7 @@ function onload() {
   // loadAthletes();
   loadSources();
   updateAthleteInput();
-  // document.getElementById(INPUT.detailDiv).innerHTML = '<input type="text" class="form-control" id=' + INPUT.detailInput + '><label for='+INPUT.detailInput+'>Detail</label>';
+  document.getElementById(INPUT.detailDiv).innerHTML = '<input type="text" class="form-control" id=' + INPUT.detailInput + '><label for='+INPUT.detailInput+'>Detail</label>';
 }
 window.onload = onload
 
@@ -98,7 +98,7 @@ export function insertPerformanceField(perfId) {
     var disziplin = getValuesFromStorage(STORE.disziplinStore)[disziplinIDStore];
     var disziplinID = disziplin[DB.disziplinID];
     var detail = null;
-    if ( /*disziplin[DB.multiIds] != null && */document.getElementById(INPUT.detailInput) != null && document.getElementById(INPUT.detailInput).value != "") {
+    if ( disziplin[DB.multiIds] != null && document.getElementById(INPUT.detailInput) != null && document.getElementById(INPUT.detailInput).value != "") {
       detail = document.getElementById(INPUT.detailInput).value;
     }
 
@@ -306,7 +306,6 @@ window.time2seconds = time2seconds
 
 function calcualtePoints(field) {
   pointCalculator.calculate(field);
-
   var detail = createMultipleDetail();
   createDetailInputHtm();
   document.getElementById(INPUT.detailInput).value = detail;
