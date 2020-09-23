@@ -38,7 +38,14 @@ class Athlete extends DBTableEntry
      */
     protected $licenseNumber;
     
-    public function __construct(string $fullName, \DateTime $date = NULL, Gender $gender, TeamType $teamType, Category $teamCategory = NULL, int $id = null, int $licenseNumber = null)
+    /**
+     *
+     * @var string
+     */
+    protected $saId;
+    
+    
+    public function __construct(string $fullName, \DateTime $date = NULL, Gender $gender, TeamType $teamType, Category $teamCategory = NULL, int $id = null, int $licenseNumber = null, string $saId = null)
     {
         $this->fullName = $fullName;
         $this->name = $this->getFullName();
@@ -57,6 +64,7 @@ class Athlete extends DBTableEntry
         if ($id != null)
             $this->setId($id);
         $this->licenseNumber = $licenseNumber;
+        $this->saId = $saId;
     }
 
     /**
@@ -129,7 +137,16 @@ class Athlete extends DBTableEntry
     {
         return $this->licenseNumber;
     }
-
+    
+    /**
+     * @return string
+     */
+    public function getSaId()
+    {
+        return $this->saId;
+    }
+    
+    
     
     
 }

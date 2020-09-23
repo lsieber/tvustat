@@ -21,6 +21,8 @@ class dbAthletes extends dbTableDescription
 
     public const CATEGORY = "teamCategoryID";
 
+    public const SAID = "saID";
+    
     public const lICENCE = "licenceNumber";
 
     public static function getIDString()
@@ -35,7 +37,8 @@ class dbAthletes extends dbTableDescription
         self::TEAMTYPEID => 3,
         self::DATE => 4,
         self::lICENCE => 5,
-        self::CATEGORY => 6
+        self::SAID => 6,
+        self::CATEGORY => 7
     );
 
     /**
@@ -72,7 +75,8 @@ class dbAthletes extends dbTableDescription
             3 => $athlete->getTeamType()->getId(),
             4 => $athlete->getDateForDB(),
             5 => $athlete->getLicenseNumber(),
-            6 => $athlete->getTeamCategory()
+            6 => $athlete->getSaId(),
+            7 => $athlete->getTeamCategory()
         );
     }
 

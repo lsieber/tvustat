@@ -6,6 +6,7 @@ use config\dbCompetition;
 use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbDisziplin;
+use config\dbPerformance;
 
 class LoadByValues extends DbHandler
 {
@@ -36,6 +37,20 @@ class LoadByValues extends DbHandler
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
     }
+
+    /**
+     *
+     * @param string $saId
+     * @return NULL|\tvustat\Athlete
+     */
+    public function loadAthleteBySaId(string $saId)
+    {
+        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::SAID . '="' . $saId . '"';
+        //echo "</br>" . $sql;
+        $array = $this->conn->executeSqlToArray($sql);
+        return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+    }
+    
     /**
      *
      * @param int $licenseNumber
@@ -43,12 +58,12 @@ class LoadByValues extends DbHandler
      */
     public function loadAthleteByLicense(int $licenseNumber)
     {
-        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::lICENCE . '=' . $licenseNumber; 
+        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::lICENCE . '=' . $licenseNumber;
         echo "</br>" . $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
     }
-    
+
     /**
      *
      * @param string $competitionName
@@ -91,5 +106,16 @@ class LoadByValues extends DbHandler
         // echo "</br>" . $sql;
         $array = $this->conn->executeSqlToArray($sql);
         return (sizeof($array) == 0) ? NULL : dbCompetition::array2Elmt($array[0], $this->conn);
+    }
+
+    public function loadPerformanceAthleteYear(int $disziplinID, int $athleteID, int $year)
+    {
+        $sql = "SELECT * FROM " . dbPerformance::DBNAME;
+        $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
+        $sql .= " WHERE " . dbPerformance::ATHLETEID . " = " . $athleteID;
+        $sql .= " AND EXTRACT(YEAR FROM " . dbCompetition::DATE . ") = " . $year;
+        $sql .= " AND " . dbPerformance::DISZIPLINID . " = " . $disziplinID;
+        $sql .= " ORDER BY " . dbPerformance::PERFORMANCE;
+        return $this->conn->executeSqlToArray($sql);
     }
 }

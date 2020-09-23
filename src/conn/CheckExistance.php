@@ -52,7 +52,26 @@ class CheckExistance extends DbHandler
         ));
     }
 
-    public function performanceByIds(array $post)
+    public function performanceByIds(Performance $performance)
+    {
+        $ids = array(
+            dbPerformance::ATHLETEID => $performance->getAthlete()->getId(),
+            dbPerformance::DISZIPLINID => $performance->getDisziplin()->getId(),
+            dbPerformance::COMPETITOINID => $performance->getCompetition()->getId(),
+            dbPerformance::PERFORMANCE => $performance->getPerformance(),
+            dbPerformance::WIND => $performance->getWind(),
+            dbPerformance::PLACE => $performance->getPlacement()
+        );
+        return $this->performanceByIdsArray($ids);
+    }
+    
+    /** checks if a performanc already exists. This is based on the Ids of the athlete, disziplin, competition. To identify if the Performance exists also the performance value, the placement as well as the wind have to be in the array. 
+     * The input array has to be in the form of an associative array with the values of dbperformance as key and the respective values as value
+     * 
+     * @param array $post
+     * @return boolean
+     */
+    public function performanceByIdsArray(array $post)
     {
         $identifiers = array(
             dbPerformance::ATHLETEID,
