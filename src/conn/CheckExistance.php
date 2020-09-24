@@ -12,6 +12,7 @@ use config\dbPerformance;
 class CheckExistance extends DbHandler
 {
 
+    //dep use getById instead
     public function checkAthleteIDExists(int $athleteId)
     {
         return $this->checkValues($this->getTable(dbAthletes::class), array(
@@ -21,6 +22,7 @@ class CheckExistance extends DbHandler
         ));
     }
 
+    //dep use getById instead
     public function checkCompetitionIDExists(int $competitionId)
     {
         return $this->checkValues($this->getTable(dbCompetition::class), array(
@@ -30,6 +32,7 @@ class CheckExistance extends DbHandler
         ));
     }
 
+    //dep use getById instead
     public function checkDisziplinIDExists(int $disziplinId)
     {
         return $this->checkValues($this->getTable(dbDisziplin::class), array(
@@ -44,6 +47,8 @@ class CheckExistance extends DbHandler
      * @param Athlete $athlete
      * @return bool
      */
+    //dep use loadByValue instead
+    
     public function athlete(Athlete $athlete)
     {
         return $this->check($this->getTable(dbAthletes::class), $athlete, array(
@@ -90,6 +95,8 @@ class CheckExistance extends DbHandler
         return $this->checkValues($this->getTable(dbPerformance::class), $values, $identifiers);
     }
 
+    //dep use getById and loadByValue instead
+    
     /**
      * If the entered competitionName has an ID it is checked if this id exists.
      * If no ID exist it is checked if the combination of lcation and facility exists in the Db
@@ -110,6 +117,8 @@ class CheckExistance extends DbHandler
         ));
     }
 
+    //dep use getById and loadByValue instead
+    
     /**
      * If the entered competitionName has an ID it is checked if this id exists.
      * If no ID exist it is checked if the name exists in the Db
@@ -129,6 +138,8 @@ class CheckExistance extends DbHandler
         ));
     }
 
+    //dep use getById and loadByValue instead
+    
     /**
      *
      * @param Competition $competition
@@ -160,6 +171,8 @@ class CheckExistance extends DbHandler
         ));
     }
 
+    //dep use getById and loadByValue instead
+    
     /**
      *
      * @param Disziplin $disziplin
@@ -172,6 +185,8 @@ class CheckExistance extends DbHandler
         ));
     }
 
+    //dep use getById and loadByValue instead
+    
     /**
      *
      * @param Disziplin $disziplin
@@ -185,6 +200,8 @@ class CheckExistance extends DbHandler
         return ($r != NULL) ? dbDisziplin::disziplinFromAsocArray($r[0], $this->conn) : NULL;
     }
 
+    //dep use getById and loadByValue instead
+    
     /**
      *
      * @param CompetitionName $compName
@@ -198,6 +215,8 @@ class CheckExistance extends DbHandler
         return ($r != NULL) ? dbCompetitionNames::competitionNameFromAsocArray($r[0], $this->conn) : NULL;
     }
 
+    //dep use getById and loadByValue instead
+    
     /**
      *
      * @param CompetitionLocation $compLoc
@@ -223,7 +242,8 @@ class CheckExistance extends DbHandler
         $values = $desc->classToCollumns($element);
         return $this->checkValues($desc, $values, $identifiers);
     }
-
+    //dep use getById and loadByValue instead
+    
     private function checkValues(dbTableDescription $desc, array $values, array $identifiers)
     {
         $k = $desc->getCollumNames();

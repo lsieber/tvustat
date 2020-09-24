@@ -21,6 +21,11 @@ class QuerryOutcome
         $this->success = $success;
     }
 
+    public static function empty(bool $success = FALSE)
+    {
+        return new self("", $success);
+    }
+
     /**
      *
      * @return array
@@ -69,6 +74,24 @@ class QuerryOutcome
     public function getSuccess()
     {
         return $this->success;
+    }
+
+    /**
+     *
+     * @param string $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     *
+     * @param bool $success
+     */
+    public function setSuccess($success)
+    {
+        $this->success = $success;
     }
 }
 

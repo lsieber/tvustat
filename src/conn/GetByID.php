@@ -10,6 +10,11 @@ use config\dbPerformance;
 use config\dbPerformanceDetail;
 use config\dbTableDescription;
 
+/**
+ *  Gets an Element of the Database by its id. If the function returns NULL, no Element could be found
+ * @author lukas
+ *
+ */
 class GetByID extends DbHandler
 {
 
@@ -44,10 +49,26 @@ class GetByID extends DbHandler
      */
     public function athlete(int $id)
     {
-        $r = self::getQuerryResult($this->getTable(dbAthletes::class), $id);
+        $r = self::getElmtById($this->getTable(dbAthletes::class), $id);
         return ($r == NULL) ? NULL : dbAthletes::array2Elmt($r, $this->conn);
     }
 
+    /**
+     *
+     * @param array $ids Array of ints
+     * @return NULL|\tvustat\Athlete
+     */
+    public function athletes(int $ids)
+    {
+        $athletes = array();
+        foreach ($ids as $id) {
+            array_push($athletes, $this->athlete($id));
+        }
+        return $athletes;
+    }
+    
+
+    
     /**
      * 
      * @param int $id
@@ -55,7 +76,7 @@ class GetByID extends DbHandler
      */
     public function disziplin(int $id)
     {
-        $r = self::getQuerryResult($this->getTable(dbDisziplin::class), $id);
+        $r = self::getElmtById($this->getTable(dbDisziplin::class), $id);
         return ($r == NULL) ? NULL : dbDisziplin::array2Elmt($r, $this->conn);
     }
 
@@ -68,28 +89,33 @@ class GetByID extends DbHandler
     {
         $join = " INNER JOIN " . dbCompetitionLocations::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::LOCATIONID . " = " . dbCompetitionLocations::DBNAME . "." . dbCompetitionLocations::ID;
         $join .= " INNER JOIN " . dbCompetitionNames::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::NAMEID . " = " . dbCompetitionNames::DBNAME . "." . dbCompetitionNames::ID . " ";
-        $r = self::getQuerryResult($this->getTable(dbCompetition::class), $id, $join);
+        $r = self::getElmtById($this->getTable(dbCompetition::class), $id, $join);
         return ($r == NULL) ? NULL : dbCompetition::array2Elmt($r, $this->conn);
     }
 
-    private function getQuerryResult(dbTableDescription $desc, int $id, $innerJoins = NULL)
+    private function getElmtById(dbTableDescription $desc, int $id, $innerJoins = NULL)
     {
-        $idString = $desc->getIDString();
         $table = $desc->getTableName();
-
+        return getByIdWhere($table, $desc->getIDString(), $id, $innerJoins = NULL);
+    }
+    
+    
+    private function getByIdWhere($table, string $whereKey, string $whereValue, $innerJoins = NULL){
+        
         $join = (is_null($innerJoins)) ? "" : $innerJoins;
-
-        $sql = self::select . $table . $join . " WHERE " . $idString . "=" . $id;
+        
+        $sql = self::select . $table . $join . " WHERE " . $whereKey . "=" . $whereValue;
         // echo $sql;
         $r = $this->conn->executeSqlToArray($sql);
-
+        
         if (sizeof($r) != 1) {
             if (sizeof($r) > 1) {
-                echo "Multiple Elements hit";
+                echo "Multiple Elements hit while searching: ".$sql;
             }
             return NUll;
         }
         return $r[0];
     }
+    
 }
 

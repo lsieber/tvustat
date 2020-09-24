@@ -24,6 +24,11 @@ abstract class DbHandler
         $this->config = $config;
     }
 
+    /**
+     * 
+     * @param string $className
+     * @return NULL|\config\dbTableDescription
+     */
     protected function getTable(string $className)
     {
         return $this->config->getTableDesc($className);

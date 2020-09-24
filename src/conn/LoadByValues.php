@@ -7,10 +7,17 @@ use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbDisziplin;
 use config\dbPerformance;
+use config\dbTableDescription;
 
 class LoadByValues extends DbHandler
 {
 
+    private function loadFromTableWhere(dbTableDescription $desc, string $whereKey, string $whereValue){
+        $sql = "SELECT * FROM " . $desc->getTableName() . " WHERE " . $whereKey . '="' . $whereValue . '"';
+        $array = $this->conn->executeSqlToArray($sql);
+        return (sizeof($array) == 1) ? $desc.array2Elmt($array[0]) : NULL;
+    }
+    
     /**
      *
      * @param string $disziplinName
@@ -18,9 +25,11 @@ class LoadByValues extends DbHandler
      */
     public function loadDiziplinByName(string $disziplinName)
     {
-        $sql = "SELECT * FROM " . dbDisziplin::getTableName() . " WHERE " . dbDisziplin::NAME . "='" . $disziplinName . "'";
-        $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) == 0) ? NULL : dbDisziplin::array2Elmt($array[0], $this->conn);
+//         $sql = "SELECT * FROM " . dbDisziplin::getTableName() . " WHERE " . dbDisziplin::NAME . "='" . $disziplinName . "'";
+//         $array = $this->conn->executeSqlToArray($sql);
+//         return (sizeof($array) == 0) ? NULL : dbDisziplin::array2Elmt($array[0], $this->conn);
+        return self::loadFromTableWhere($this->getTable(dbDisziplin::class), dbDisziplin::NAME, $disziplinName);
+        
     }
 
     /**
@@ -31,12 +40,12 @@ class LoadByValues extends DbHandler
      */
     public function loadAthleteByName(string $athletename)
     {
-        // $birthDateSql = (is_null($birthdate)) ? dbAthletes::DATE . " IS NULL" : dbAthletes::DATE . "='" . DateFormatUtils::formatDateForDB($birthdate) . "'";
-        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::FULLNAME . '="' . $athletename . '"'; /* '" AND ' . $birthDateSql; */
-        // echo "</br>" . $sql;
-        $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+//         $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::FULLNAME . '="' . $athletename . '"'; /* '" AND ' . $birthDateSql; */
+//         $array = $this->conn->executeSqlToArray($sql);
+//         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+        return self::loadFromTableWhere($this->getTable(dbAthletes::class), dbAthletes::FULLNAME, $athletename);
     }
+
 
     /**
      *
@@ -45,10 +54,11 @@ class LoadByValues extends DbHandler
      */
     public function loadAthleteBySaId(string $saId)
     {
-        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::SAID . '="' . $saId . '"';
-        //echo "</br>" . $sql;
-        $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+//         $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::SAID . '="' . $saId . '"';
+//         $array = $this->conn->executeSqlToArray($sql);
+//         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+        return self::loadFromTableWhere($this->getTable(dbAthletes::class), dbAthletes::SAID, $saId);
+        
     }
     
     /**
@@ -58,10 +68,12 @@ class LoadByValues extends DbHandler
      */
     public function loadAthleteByLicense(int $licenseNumber)
     {
-        $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::lICENCE . '=' . $licenseNumber;
-        echo "</br>" . $sql;
-        $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+//         $sql = "SELECT * FROM " . dbAthletes::getTableName() . " WHERE " . dbAthletes::lICENCE . '=' . $licenseNumber;
+//         echo "</br>" . $sql;
+//         $array = $this->conn->executeSqlToArray($sql);
+//         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
+        return self::loadFromTableWhere($this->getTable(dbAthletes::class), dbAthletes::lICENCE, $licenseNumber);
+        
     }
 
     /**
@@ -71,10 +83,12 @@ class LoadByValues extends DbHandler
      */
     public function loadCompetitionNameByName(string $competitionName)
     {
-        $sql = "SELECT * FROM " . dbCompetitionNames::getTableName() . " WHERE " . dbCompetitionNames::NAME . '="' . $competitionName . '"';
-        // echo $sql;
-        $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) == 0) ? NULL : dbCompetitionNames::array2Elmt($array[0], $this->conn);
+//         $sql = "SELECT * FROM " . dbCompetitionNames::getTableName() . " WHERE " . dbCompetitionNames::NAME . '="' . $competitionName . '"';
+//         // echo $sql;
+//         $array = $this->conn->executeSqlToArray($sql);
+//         return (sizeof($array) == 0) ? NULL : dbCompetitionNames::array2Elmt($array[0], $this->conn);
+        return self::loadFromTableWhere($this->getTable(dbCompetitionNames::class), dbCompetitionNames::NAME, $competitionName);
+        
     }
 
     /**
@@ -84,10 +98,12 @@ class LoadByValues extends DbHandler
      */
     public function loadCompetitionLocationByName(string $competitionLocation)
     {
-        $sql = "SELECT * FROM " . dbCompetitionLocations::getTableName() . " WHERE " . dbCompetitionLocations::VILLAGE . '="' . $competitionLocation . '"';
-        // echo $sql;
-        $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) == 0) ? NULL : dbCompetitionLocations::array2Elmt($array[0], $this->conn);
+//         $sql = "SELECT * FROM " . dbCompetitionLocations::getTableName() . " WHERE " . dbCompetitionLocations::VILLAGE . '="' . $competitionLocation . '"';
+//         // echo $sql;
+//         $array = $this->conn->executeSqlToArray($sql);
+//         return (sizeof($array) == 0) ? NULL : dbCompetitionLocations::array2Elmt($array[0], $this->conn);
+        return self::loadFromTableWhere($this->getTable(dbCompetitionLocations::class), dbCompetitionLocations::VILLAGE, $competitionLocation);
+        
     }
 
     /**
