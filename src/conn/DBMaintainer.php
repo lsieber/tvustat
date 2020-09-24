@@ -43,6 +43,7 @@ class DBMaintainer
         $this->check = new CheckExistance($this->conn, $this->config);
         $this->getById = new GetByID($this->conn, $this->config);
         $this->loadbyValues = new LoadByValues($this->conn, $this->config);
+        
     }
 
     /**
@@ -349,8 +350,6 @@ class DBMaintainer
     {
         $sql = "SELECT * From " . dbDisziplin::DBNAME;
         $sql .= " LEFT JOIN " . dbMultipleDisziplins::DBNAME . " ON " . dbMultipleDisziplins::DBNAME . "." . dbMultipleDisziplins::ID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
-
-        // $sql .= " INNER JOIN " . dbAgeCategory::DBNAME . " ON " . dbCategory::DBNAME . "." . dbCategory::AGECATEGORYID . " = " . dbAgeCategory::DBNAME . "." . dbAgeCategory::ID;
         return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbDisziplin::ORDER);
     }
 

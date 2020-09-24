@@ -38,7 +38,6 @@ class LoadByValues extends DbHandler
         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
     }
 
-<<<<<<< HEAD
     /**
      *
      * @param string $saId
@@ -52,8 +51,6 @@ class LoadByValues extends DbHandler
         return (sizeof($array) == 0) ? NULL : dbAthletes::array2Elmt($array[0], $this->conn);
     }
     
-=======
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
     /**
      *
      * @param int $licenseNumber

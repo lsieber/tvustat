@@ -65,7 +65,7 @@ class AddElement extends DbHandler
     {
         if (DBInputUtils::validPerformanceForInput($performance)) {
             $querry = $this->addElement($performance, $this->getTable(dbPerformance::class));
-            if (!is_null($performance->getDetail())) {
+            if (! is_null($performance->getDetail())) {
                 $performanceID = $querry->getCustomValue(dbPerformance::getIDString());
                 $result = $this->performanceDetail($performanceID, $performance->getDetail());
                 $querry->putCustomValue("DetailInsertion", ($result == 1));
@@ -74,14 +74,15 @@ class AddElement extends DbHandler
         }
         return new QuerryOutcome("The entry of the Performance failed, the specifications are not met!", false);
     }
-    
+
     /**
-     * 
+     *
      * @param int $performanceID
      * @param string $detail
      * @return boolean
      */
-    public function performanceDetail(int $performanceID, string $detail){
+    public function performanceDetail(int $performanceID, string $detail)
+    {
         $sqlDetail = "INSERT INTO " . dbPerformanceDetail::DBNAME . ' VALUES (Null, ' . $performanceID . ',"' . $detail . '")';
         return $this->conn->getConn()->query($sqlDetail);
     }
