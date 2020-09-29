@@ -84,7 +84,7 @@ class dbPerformance extends dbTableDescription
             6 => $performance->getPlacement(),
             7 => $performance->getManualTiming(),
             8 => $performance->getSource()->getId(),
-            9 => DateFormatUtils::formatDateForDB(new \DateTime())
+            9 => DateFormatUtils::nowForDB()
         );
     }
 

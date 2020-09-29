@@ -1,7 +1,10 @@
 <?php
 namespace tvustat;
 
-abstract class DBInputUtils
+use config\dbPerformance;
+use function tvustat\DBInputUtils\formatPerformanceToFloat;
+
+class DBInputUtils
 {
 
     /**
@@ -12,7 +15,12 @@ abstract class DBInputUtils
      */
     public static function formatPerformanceForDB(Performance $performance)
     {
-        return ($performance->getDisziplin()->isTime()) ? TimeUtils::time2seconds($performance->getPerformance()) : $performance->getPerformance();
+        return formatPerformanceToFloat($performance->getDisziplin()->isTime(), $performance->getPerformance());
+    }
+
+    public static function formatPerformanceToFloat(bool $isTime, $performanceValue)
+    {
+        return ($isTime) ? TimeUtils::time2seconds($performanceValue) : $performanceValue;
     }
 
     /**
@@ -22,7 +30,7 @@ abstract class DBInputUtils
      */
     public static function checkInputRange(Performance $performance)
     {
-        $perfModified = DBInputUtils::formatPerformanceForDB($performance);
+        $perfModified = self::formatPerformanceForDB($performance);
         $minValueOk = $perfModified >= $performance->getDisziplin()->getMinValue();
         $maxValueOk = $perfModified <= $performance->getDisziplin()->getMaxValue();
         return $minValueOk && $maxValueOk;
@@ -30,6 +38,7 @@ abstract class DBInputUtils
 
     /**
      * Checks if the Team Type of the Performance is the same as the Team type of the disziplin
+     *
      * @param Performance $performance
      * @return boolean
      */
@@ -41,10 +50,41 @@ abstract class DBInputUtils
             ->getTeamType()
             ->getId();
     }
-    
-    public static function validPerformanceForInput(Performance $performance) {
+
+    public static function validPerformanceForInput(Performance $performance)
+    {
         return self::checkInputRange($performance) && self::checkTeamTypeMatch($performance);
     }
-    
+
+    public static function performanceExistsInDb(DBMaintainer $db, Performance $performance)
+    {
+        return ! is_null($db->getbyValues->performance($performance->athlete->getId(), $performance->disziplin->getId(), $performance->competition->getId(), $performance->getPerformance()));
+    }
+
+    public static function performanceIsFromTVUBuchAndExists(DBMaintainer $db, Performance $p)
+    {
+        if (CompetitionUtils::isFromTVUBuch($p->getCompetition())) {
+            $existingPerformances = $db->getbyValues->performanceAthleteYear($p->getDisziplin()
+                ->getId(), $p->getAthlete()
+                ->getId(), DateFormatUtils::formatDateaAsYear($p->getCompetition()
+                ->getDate()));
+            if (sizeof($existingPerformances) > 0) {
+                foreach ($existingPerformances as $value) {
+                    if ($p->getDisziplin()
+                        ->getSorting()
+                        ->sortASC()) {
+                        if ($value[dbPerformance::PERFORMANCE] <= $p->getPerformance()) {
+                            return true;
+                        }
+                    } else {
+                        if ($value[dbPerformance::PERFORMANCE] >= $p->getPerformance()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
 

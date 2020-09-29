@@ -1,7 +1,7 @@
 <?php
 namespace tvustat;
 
-class PersonUtils
+class AthleteUtils
 {
 
     public static function checkAthleteReadyForInsertion(Athlete $athlete)

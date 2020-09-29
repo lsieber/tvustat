@@ -111,7 +111,7 @@ $querry = new QuerryOutcome("Nothing done yet", false);
 /**
  * Disziplin
  */
-$disziplin = $db->loadbyValues->loadDiziplinByName($disziplinName);
+$disziplin = $db->getbyValues->disziplin($disziplinName);
 if (is_null($disziplin)) {
     $querry->putCustomValue("message", "Disziplin " . $disziplinName . " nicht gefunden");
     $querry->putCustomValue(STATUS, NO_DISZIPLIN_RETURN);
@@ -122,23 +122,23 @@ if (is_null($disziplin)) {
      */
     $athlete = null;
     if ($saIdExists) {
-        $athlete = $db->loadbyValues->loadAthleteBySaId($athleteSaId);
+        $athlete = $db->getbyValues->athleteBySaId($athleteSaId);
     } elseif ($licenseExists){
-        $athlete = $db->loadbyValues->loadAthleteByLicense($athleteLicense);
+        $athlete = $db->getbyValues->athleteBySaLicense($athleteLicense);
     } else {
-        $athlete = $db->loadbyValues->loadAthleteByName($athleteName);
+        $athlete = $db->getbyValues->athlete($athleteName);
     }
     if (is_null($athlete)) {
-        $athlete = $db->loadbyValues->loadAthleteByName($athleteName);
+        $athlete = $db->getbyValues->athlete($athleteName);
         if (is_null($athlete)){
             $querry->putCustomValue("message", "Athlete " . $athleteName . " nicht gefunden");
             $querry->putCustomValue(STATUS, NO_ATHLETE_RETURN);
         } else {
             if ($saIdExists) {
-                $db->addSaidToAthlete($athlete, $athleteSaId);
+                $db->add->saIdToAthlete($athlete, $athleteSaId);
             }
             if ($licenseExists) {
-                $db->addLicenseToAthlete($athlete, $licenseNumber);
+                $db->add->licenseToAthlete($athlete, $licenseNumber);
             }
         }
     } 
@@ -147,11 +147,11 @@ if (is_null($disziplin)) {
         /**
          * Competition Name
          */
-        $competitionName = $db->loadbyValues->loadCompetitionNameByName($cName);
+        $competitionName = $db->getbyValues->competitionName($cName);
         if ($competitionName == NULL) {
             $competitionNameNew = new CompetitionName($cName);
-            $db->addCompetitionName($competitionNameNew);
-            $competitionName = $db->loadbyValues->loadCompetitionNameByName($cName);
+            $db->add->competitionName($competitionNameNew);
+            $competitionName = $db->getbyValues->competitionName($cName);
             $querry->putCustomValue("competitionName", "created new competition Name");
         }
         assert_NotNull($competitionName, "Competition Name " . $cName . " nicht gefunden");
@@ -159,11 +159,11 @@ if (is_null($disziplin)) {
         /**
          * Competition Location
          */
-        $competitionLocation = $db->loadbyValues->loadCompetitionLocationByName($village);
+        $competitionLocation = $db->getbyValues->competitionLocation($village);
         if ($competitionLocation == NULL) {
             $competitionLocationNew = new CompetitionLocation($village, NULL);
-            $db->addCompetitionLocation($competitionLocationNew);
-            $competitionLocation = $db->loadbyValues->loadCompetitionLocationByName($village);
+            $db->add->competitionLocation($competitionLocationNew);
+            $competitionLocation = $db->getbyValues->competitionLocation($village);
             $querry->putCustomValue("competitionLocation", "created new competition Location");
         }
         assert_NotNull($competitionLocation, "Competition Location " . $village . " nicht gefunden");
@@ -171,11 +171,11 @@ if (is_null($disziplin)) {
         /**
          * Competition
          */
-        $competition = $db->loadbyValues->loadCompetitionByName($cName, $village, $cDate);
+        $competition = $db->getbyValues->competition($cName, $village, $cDate);
         if ($competition == NULL) {
             $competitionNew = new Competition($competitionName, $competitionLocation, $cDate);
-            $db->addCompetition($competitionNew);
-            $competition = $db->loadbyValues->loadCompetitionByName($cName, $village, $cDate);
+            $db->add->competition($competitionNew);
+            $competition = $db->getbyValues->competition($cName, $village, $cDate);
             $querry->putCustomValue("competition", "created new competition");
         }
         assert_NotNull($competition != NULL, "Competition " . $cName . $village . DateFormatUtils::formatDateForBL($cDate) . " nicht gefunden");
@@ -186,7 +186,7 @@ if (is_null($disziplin)) {
         $source = $db->getConn()->getSource($sourceID);
         $preformance = new Performance($disziplin, $athlete, $competition, $perf, $wind, $ranking, FALSE, $source, NULL, $detail);
 
-        $querryInsertation = $db->addPerformance($preformance);
+        $querryInsertation = $db->add->performance($preformance);
         $querry->putCustomValue("message", $querryInsertation->getMessage());
         $querryInsertation->getSuccess() ? $querry->putCustomValue(STATUS, SUCCESSFULL_INSERTATION_RETURN) : $querry->putCustomValue(STATUS, PERFORMANCE_EXISTS_RETURN);
         $querry->putCustomValue("performance", $preformance->getPerformance());

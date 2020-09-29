@@ -7,13 +7,15 @@ use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbDisziplin;
 use config\dbPerformance;
-use config\dbPerformanceDetail;
 use config\dbTableDescription;
+use function tvustat\GetByID\getByIdWhere;
 
 /**
- *  Gets an Element of the Database by its id. If the function returns NULL, no Element could be found
- * @author lukas
+ * Gets an Element of the Database by its id.
+ * If the function returns NULL, no Element could be found
  *
+ * @author lukas
+ *        
  */
 class GetByID extends DbHandler
 {
@@ -21,7 +23,7 @@ class GetByID extends DbHandler
     const select = "SELECT * FROM ";
 
     /**
-     * 
+     *
      * @param int $id
      * @return NULL|\tvustat\Performance
      */
@@ -29,21 +31,15 @@ class GetByID extends DbHandler
     {
         $sql = "SELECT * FROM " . dbPerformance::DBNAME;
 
-        $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
-        $sql .= " INNER JOIN " . dbCompetitionLocations::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::LOCATIONID . " = " . dbCompetitionLocations::DBNAME . "." . dbCompetitionLocations::ID;
-        $sql .= " INNER JOIN " . dbCompetitionNames::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::NAMEID . " = " . dbCompetitionNames::DBNAME . "." . dbCompetitionNames::ID . " ";
+        $sql .= " " . PerformanceHelper::joins();
 
-        $sql .= " INNER JOIN " . dbDisziplin::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
-        $sql .= " INNER JOIN " . dbAthletes::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::ATHLETEID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
-
-        $sql .= " LEFT JOIN " . dbPerformanceDetail::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::ID . " = " . dbPerformanceDetail::DBNAME . "." . dbPerformanceDetail::PERFORMANCEID;
         $sql .= " WHERE " . dbPerformance::DBNAME . "." . dbPerformance::ID . " = " . $id;
         $r = $this->conn->executeSqlToArray($sql);
         return ($r == NULL) ? NULL : dbPerformance::array2Elmt($r[0], $this->conn);
     }
 
     /**
-     * 
+     *
      * @param int $id
      * @return NULL|\tvustat\Athlete
      */
@@ -55,10 +51,11 @@ class GetByID extends DbHandler
 
     /**
      *
-     * @param array $ids Array of ints
+     * @param array $ids
+     *            Array of ints
      * @return NULL|\tvustat\Athlete
      */
-    public function athletes(int $ids)
+    public function athletes(array $ids)
     {
         $athletes = array();
         foreach ($ids as $id) {
@@ -66,11 +63,9 @@ class GetByID extends DbHandler
         }
         return $athletes;
     }
-    
 
-    
     /**
-     * 
+     *
      * @param int $id
      * @return NULL|\tvustat\Disziplin
      */
@@ -96,26 +91,23 @@ class GetByID extends DbHandler
     private function getElmtById(dbTableDescription $desc, int $id, $innerJoins = NULL)
     {
         $table = $desc->getTableName();
-        return getByIdWhere($table, $desc->getIDString(), $id, $innerJoins = NULL);
+        return $this->getByIdWhere($table, $desc->getIDString(), $id, $innerJoins);
     }
-    
-    
-    private function getByIdWhere($table, string $whereKey, string $whereValue, $innerJoins = NULL){
-        
+
+    private function getByIdWhere($table, string $whereKey, string $whereValue, $innerJoins = NULL)
+    {
         $join = (is_null($innerJoins)) ? "" : $innerJoins;
-        
         $sql = self::select . $table . $join . " WHERE " . $whereKey . "=" . $whereValue;
-        // echo $sql;
+        //echo $sql;
         $r = $this->conn->executeSqlToArray($sql);
-        
+
         if (sizeof($r) != 1) {
             if (sizeof($r) > 1) {
-                echo "Multiple Elements hit while searching: ".$sql;
+                echo "Multiple Elements hit while searching: " . $sql;
             }
             return NUll;
         }
         return $r[0];
     }
-    
 }
 

@@ -5,15 +5,11 @@
     use config\dbCompetitionLocations;
     use config\dbCompetitionNames;
     use config\dbPerformance;
-    use tvustat\AthleteNameOnly;
-    use tvustat\Competition;
+    use config\dbUnsureBirthDates;
     use tvustat\CompetitionLocation;
     use tvustat\CompetitionName;
     use tvustat\DBMaintainer;
     use tvustat\DateFormatUtils;
-    use tvustat\DisziplinNameOnly;
-    use config\dbUnsureBirthDates;
-    use tvustat\LoadByValues;
     use tvustat\QuerryOutcome;
 
     require_once '../vendor/autoload.php';
@@ -44,32 +40,30 @@
     $db = new DBMaintainer();
 
     if ($disziplin_exists) {
-        $disziplinExists = $db->checkDisziplinExists(new DisziplinNameOnly($_POST["disziplin"], $db->getConn()));
-        $converted_res = ($disziplinExists) ? 'true' : 'false';
-        $result = array(
+        // TODO change "disziplin" to the dbDisziplin value
+        $disziplin = $db->getbyValues->disziplin($_POST["disziplin"]);
+        $converted_res = (is_null($disziplin)) ? 'false' : 'true';
+        echo json_encode(array(
             "disziplinExists" => $converted_res,
             "disziplinName" => $_POST["disziplin"]
-        );
-        echo json_encode($result);
+        ));
     }
 
     // CHECKS IF THE ATHLETE NAME EXIXSTS. THE DATE IS NOOOOT USED :( use checkAthlete
     if ($athlete_exists) {
-        $date = DateTime::createFromFormat("d.m.Y", $_POST["date"]);
-        $athleteExists = $db->checkAthleteExists(new AthleteNameOnly($_POST["fullName"], $db->getConn()));
-        $converted_res = ($athleteExists) ? 'true' : 'false';
-
-        $result = array(
+        // $date = DateTime::createFromFormat("d.m.Y", $_POST["date"]);
+        $athlete = $db->getbyValues->athlete($_POST[dbAthletes::FULLNAME]);
+        $converted_res = (is_null($athlete)) ? 'false' : 'true';
+        echo json_encode(array(
             "athleteExists" => $converted_res,
-            "fullName" => $_POST["fullName"],
-            "date" => DateFormatUtils::formatDateForDB($date)
-        );
-        echo json_encode($result);
+            "fullName" => $_POST["fullName"]
+            // "date" => DateFormatUtils::formatDateForDB($date)
+        ));
     }
     if ($athlete_and_year_exists) {
         $year = intval($_POST["year"]);
-        $fullName = strval($_POST["fullName"]);
-        $athlete = $db->loadbyValues->loadAthleteByName($fullName);
+        $fullName = strval($_POST[dbAthletes::FULLNAME]);
+        $athlete = $db->getbyValues->athlete($fullName);
         $athleteIsInDb = FALSE;
         if (! is_null($athlete)) {
             $birthYearDb = DateFormatUtils::formatDateaAsYear($athlete->getDate());
@@ -82,30 +76,24 @@
             }
         }
         if (! $athleteIsInDb) {
-            $result = new QuerryOutcome("Athlete Exists", FALSE);
+            $result = new QuerryOutcome("Athlete does not exist", FALSE);
             echo json_encode($result->getJSONArray());
         }
     }
 
     if ($competition_exists) {
         $date = DateTime::createFromFormat("d.m.Y", $_POST[dbCompetition::DATE]);
-        $name = new CompetitionName($_POST[dbCompetitionNames::NAME]);
-        $location = new CompetitionLocation($_POST[dbCompetitionLocations::VILLAGE], "");
-        $competiton = new Competition($name, $location, $date);
-
-        $competitionExists = $db->checkCompetitionExists($competiton);
-        $converted_res = ($competitionExists) ? 'true' : 'false';
-
-        $result = array(
+        $competition = $db->getbyValues->competition($_POST[dbCompetitionNames::NAME], $_POST[dbCompetitionLocations::VILLAGE], $date);
+        $converted_res = (is_null($competition)) ? 'false' : 'true';
+        echo json_encode(array(
             "competitionExists" => $converted_res,
-            dbCompetitionNames::NAME => $name->getCompetitionName(),
+            dbCompetitionNames::NAME => $_POST[dbCompetitionNames::NAME],
             dbCompetition::DATE => DateFormatUtils::formatDateForDB($date),
-            dbCompetitionLocations::VILLAGE => $location->getVillage()
-            // "date" => $_POST["date"]
-        );
-        echo json_encode($result);
+            dbCompetitionLocations::VILLAGE => $_POST[dbCompetitionLocations::VILLAGE]
+        ));
     }
 
+    // TODO Still required?
     if ($performancesDisAthComp) {
         $results = array();
         foreach ($_POST[dbPerformance::DISZIPLINID] as $dbStoreId => $diszipliId) {
@@ -120,6 +108,7 @@
         }
         echo json_encode($results);
     }
+
     if ($performancesDisAthYear) {
         $results = array();
         foreach ($_POST[dbPerformance::DISZIPLINID] as $dbStoreId => $diszipliId) {
@@ -132,7 +121,6 @@
     }
 
     if ($competitionsInYear) {
-
         echo json_encode($db->getCompetitionsForYear($_POST["years"]));
     }
 
@@ -143,6 +131,7 @@
     if ($allCompetitionNames) {
         echo json_encode($db->getAllCompetitionNames());
     }
+    
     if ($allCompetitionLocations) {
         echo json_encode($db->getAllCompetitionLocations());
     }
@@ -150,9 +139,11 @@
     if ($allAgeCategories) {
         echo json_encode($db->getAllAgeCategories());
     }
+    
     if ($allCategories) {
         echo json_encode($db->getAllCategories());
     }
+    
     if ($allOutputCategories) {
         echo json_encode($db->getAllOutputCategories());
     }
@@ -168,6 +159,7 @@
     if ($allYears) {
         echo json_encode($db->getAllYears());
     }
+    
     if ($allSources) {
         echo json_encode($db->getAllSources());
     }
@@ -177,37 +169,10 @@
     }
 
     if ($athletesforCategory) {
-        $year = $_POST["year"];
-
-        $sql = "SELECT * FROM " . dbAthletes::DBNAME;
-        $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
-        $sql .= " LEFT JOIN " . dbUnsureBirthDates::DBNAME . " ON " . dbUnsureBirthDates::DBNAME . "." . dbUnsureBirthDates::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
-
-        $sql .= " WHERE (";
-        $first = true;
-        foreach ($_POST["categories"] as $id) {
-            if (! $first) {
-                $sql .= " OR";
-            }
-            $category = $db->getConn()->getCategory($id);
-            $sql .= " (" . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DBNAME . "." . dbAthletes::DATE . ") >= " . $category->getAgeCategory()->getMinAge() . " AND";
-            $sql .= " " . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DBNAME . "." . dbAthletes::DATE . ") <= " . $category->getAgeCategory()->getMaxAge() . " AND ";
-            $sql .= dbAthletes::GENDERID . " = " . $category->getGender()->getId() . ")";
-            $first = false;
-        }
-        $sql .= ") OR (" . dbAthletes::CATEGORY . " IN (" . implode(",", $_POST["categories"]) . ") ) ORDER BY " . dbAthletes::TEAMTYPEID . "," . dbAthletes::FULLNAME;
-        echo json_encode($db->getConn()->executeSqlToArray($sql));
+        echo json_encode($db->athletesForCategory($_POST["year"],  $_POST["categories"]));
     }
 
     if ($similarAthletes) {
-        $namepart = $_POST["athleteName"];
-
-        $sql = "SELECT * FROM " . dbAthletes::DBNAME;
-        $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
-        $sql .= " LEFT JOIN " . dbUnsureBirthDates::DBNAME . " ON " . dbUnsureBirthDates::DBNAME . "." . dbUnsureBirthDates::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
-
-        $sql .= " WHERE " . dbAthletes::FULLNAME . " LIKE '%" . $namepart . "%' ORDER BY " . dbAthletes::FULLNAME;
-        // echo $sql;
-        echo json_encode($db->getConn()->executeSqlToArray($sql));
+        echo json_encode($db->similarAthletes($_POST["athleteName"]));
     }
     ?>

@@ -25,7 +25,7 @@ class AthleteBestList
         $this->top = $top;
         $this->sql = SpecialOutputSQL::createAthlete($athleteIds);
         // echo $this->sql;
-        $this->athletes = $db->getAthletes($athleteIds);
+        $this->athletes = $db->getById->athletes($athleteIds);
         $this->title = new BestListTitleFromString("Resultate für: " . $this->getAthleteNames());
         $this->bestList = BestList::empty();
     }

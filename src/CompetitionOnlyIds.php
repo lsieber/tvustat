@@ -1,15 +1,15 @@
-<?php
-namespace tvustat;
+// <?PHP
+// NAMESPACE TVUSTAT;
 
-final class CompetitionOnlyIds extends Competition
-{
+// FINAL CLASS COMPETITIONONLYIDS EXTENDS COMPETITION
+// {
 
-    public static function create(int $nameID, int $locationID, \DateTime $date, string $id = NULL)
-    {
-        echo $nameID . ", " . $locationID . ", " . DateFormatUtils::formatDateForBL($date);
-        $location = new CompetitionLocation("NV", "NV", $locationID);
-        $name = new CompetitionName("NV", $nameID);
-        return new Competition($name, $location, $date, $id = NULL);
-    }
-}
+//     PUBLIC STATIC FUNCTION CREATE(INT $NAMEID, INT $LOCATIONID, \DATETIME $DATE, STRING $ID = NULL)
+//     {
+//         ECHO $NAMEID . ", " . $LOCATIONID . ", " . DATEFORMATUTILS::FORMATDATEFORBL($DATE);
+//         $LOCATION = NEW COMPETITIONLOCATION("NV", "NV", $LOCATIONID);
+//         $NAME = NEW COMPETITIONNAME("NV", $NAMEID);
+//         RETURN NEW COMPETITION($NAME, $LOCATION, $DATE, $ID = NULL);
+//     }
+// }
 

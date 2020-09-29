@@ -97,5 +97,18 @@ class Competition extends DBTableEntry
     {
         return $this->dateFormat;
     }
+
+    /**
+     *
+     * @param Competition $otherCompetition
+     * @return boolean
+     */
+    public function equals(Competition $otherCompetition)
+    {
+        if ($otherCompetition == NULL)
+            return FALSE;
+
+        return $otherCompetition->getName()->getId() == $this->getName()->getId() && $otherCompetition->getId() == $this->getId() && $otherCompetition->getDate() == $this->getDate() && $otherCompetition->getLocation()->getId() == $this->getLocation()->getId();
+    }
 }
 

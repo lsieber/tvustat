@@ -20,7 +20,7 @@ class CompetitionBestList
         $this->db = $db;
         $this->sql = SpecialOutputSQL::createCompetition($competitionId);
         // echo $this->sql;
-        $competition = $db->getCompetition($competitionId);
+        $competition = $db->getById->competition($competitionId);
         $this->title = "Resultate für Wettkampf: " . $competition->getName()->getCompetitionName() . //
         ", in: " . $competition->getLocation()->getVillage() . //
         ", am:" . DateFormatUtils::formatDateForBL($competition->getDate());

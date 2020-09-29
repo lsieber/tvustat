@@ -39,6 +39,9 @@ class Connection
     public function executeSqlToArray(string $sql)
     {
         $result = $this->conn->query($sql);
+        if ($result == FALSE) {
+            return array();
+        }
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
