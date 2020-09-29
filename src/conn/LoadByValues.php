@@ -16,7 +16,7 @@ class LoadByValues extends DbHandler
     {
         $sql = "SELECT * FROM " . $desc->getTableName() . " WHERE " . $whereKey . '="' . $whereValue . '"';
         $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) == 1) ? $desc->array2Elmt($array[0]) : NULL;
+        return (sizeof($array) == 1) ? $desc->array2Elmt($array[0], $this->conn) : NULL;
     }
 
     /**
@@ -119,12 +119,14 @@ class LoadByValues extends DbHandler
         return (sizeof($array) == 0) ? NULL : dbCompetition::array2Elmt($array[0], $this->conn);
     }
 
-    
     public function performanceElmt(Performance $performance)
     {
-        return $this->loadPerformance($performance->getAthlete()->getId(), $performance->getDisziplin()->getId(), $performance->getCompetition()->getId(), $performance->getPerformance());
+        return $this->performance($performance->getAthlete()
+            ->getId(), $performance->getDisziplin()
+            ->getId(), $performance->getCompetition()
+            ->getId(), $performance->getPerformance());
     }
-    
+
     public function performance(int $athleteId, int $disziplinId, int $competitionId, float $performance, bool $alsoCheckWind = FALSE, float $wind = NULL, bool $alsoCheckRanking = FALSE, float $ranking = NULL)
     {
         $sql = "SELECT * FROM " . dbPerformance::DBNAME . " ";
@@ -132,17 +134,17 @@ class LoadByValues extends DbHandler
         $sql .= self::perfWhereSql($athleteId, $disziplinId, $competitionId, $performance);
         $sql .= ($alsoCheckWind) ? "AND " . dbPerformance::WIND . " = " . $wind . " " : "";
         $sql .= ($alsoCheckRanking) ? "AND " . dbPerformance::PLACE . " = " . $ranking . " " : "";
-        
+
         $array = $this->conn->executeSqlToArray($sql);
-        return (sizeof($array) > 0) ? dbPerformance::array2Elmt($array[0]) : NULL;
+        return (sizeof($array) > 0) ? dbPerformance::array2Elmt($array[0], $this->conn) : NULL;
     }
 
     private static function perfWhereSql(int $athleteId, int $disziplinId, int $competitionId, float $performance)
     {
-        $sql = "WHERE " . dbPerformance::ATHLETEID . " = " . $athleteId . " AND ";
-        $sql .= dbPerformance::DISZIPLINID . " = " . $disziplinId . " AND ";
-        $sql .= dbPerformance::COMPETITOINID . " = " . $competitionId . " AND ";
-        $sql .= dbPerformance::PERFORMANCE . " = " . $performance . " ";
+        $sql = "WHERE " . dbPerformance::DBNAME . "." . dbPerformance::ATHLETEID . " = " . $athleteId . " AND ";
+        $sql .= dbPerformance::DBNAME . "." . dbPerformance::DISZIPLINID . " = " . $disziplinId . " AND ";
+        $sql .= dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . $competitionId . " AND ";
+        $sql .= dbPerformance::DBNAME . "." . dbPerformance::PERFORMANCE . " = " . $performance . " ";
         return $sql;
     }
 

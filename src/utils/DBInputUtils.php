@@ -15,7 +15,7 @@ class DBInputUtils
      */
     public static function formatPerformanceForDB(Performance $performance)
     {
-        return formatPerformanceToFloat($performance->getDisziplin()->isTime(), $performance->getPerformance());
+        return self::formatPerformanceToFloat($performance->getDisziplin()->isTime(), $performance->getPerformance());
     }
 
     public static function formatPerformanceToFloat(bool $isTime, $performanceValue)

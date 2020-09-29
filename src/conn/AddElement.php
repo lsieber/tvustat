@@ -103,8 +103,8 @@ class AddElement extends DbHandler
                 ->getCompetitionName() . " could not be found in the Database", False);
         }
 
-        $perfExists = $this->getByValue->loadPerformanceElmt($performance);
-        if ($perfExists) {
+        $perfExists = $this->getByValue->performanceElmt($performance);
+        if (!is_null($perfExists)) {
             return new QuerryOutcome("Performance Already exists.", FALSE);
         }
 
@@ -193,14 +193,14 @@ class AddElement extends DbHandler
             return new QuerryOutcome("Competition needs more details to insert into the db", false);
         }
 
-        if ($this->getByValue->competitionLocation($competition->getLocation()) == NULL) {
+        if ($this->getByValue->competitionLocation($competition->getLocation()->getVillage()) == NULL) {
             return new QuerryOutcome("The Competition Location does Not Exist in the Database", false);
         }
 
-        if ($this->getByValue->competitionName($competition->getName()) == NULL) {
+        if ($this->getByValue->competitionName($competition->getName()->getCompetitionName()) == NULL) {
             return new QuerryOutcome("The Competition Name does Not Exist in the Database", false);
         }
-        return ($this->getByValue->competition($competition) != NULL) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($competition, $this->getTable(dbCompetition::class));
+        return ($this->getByValue->competition($competition->getName()->getCompetitionName(), $competition->getLocation()->getVillage(), $competition->getDate()) != NULL) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($competition, $this->getTable(dbCompetition::class));
     }
 
     public function competitionLocation(CompetitionLocation $location)
@@ -208,7 +208,7 @@ class AddElement extends DbHandler
         if (! CompetitionUtils::checkLocationReadyForInsertion($location)) {
             return new QuerryOutcome("Competition needs more details to insert into the db", false);
         }
-        $querry = ($this->getByValue->competitionLocation($location) != NULL) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($location, $this->getTable(dbCompetitionLocations::class));
+        $querry = ($this->getByValue->competitionLocation($location->getVillage()) != NULL) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($location, $this->getTable(dbCompetitionLocations::class));
         $querry->putCustomValue(dbCompetitionLocations::VILLAGE, $location->getVillage());
         $querry->putCustomValue(dbCompetitionLocations::FACILITY, $location->getFacility());
         return $querry;
@@ -224,7 +224,7 @@ class AddElement extends DbHandler
         if (! CompetitionUtils::checkNameReadyForInsertion($name)) {
             return new QuerryOutcome("Competition needs more details to insert into the db", false);
         }
-        $querry = ($this->getByValue->competition($name)) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($name, $this->getTable(dbCompetitionNames::class));
+        $querry = (!is_null($this->getByValue->competitionName($name->getCompetitionName()))) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($name, $this->getTable(dbCompetitionNames::class));
         $querry->putCustomValue(dbCompetitionNames::NAME, $name->getCompetitionName());
         return $querry;
     }
@@ -249,7 +249,7 @@ class AddElement extends DbHandler
     public function saIdToAthlete(Athlete $athlete, string $saId)
     {
         $athleteId = $athlete->getId();
-        $athleteDb = $this->loadbyValues->loadAthleteByName($athlete->getFullName());
+        $athleteDb = $this->getByValue->athlete($athlete->getFullName());
         if ($athleteId == $athleteDb->getId() && is_null($athleteDb->getSaId())) {
             $sqlUpdate = "UPDATE `athletes` SET " . dbAthletes::SAID . " = '" . $saId . "' WHERE athleteID = " . $athleteId;
             return $this->conn->getConn()->query($sqlUpdate);
@@ -260,7 +260,7 @@ class AddElement extends DbHandler
     public function licenseToAthlete(Athlete $athlete, string $license)
     {
         $athleteId = $athlete->getId();
-        $athleteDb = $this->loadbyValues->loadAthleteByName($athlete->getFullName());
+        $athleteDb = $this->getByValue->athlete($athlete->getFullName());
         if ($athleteId == $athleteDb->getId() && is_null($athleteDb->getLicenseNumber())) {
             $sqlUpdate = "UPDATE `athletes` SET " . dbAthletes::lICENCE . " = " . $license . " WHERE athleteID = " . $athleteId;
             return $this->conn->getConn()->query($sqlUpdate);
