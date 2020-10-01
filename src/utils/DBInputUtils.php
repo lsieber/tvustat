@@ -58,7 +58,7 @@ class DBInputUtils
 
     public static function performanceExistsInDb(DBMaintainer $db, Performance $performance)
     {
-        return ! is_null($db->getbyValues->performance($performance->athlete->getId(), $performance->disziplin->getId(), $performance->competition->getId(), $performance->getPerformance()));
+        return ! is_null($db->getbyValues->performance($performance->getAthlete()->getId(), $performance->getDisziplin()->getId(), $performance->getCompetition()->getId(), $performance->getPerformance()));
     }
 
     public static function performanceIsFromTVUBuchAndExists(DBMaintainer $db, Performance $p)

@@ -1,4 +1,5 @@
 <?php
+namespace tvustat;
 
 class StringConversionUtils
 {
