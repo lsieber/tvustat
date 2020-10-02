@@ -57,6 +57,11 @@ class Disziplin extends DBTableEntry
      * @var float
      */
     private $maxValue;
+    
+    /**
+     * @var bool
+     */
+    private $windMeasured;
 
     // private $sql_val_kat;
 
@@ -64,7 +69,7 @@ class Disziplin extends DBTableEntry
 
     // private $pointsSLV2010IDMan;
     // private $associatedCombinedEventIds;
-    public function __construct(string $name, Sorting $sorting, float $orderNumber, bool $isTime, bool $isDecimal, DisziplinType $disziplinType, TeamType $teamType, float $minValue, float $maxValue, int $id = NULL)
+    public function __construct(string $name, Sorting $sorting, float $orderNumber, bool $isTime, bool $isDecimal, DisziplinType $disziplinType, TeamType $teamType, float $minValue, float $maxValue, bool $windMeasured = FALSE, int $id = NULL)
     {
         $this->name = $name;
         $this->sorting = $sorting;
@@ -75,6 +80,7 @@ class Disziplin extends DBTableEntry
         $this->teamType = $teamType;
         $this->minValue = $minValue;
         $this->maxValue = $maxValue;
+        $this->windMeasured = $windMeasured;
         // $this->sql_val_kat = $sql_val_kat;
         // $this->laufsort = ($laufsort == NULL) ? (int) strlen($name) : $laufsort;
         if ($id != NULL)
@@ -166,6 +172,15 @@ class Disziplin extends DBTableEntry
         return $this->maxValue;
     }
 
+    /**
+     *
+     * @return bool
+     */
+    public function getWindMeasured()
+    {
+        return $this->windMeasured;
+    }
+    
     /**
      *
      * @param Disziplin $otherDisziplin

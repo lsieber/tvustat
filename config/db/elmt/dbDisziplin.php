@@ -30,6 +30,8 @@ class dbDisziplin extends dbTableDescription
     public const MAXVAL = "maxVal";
 
     public const SWISSATHLETICS = "swissAthleticsID";
+    
+    public const WINDMEASURED = "windMeasured";
 
     public static function getIDString()
     {
@@ -58,7 +60,8 @@ class dbDisziplin extends dbTableDescription
         self::ORDER => 7,
         self::MINVAL => 8,
         self::MAXVAL => 9,
-        self::SWISSATHLETICS => 10
+        self::SWISSATHLETICS => 10, 
+        self::WINDMEASURED => 11,
     );
 
     /**
@@ -99,7 +102,8 @@ class dbDisziplin extends dbTableDescription
             7 => $disziplin->getOrderNumber(),
             8 => $disziplin->getMinValue(),
             9 => $disziplin->getMaxValue(),
-            10 => NULL
+            10 => NULL, 
+            11 => $disziplin->getWindMeasured()
         );
     }
 
@@ -115,6 +119,7 @@ class dbDisziplin extends dbTableDescription
         $conn->getTeamType($r[self::TEAMTYPEID]), //
         $r[self::MINVAL], // miN vALUE
         $r[self::MAXVAL], // Max Value
+        $r[self::WINDMEASURED],
         $r[self::ID]);
     }
 }
