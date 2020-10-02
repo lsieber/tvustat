@@ -16,4 +16,7 @@ export class ServerCom {
     post(params, successFunction, type){
         $.post(this.filename, params, successFunction, type);
     }
+
+
 }
+

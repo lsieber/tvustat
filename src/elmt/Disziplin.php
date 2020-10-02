@@ -165,5 +165,18 @@ class Disziplin extends DBTableEntry
     {
         return $this->maxValue;
     }
+
+    /**
+     *
+     * @param Disziplin $otherDisziplin
+     * @return boolean
+     */
+    public function equals(Disziplin $otherDisziplin)
+    {
+        if ($otherDisziplin == NULL)
+            return FALSE;
+
+        return $otherDisziplin->getName() == $this->getName() && $otherDisziplin->getId() == $this->getId();
+    }
 }
 

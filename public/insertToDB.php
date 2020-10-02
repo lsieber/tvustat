@@ -1,23 +1,27 @@
 <?php
+use config\dbAthleteActiveYear;
 use config\dbAthletes;
 use config\dbCompetition;
 use config\dbCompetitionLocations;
 use config\dbCompetitionNames;
 use config\dbDisziplin;
 use config\dbPerformance;
+use config\dbUnsureBirthDates;
 use tvustat\Athlete;
 use tvustat\CompetitionLocation;
 use tvustat\CompetitionName;
-use tvustat\CompetitionOnlyIds;
+use tvustat\CompetitionUtils;
 use tvustat\DBMaintainer;
+use tvustat\DateFormatUtils;
 use tvustat\Disziplin;
 use tvustat\QuerryOutcome;
 use tvustat\TimeUtils;
-use config\dbAthleteActiveYear;
-use tvustat\DateFormatUtils;
-use tvustat\CompetitionUtils;
 use tvustat\Performance;
-use config\dbUnsureBirthDates;
+use config\dbPerformanceDetail;
+use tvustat\WindUtils;
+use tvustat\DBInputUtils;
+use tvustat\PostUtils;
+use tvustat\StringConversionUtils;
 
 require_once '../vendor/autoload.php';
 
@@ -53,7 +57,7 @@ if ($insert_disziplin) {
     /**
      * Adds The disziplin to the Database and echos the json encoded Array of a message and success value
      */
-    echo json_encode($db->addDisziplin($disziplin)->getJSONArray());
+    echo json_encode($db->add->disziplin($disziplin)->getJSONArray());
 }
 
 if ($insert_athlete) {
@@ -89,17 +93,25 @@ if ($insert_athlete) {
         $date = new DateTime($_POST[dbAthletes::DATE]);
     }
     // echo DateFormatUtils::formatDateForBL($date);
+
+    $license = PostUtils::value(dbAthletes::lICENCE);
+    $said = PostUtils::value(dbAthletes::SAID);
+
     $athlete = new Athlete( //
     $_POST[dbAthletes::FULLNAME], //
     $date, //
     $c->getGender(intval($_POST[dbAthletes::GENDERID])), //
-    $c->getTeamType(intval($_POST[dbDisziplin::TEAMTYPEID]))); //
+    $c->getTeamType(intval($_POST[dbDisziplin::TEAMTYPEID])), //
+    NULL, // TeamCategory
+    NULL, // Athlete Id
+    $license, // licenseNumber
+    $said); // said
 
     /**
      * Adds The athlete to the Database and echos the json encoded Array of a message and success value
      */
 
-    $querry = $db->addAthlete($athlete);
+    $querry = $db->add->athlete($athlete);
 
     $querry->putCustomValue("m2", $isUnsureBirthDate);
     $querry->putCustomValue("m3", $isUnsureBirthYear);
@@ -107,7 +119,7 @@ if ($insert_athlete) {
     $querry->putCustomValue("maxYear", $maxYear);
 
     if (array_key_exists(dbAthleteActiveYear::YEAR, $_POST) && $querry->getSuccess()) {
-        $value = $db->addAthleteActiveYear($querry->getCustomValue(dbAthletes::getIDString()), intval($_POST[dbAthleteActiveYear::YEAR]));
+        $value = $db->add->athleteActiveYear($querry->getCustomValue(dbAthletes::getIDString()), intval($_POST[dbAthleteActiveYear::YEAR]));
         $querry->putCustomValue("active year Result", $value);
     }
     $querry->putCustomValue(dbAthletes::FULLNAME, $_POST[dbAthletes::FULLNAME]);
@@ -119,7 +131,7 @@ if ($insert_athlete) {
 
     if (($isUnsureBirthDate || $isUnsureBirthYear) && $querry->getSuccess()) {
         $querry->putCustomValue("m1", "We are adding a unsure birth date");
-        $value = $db->addUnsureBirthDate($querry->getCustomValue(dbAthletes::getIDString()), $isUnsureBirthDate, $isUnsureBirthYear, $minYear, $maxYear);
+        $value = $db->add->unsureBirthDate($querry->getCustomValue(dbAthletes::getIDString()), $isUnsureBirthDate, $isUnsureBirthYear, $minYear, $maxYear);
         $querry->putCustomValue("Unsure Birth Date Result", $value);
     }
 
@@ -128,7 +140,7 @@ if ($insert_athlete) {
 
 if ($insert_competionName) {
     $competitionName = new CompetitionName($_POST[dbCompetitionNames::NAME]); //
-    $querry = $db->addCompetitionName($competitionName);
+    $querry = $db->add->competitionName($competitionName);
     $json = $querry->getJSONArray();
     echo json_encode($json);
     // echo json_encode($db->addCompetitionName($competitionName)->getJSONArray());
@@ -138,7 +150,7 @@ if ($insert_competionLocation) {
     $_POST[dbCompetitionLocations::VILLAGE], //
     $_POST[dbCompetitionLocations::FACILITY]);
 
-    echo json_encode($db->addCompetitionLocation($competitionLocation)->getJSONArray());
+    echo json_encode($db->add->competitionLocation($competitionLocation)->getJSONArray());
 }
 if ($insert_competion) {
     $competition = CompetitionOnlyIds::create( //
@@ -146,70 +158,59 @@ if ($insert_competion) {
     $_POST[dbCompetition::LOCATIONID], //
     new DateTime($_POST[dbCompetition::DATE]));
 
-    echo json_encode($db->addCompetition($competition)->getJSONArray());
+    echo json_encode($db->add->competition($competition)->getJSONArray());
 }
 
+// ******************************************************************************************
+// ******************** Performance Input ***************************************************
+// ******************************************************************************************
 if ($insert_performance) {
-    $athleteEx = $db->checkAthleteIDExists($_POST[dbPerformance::ATHLETEID]);
-    $compEx = $db->checkCompetitionIDExists($_POST[dbPerformance::COMPETITOINID]);
-    $disEx = $db->checkDisziplinIDExists($_POST[dbPerformance::DISZIPLINID]);
+    $athlete = $db->getById->athlete($_POST[dbPerformance::ATHLETEID]);
+    $competition = $db->getById->competition($_POST[dbPerformance::COMPETITOINID]);
+    $disziplin = $db->getById->disziplin($_POST[dbPerformance::DISZIPLINID]);
+
+    $performanceResult = DBInputUtils::formatPerformanceToFloat($disziplin->isTime(), $_POST[dbPerformance::PERFORMANCE]);
+    $wind = PostUtils::value(dbPerformance::WIND);
+    $wind = is_null($wind) || $wind == ""? NULL: floatval($wind);
+    $ranking = PostUtils::value(dbPerformance::PLACE);
+    $manualTiming = StringConversionUtils::stringTrueFalseToBool($_POST[dbPerformance::MANUALTIME]);
+    $sourceId = intval($_POST[dbPerformance::SOURCE]);
+    $source = $db->getConn()->getSource($sourceId);
+    $detail = PostUtils::value(dbPerformanceDetail::DETAIL);
+    $forcedEntry = (isset($_POST['forced'])) ? $_POST['forced'] == "true" : FALSE;
+
+    $performance = new Performance($disziplin, $athlete, $competition, $performanceResult, $wind, $ranking, $manualTiming, $source, NULL, $detail);
+
+    $result = insertPerformance($performance, $forcedEntry, $db);
+
+    echo json_encode($result->getJSONArray());
+}
+
+function insertPerformance(Performance $performance, bool $forcedEntry, DBMaintainer $db)
+{
+    $athlete = $performance->getAthlete();
+    $disziplin = $performance->getDisziplin();
+    $competition = $performance->getCompetition();
 
     $result = new QuerryOutcome("NO RESULT! CHECK THE FUNCTION", FALSE);
-    if ($athleteEx && $compEx && $disEx) {
+    if (! is_null($athlete) && ! is_null($competition) && ! is_null($disziplin)) {
 
-        $disziplin = $db->getDisziplin($_POST[dbPerformance::DISZIPLINID]);
-        $athlete = $db->getAthlete($_POST[dbPerformance::ATHLETEID]);
-        $competition = $db->getCompetition($_POST[dbPerformance::COMPETITOINID]);
+        // $perfModified = ($disziplin->isTime()) ? TimeUtils::time2seconds($_POST[dbPerformance::PERFORMANCE]) : $_POST[dbPerformance::PERFORMANCE];
 
-        $perfModified = ($disziplin->isTime()) ? TimeUtils::time2seconds($_POST["performance"]) : $_POST["performance"];
+        // $minValueOk = $perfModified >= $disziplin->getMinValue();
+        // $maxValueOk = $perfModified <= $disziplin->getMaxValue();
+        // $teamTypeMatches = $athlete->getTeamType()->getId() == $disziplin->getTeamType()->getId();
+        // $forcedEntry = (isset($_POST['forced'])) ? $_POST['forced'] == "true" : FALSE;
 
-        $minValueOk = $perfModified >= $disziplin->getMinValue();
-        $maxValueOk = $perfModified <= $disziplin->getMaxValue();
-        $teamTypeMatches = $athlete->getTeamType()->getId() == $disziplin->getTeamType()->getId();
-        $forcedEntry = (isset($_POST['forced'])) ? $_POST['forced'] == "true" : FALSE;
+        // if (($minValueOk && $maxValueOk && $teamTypeMatches) || ($forcedEntry)) {
+        if (DBInputUtils::validPerformanceForInput($performance) || $forcedEntry) {
 
-        if (($minValueOk && $maxValueOk && $teamTypeMatches) || ($forcedEntry)) {
-            if (! $db->checkPerformanceByIds($_POST)) {
-                $existingPerformances = $db->loadPerformanceAthleteYear($disziplin->getId(), $athlete->getId(), DateFormatUtils::formatDateaAsYear($competition->getDate()));
-                $performanceExists = false;
-                if (CompetitionUtils::isFromTVUBuch($competition)) {
-                    if (sizeof($existingPerformances) > 0) {
+            if (! DBInputUtils::performanceExistsInDb($db, $performance)) {
 
-                        $result = new QuerryOutcome("The entered Performance does identically exist allready in A normal competition and not from The TVu Buch", false);
-                        foreach ($existingPerformances as $value) {
-                            if ($disziplin->getSorting()->sortASC()) {
-                                if ($value[dbPerformance::PERFORMANCE] <= $perfModified) {
-                                    $performanceExists = true;
-                                }
-                            } else {
-                                if ($value[dbPerformance::PERFORMANCE] >= $perfModified) {
-                                    $performanceExists = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (! $performanceExists) {
-                    $result = $db->addPerformanceWithIdsOnly($_POST);
-                    if ($result->getSuccess()) {
-                        $newPerf = $db->getPerformance($result->getCustomValue(dbPerformance::getIDString()));
-
-                        $result->putCustomValue(dbAthletes::FULLNAME, $newPerf->getAthlete()
-                            ->getFullName());
-                        $result->putCustomValue(dbDisziplin::NAME, $newPerf->getDisziplin()
-                            ->getName());
-                        $result->putCustomValue(dbPerformance::PERFORMANCE, $newPerf->getPerformance());
-
-                        foreach ($existingPerformances as $performanceRaw) {
-                            if ($performanceRaw[dbPerformance::PERFORMANCE] == $newPerf->getPerformance()) {
-                                $compExisting = $db->getCompetition($performanceRaw[dbPerformance::COMPETITOINID]);
-                                if (CompetitionUtils::isFromTVUBuch($compExisting)) {
-                                    $db->removePerformance($performanceRaw[dbPerformance::ID]);
-                                    $result->putCustomValue("REMOVED SAME TVU BUCH ENTRY", $performanceRaw[dbPerformance::PERFORMANCE]);
-                                }
-                            }
-                        }
-                    }
+                if (DBInputUtils::performanceIsFromTVUBuchAndExists($db, $performance)) {
+                    $result = new QuerryOutcome("The entered Performance does identically exist allready in A normal competition and not from The TVu Buch", false);
+                } else {
+                    $result = $db->add->performance($performance);
                 }
             } else {
                 $result = new QuerryOutcome("The entered Performance does identically exist allready", false);
@@ -233,7 +234,7 @@ if ($insert_performance) {
     if (isset($_POST["fromFile"])) {
         $result->putCustomValue("fromFile", $_POST["fromFile"]);
     }
-    echo json_encode($result->getJSONArray());
+    return $result;
 }
 
 ?>

@@ -1,13 +1,13 @@
-<?php
-namespace tvustat;
+// <?php
+// namespace tvustat;
 
-abstract class PerformanceLoader
-{
+// abstract class PerformanceLoader
+// {
 
-    /**
-     *
-     * @return Performances
-     */
-    abstract function getData();
-}
+//     /**
+//      *
+//      * @return Performances
+//      */
+//     abstract function getData();
+// }
 

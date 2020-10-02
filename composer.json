@@ -1,7 +1,4 @@
 {
-	"require-dev" : {
-		"phpunit/phpunit" : "^9"
-	},
 	"autoload" : {
 		"psr-4" : {
 			"tvustat\\" : [
@@ -33,19 +30,5 @@
 	"description" : "This is a Project which aims to extend the existing Swiss Athletics Database for STV Clubs",
 	"require" : {
 		"php" : ">=7.2"
-	},
-	"autoload-dev" : {
-		"psr-4" : {
-<<<<<<< HEAD
-			"tvustat\\" : [
-				"tests",
-=======
-			"tvustat" : [
-				"tests",
-				"tests/elmt",
->>>>>>> 66226c928e3fdaeb5a3f273fa14cece40825328b
-				"tests/unit"
-			]
-		}
 	}
 }

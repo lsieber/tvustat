@@ -28,7 +28,7 @@ if (array_key_exists(dbPointSchemes::ID, $_POST)) {
 } else {
     $schemeNameId = intval($_POST[dbPointSchemeNames::ID]);
     $genderId = intval($_POST[dbGenders::ID]);
-    $pointScheme = $db->getPointScheme($genderId, $schemeNameId)[0];
+    $pointScheme = $db->getAll->pointScheme($genderId, $schemeNameId)[0];
     $schemeId = $pointScheme[dbPointSchemes::ID];
 }
 

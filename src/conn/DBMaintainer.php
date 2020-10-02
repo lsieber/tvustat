@@ -1,22 +1,9 @@
 <?php
 namespace tvustat;
 
-use config\dbAgeCategory;
 use config\dbAthleteActiveYear;
 use config\dbAthletes;
-use config\dbBirthDateExeptions;
-use config\dbCategory;
-use config\dbCompetition;
-use config\dbCompetitionLocations;
-use config\dbCompetitionNames;
 use config\dbConfig;
-use config\dbDisziplin;
-use config\dbMultipleDisziplins;
-use config\dbOutputCategory;
-use config\dbPerformance;
-use config\dbPerformanceSource;
-use config\dbPointSchemeNames;
-use config\dbPointSchemes;
 use config\dbUnsureBirthDates;
 
 class DBMaintainer
@@ -26,13 +13,16 @@ class DBMaintainer
 
     private $config;
 
-    private $add;
+    public $add;
 
-    private $check;
+    // private $check;
+    public $getById;
 
-    private $getById;
+    public $getAll;
 
-    public $loadbyValues;
+    private $delete;
+
+    public $getbyValues;
 
     public function __construct()
     {
@@ -40,9 +30,11 @@ class DBMaintainer
         $this->config = new dbConfig();
 
         $this->add = new AddElement($this->conn, $this->config);
-        $this->check = new CheckExistance($this->conn, $this->config);
+        // $this->check = new CheckExistance($this->conn, $this->config);
         $this->getById = new GetByID($this->conn, $this->config);
-        $this->loadbyValues = new LoadByValues($this->conn, $this->config);
+        $this->getbyValues = new LoadByValues($this->conn, $this->config);
+        $this->getAll = new GetAll($this->conn, $this->config);
+        $this->delete = new Delete($this->conn, $this->config);
     }
 
     /**
@@ -55,42 +47,22 @@ class DBMaintainer
 
     public function addAthleteActiveYear(int $athleteID, int $athleteActiveYear)
     {
-        $sqlActive = "INSERT INTO " . dbAthleteActiveYear::DBNAME . " VALUES (" . $athleteID . "," . $athleteActiveYear . ")";
-        return $this->conn->getConn()->query($sqlActive);
+        return $this->add->athleteActiveYear($athleteID, $athleteActiveYear);
     }
 
     public function addUnsureBirthDate(int $athleteId, bool $isUnsureDate, bool $isUnsureYear, int $minYear = null, int $maxYear = null)
     {
-        $sqlUnsure = "INSERT INTO " . dbUnsureBirthDates::DBNAME . " VALUES (" . $athleteId . "," . intval($isUnsureDate) . "," . intval($isUnsureYear) . "," . self::nullToString($minYear) . "," . self::nullToString($maxYear) . ")";
-        return $this->conn->getConn()->query($sqlUnsure);
+        return $this->add->unsureBirthDate($athleteId, $isUnsureDate, $isUnsureYear);
     }
-
 
     public function addSaIdToAthlete(Athlete $athlete, string $saId)
     {
-        $athleteId = $athlete->getId();
-        $athleteDb = $this->loadbyValues->loadAthleteByName($athlete->getFullName());
-        if ($athleteId == $athleteDb->getId() && is_null($athleteDb->getSaId())) {
-            $sqlUpdate = "UPDATE `athletes` SET " . dbAthletes::SAID . " = '" . $saId . "' WHERE athleteID = " . $athleteId;
-            return $this->conn->getConn()->query($sqlUpdate);
-        }
-        return null;
+        return $this->add->saIdToAthlete($athlete, $saId);
     }
 
     public function addLicenseToAthlete(Athlete $athlete, string $license)
     {
-        $athleteId = $athlete->getId();
-        $athleteDb = $this->loadbyValues->loadAthleteByName($athlete->getFullName());
-        if ($athleteId == $athleteDb->getId() && is_null($athleteDb->getLicenseNumber())) {
-            $sqlUpdate = "UPDATE `athletes` SET " . dbAthletes::lICENCE . " = " . $license . " WHERE athleteID = " . $athleteId;
-            return $this->conn->getConn()->query($sqlUpdate);
-        }
-        return null;
-    }
-
-    private static function nullToString($nullableValue = null)
-    {
-        return ($nullableValue == null) ? "null" : $nullableValue;
+        return $this->add->licenseToAthlete($athlete, $license);
     }
 
     public function addDisziplin(Disziplin $disziplin)
@@ -118,10 +90,10 @@ class DBMaintainer
         return $this->add->competitionLocation($competitionLocation);
     }
 
-    public function addPerformanceWithIdsOnly(array $associativeArray)
-    {
-        return $this->add->performanceWithIdsOnly($associativeArray);
-    }
+//     public function addPerformanceWithIdsOnly(array $associativeArray)
+//     {
+//         return $this->add->performanceWithIdsOnly($associativeArray);
+//     }
 
     /**
      *
@@ -130,97 +102,97 @@ class DBMaintainer
      */
     public function addPerformance(Performance $performance)
     {
-        return (! $this->check->performanceByIds($performance)) ? $this->add->performance($performance) : new QuerryOutcome("Value Already Exists", false);
+        // TODO Move To Add
+        return $this->add->performance($performance);
     }
 
     /**
      * CHECKING FUNCTIONALITIES
      */
 
-    /**
-     *
-     * @param Athlete $athlete
-     * @return boolean
-     */
-    public function checkAthleteExists(Athlete $athlete)
-    {
-        return $this->check->athlete($athlete);
-    }
+    // /**
+    // *
+    // * @param Athlete $athlete
+    // * @return boolean
+    // */
+    // public function checkAthleteExists(Athlete $athlete)
+    // {
+    // return $this->check->athlete($athlete);
+    // }
 
-    /**
-     *
-     * @param string $athleteName
-     * @param \DateTime $birthDate
-     * @return boolean
-     */
-    public function checkIfAlternativeBirthDate(string $athleteName, \DateTime $birthDate)
-    {
-        return dbBirthDateExeptions::isAthleteException($athleteName, $birthDate, $this->conn);
-    }
+    // /**
+    // *
+    // * @param string $athleteName
+    // * @param \DateTime $birthDate
+    // * @return boolean
+    // */
+    // public function checkIfAlternativeBirthDate(string $athleteName, \DateTime $birthDate)
+    // {
+    // return dbBirthDateExeptions::isAthleteException($athleteName, $birthDate, $this->conn);
+    // }
 
-    /**
-     *
-     * @param Disziplin $disziplin
-     * @return boolean
-     */
-    public function checkDisziplinExists(Disziplin $disziplin)
-    {
-        return $this->check->disziplin($disziplin);
-    }
+    // /**
+    // *
+    // * @param Disziplin $disziplin
+    // * @return boolean
+    // */
+    // public function checkDisziplinExists(Disziplin $disziplin)
+    // {
+    // return $this->check->disziplin($disziplin);
+    // }
 
-    /**
-     *
-     * @param Competition $competition
-     * @return boolean
-     */
-    public function checkCompetitionExists(Competition $competition)
-    {
-        return $this->check->competition($competition);
-    }
+    // /**
+    // *
+    // * @param Competition $competition
+    // * @return boolean
+    // */
+    // public function checkCompetitionExists(Competition $competition)
+    // {
+    // return $this->check->competition($competition);
+    // }
 
-    /**
-     *
-     * @param array $post
-     * @return boolean
-     */
-    public function checkPerformanceByIds(array $post)
-    {
-        return $this->check->performanceByIdsArray($post);
-    }
+    // /**
+    // *
+    // * @param array $post
+    // * @return boolean
+    // */
+    // public function checkPerformanceByIds(array $post)
+    // {
+    // return $this->check->performanceByIdsArray($post);
+    // }
 
-    /**
-     *
-     * @param int $athleteId
-     * @return NULL|boolean
-     */
-    public function checkAthleteIDExists(int $athleteId)
-    {
-        return $this->check->checkAthleteIDExists($athleteId);
-    }
+    // /**
+    // *
+    // * @param int $athleteId
+    // * @return NULL|boolean
+    // */
+    // public function checkAthleteIDExists(int $athleteId)
+    // {
+    // return $this->check->checkAthleteIDExists($athleteId);
+    // }
 
-    /**
-     *
-     * @param int $competitionId
-     * @return NULL|boolean
-     */
-    public function checkCompetitionIDExists(int $competitionId)
-    {
-        return $this->check->checkCompetitionIDExists($competitionId);
-    }
+    // /**
+    // *
+    // * @param int $competitionId
+    // * @return NULL|boolean
+    // */
+    // public function checkCompetitionIDExists(int $competitionId)
+    // {
+    // return $this->check->checkCompetitionIDExists($competitionId);
+    // }
 
-    /**
-     *
-     * @param int $disziplinId
-     * @return NULL|boolean
-     */
-    public function checkDisziplinIDExists(int $disziplinId)
-    {
-        return $this->check->checkDisziplinIDExists($disziplinId);
-    }
-
+    // /**
+    // *
+    // * @param int $disziplinId
+    // * @return NULL|boolean
+    // */
+    // public function checkDisziplinIDExists(int $disziplinId)
+    // {
+    // return $this->check->checkDisziplinIDExists($disziplinId);
+    // }
     public function loadPerformanceAthleteYear(int $disziplinID, int $athleteID, int $year)
     {
-        return $this->loadbyValues->loadPerformanceAthleteYear($disziplinID, $athleteID, $year);
+        return $this->getbyValues->performanceAthleteYear($disziplinID, $athleteID, $year);
     }
 
     /**
@@ -239,11 +211,7 @@ class DBMaintainer
 
     public function getAthletes(array $ids)
     {
-        $athletes = array();
-        foreach ($ids as $id) {
-            array_push($athletes, $this->getAthlete($id));
-        }
-        return $athletes;
+        return $this->getById->athletes($ids);
     }
 
     public function getAthlete(int $id)
@@ -279,127 +247,73 @@ class DBMaintainer
      */
     public function getAllCompetitions()
     {
-        $sql = self::getCompetitionSQl();
-        return self::changeDateType($this->conn->executeSqlToArray($sql), dbCompetition::DATE);
+        return $this->getAll->competitions();
     }
 
-    private static function getCompetitionSQl()
-    {
-        $sql = "SELECT * From " . dbCompetition::DBNAME;
-        $sql .= " INNER JOIN " . dbCompetitionLocations::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::LOCATIONID . " = " . dbCompetitionLocations::DBNAME . "." . dbCompetitionLocations::ID;
-        $sql .= " INNER JOIN " . dbCompetitionNames::DBNAME . " ON " . dbCompetition::DBNAME . "." . dbCompetition::NAMEID . " = " . dbCompetitionNames::DBNAME . "." . dbCompetitionNames::ID;
-        return $sql;
-    }
-
+    // ?????????????????????????????
     public function getCompetitionsForYear(array $years)
     {
-        $sql = self::getCompetitionSQl();
-        $list = implode(",", $years);
-        $sql .= " WHERE EXTRACT(YEAR FROM " . dbCompetition::DATE . ") IN (" . $list . ") ORDER BY " . dbCompetition::DATE;
-        $r = self::changeDateType($this->conn->executeSqlToArray($sql), dbCompetition::DATE);
-
-        foreach ($r as $k => $v) {
-            $r[$k]["numberPerformances"] = self::countNumberPerformancesForCompetition($v[dbCompetition::ID]);
-        }
-
-        return $r;
-    }
-
-    private function countNumberPerformancesForCompetition(int $competitionID)
-    {
-        $sql = 'SELECT COUNT(*) FROM ' . dbPerformance::DBNAME . ' WHERE ' . dbPerformance::COMPETITOINID . ' = ' . $competitionID;
-        return $this->conn->executeSqlToArray($sql)[0]["COUNT(*)"];
-    }
-
-    private function countNumberPerformancesForCompetitionAndCat(int $competitionID, AgeCategory $ageCat)
-    {
-        $sql = 'SELECT COUNT(*) FROM ' . dbPerformance::DBNAME . ' WHERE ' . dbPerformance::COMPETITOINID . ' = ' . $competitionID;
-        return $this->conn->executeSqlToArray($sql)[0]["COUNT(*)"];
+        return $this->getAll->getCompetitionsForYear($years);
     }
 
     public function getAllCompetitionLocations()
     {
-        return $this->conn->executeSqlToArray("SELECT * From " . dbCompetitionLocations::DBNAME);
+        return $this->getAll->competitionLocations();
     }
 
     public function getAllCompetitionNames()
     {
-        return $this->conn->executeSqlToArray("SELECT * From " . dbCompetitionNames::DBNAME);
+        return $this->getAll->competitionNames();
     }
 
     public function getAllAgeCategories()
     {
-        return $this->conn->executeSqlToArray("SELECT * From " . dbAgeCategory::DBNAME);
+        return $this->getAll->ageCategories();
     }
 
     public function getAllCategories()
     {
-        $sql = "SELECT * From " . dbCategory::DBNAME;
-        $sql .= " INNER JOIN " . dbAgeCategory::DBNAME . " ON " . dbCategory::DBNAME . "." . dbCategory::AGECATEGORYID . " = " . dbAgeCategory::DBNAME . "." . dbAgeCategory::ID;
-        return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbCategory::ORDER);
+        return $this->getAll->categories();
     }
 
     public function getAllOutputCategories()
     {
-        $sql = "SELECT * From " . dbOutputCategory::DBNAME;
-        return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbOutputCategory::ORDER);
+        return $this->getAll->outputCategories();
     }
 
     public function getAllDisziplins()
     {
-        $sql = "SELECT * From " . dbDisziplin::DBNAME;
-        $sql .= " LEFT JOIN " . dbMultipleDisziplins::DBNAME . " ON " . dbMultipleDisziplins::DBNAME . "." . dbMultipleDisziplins::ID . " = " . dbDisziplin::DBNAME . "." . dbDisziplin::ID;
-
-        // $sql .= " INNER JOIN " . dbAgeCategory::DBNAME . " ON " . dbCategory::DBNAME . "." . dbCategory::AGECATEGORYID . " = " . dbAgeCategory::DBNAME . "." . dbAgeCategory::ID;
-        return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbDisziplin::ORDER);
+        return $this->getAll->disziplins();
     }
 
     public function getAllAthletes()
     {
-        $innerjoin = " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
-        $r = $this->conn->executeSqlToArray("SELECT * From " . dbAthletes::DBNAME . $innerjoin . " ORDER BY " . dbAthletes::FULLNAME);
-        return self::changeDateType($r, dbAthletes::DATE);
-    }
-
-    private static function changeDateType(array $r, $identifier)
-    {
-        foreach ($r as $key => $entry) {
-            $r[$key][$identifier] = DateFormatUtils::convertDateFromDB2BL($entry[$identifier]);
-        }
-        return $r;
+        return $this->getAll->athletes();
     }
 
     public function getAllYears()
     {
-        $sql = "SELECT DISTINCT YEAR(" . dbCompetition::DATE . ") FROM " . dbPerformance::DBNAME;
-        $sql .= " INNER JOIN " . dbCompetition::DBNAME . " ON " . dbPerformance::DBNAME . "." . dbPerformance::COMPETITOINID . " = " . dbCompetition::DBNAME . "." . dbCompetition::ID;
-        $sql .= " ORDER BY YEAR(" . dbCompetition::DATE . ") DESC";
-        return $this->conn->executeSqlToArray($sql);
+        return $this->getAll->years();
     }
 
     public function getAllSources()
     {
-        $sql = "SELECT * FROM " . dbPerformanceSource::DBNAME;
-        return $this->conn->executeSqlToArray($sql);
+        return $this->getAll->sources();
     }
 
     public function getAllPointNameSchemes()
     {
-        return $this->conn->executeSqlToArray("SELECT * From " . dbPointSchemeNames::DBNAME);
+        return $this->getAll->pointNameSchemes();
     }
 
     public function getAllPointSchemes()
     {
-        $sql = "SELECT * From " . dbPointSchemes::DBNAME;
-        $sql .= " INNER JOIN " . dbPointSchemeNames::DBNAME . " ON " . dbPointSchemes::DBNAME . "." . dbPointSchemes::COMPETITOINID . " = " . dbPointSchemeNames::DBNAME . "." . dbPointSchemeNames::ID;
-        return $this->conn->executeSqlToArray($sql);
+        return $this->getAll->pointSchemes();
     }
 
     public function getPointScheme(int $genderId, int $pointSchemeNameId)
     {
-        $sql = "SELECT * From " . dbPointSchemes::DBNAME;
-        $sql .= " WHERE " . dbPointSchemes::GENDERID . "=" . $genderId . " AND " . dbPointSchemes::NAMEID . "=" . $pointSchemeNameId;
-        return $this->conn->executeSqlToArray($sql);
+        return $this->getAll->pointScheme($genderId, $pointSchemeNameId);
     }
 
     /**
@@ -407,8 +321,41 @@ class DBMaintainer
      */
     function removePerformance(int $id)
     {
-        $sql = "DELETE FROM " . dbPerformance::DBNAME . " WHERE " . dbPerformance::ID . " = " . $id;
-        return $this->conn->getConn()->query($sql);
+        return $this->delete->performance($id);
+    }
+
+    /**
+     * Specials
+     */
+    public function athletesForCategory($year, $categories)
+    {
+        $sql = "SELECT * FROM " . dbAthletes::DBNAME;
+        $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        $sql .= " LEFT JOIN " . dbUnsureBirthDates::DBNAME . " ON " . dbUnsureBirthDates::DBNAME . "." . dbUnsureBirthDates::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+
+        $sql .= " WHERE (";
+        $first = true;
+        foreach ($_POST["categories"] as $id) {
+            if (! $first) {
+                $sql .= " OR";
+            }
+            $category = $this->getConn()->getCategory($id);
+            $sql .= " (" . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DBNAME . "." . dbAthletes::DATE . ") >= " . $category->getAgeCategory()->getMinAge() . " AND";
+            $sql .= " " . $year . " - EXTRACT(YEAR FROM " . dbAthletes::DBNAME . "." . dbAthletes::DATE . ") <= " . $category->getAgeCategory()->getMaxAge() . " AND ";
+            $sql .= dbAthletes::GENDERID . " = " . $category->getGender()->getId() . ")";
+            $first = false;
+        }
+        $sql .= ") OR (" . dbAthletes::CATEGORY . " IN (" . implode(",", $categories) . ") ) ORDER BY " . dbAthletes::TEAMTYPEID . "," . dbAthletes::FULLNAME;
+        return $this->getConn()->executeSqlToArray($sql);
+    }
+    
+    public function similarAthletes($namepart) {
+        $sql = "SELECT * FROM " . dbAthletes::DBNAME;
+        $sql .= " LEFT JOIN " . dbAthleteActiveYear::DBNAME . " ON " . dbAthleteActiveYear::DBNAME . "." . dbAthleteActiveYear::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        $sql .= " LEFT JOIN " . dbUnsureBirthDates::DBNAME . " ON " . dbUnsureBirthDates::DBNAME . "." . dbUnsureBirthDates::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
+        
+        $sql .= " WHERE " . dbAthletes::FULLNAME . " LIKE '%" . $namepart . "%' ORDER BY " . dbAthletes::FULLNAME;
+        return $this->getConn()->executeSqlToArray($sql);
     }
 }
 

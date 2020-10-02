@@ -33,18 +33,17 @@ class Athlete extends DBTableEntry
     protected $teamCategory;
 
     /**
-     * 
+     *
      * @var int
      */
     protected $licenseNumber;
-    
+
     /**
      *
      * @var string
      */
     protected $saId;
-    
-    
+
     public function __construct(string $fullName, \DateTime $date = NULL, Gender $gender, TeamType $teamType, Category $teamCategory = NULL, int $id = null, int $licenseNumber = null, string $saId = null)
     {
         $this->fullName = $fullName;
@@ -129,25 +128,36 @@ class Athlete extends DBTableEntry
     {
         return DateFormatUtils::formatDateForDB($this->date);
     }
-    
+
     /**
+     *
      * @return number
      */
     public function getLicenseNumber()
     {
         return $this->licenseNumber;
     }
-    
+
     /**
+     *
      * @return string
      */
     public function getSaId()
     {
         return $this->saId;
     }
-    
-    
-    
-    
+
+    /**
+     * 
+     * @param Athlete $otherAthlete
+     * @return boolean
+     */
+    public function equals(Athlete $otherAthlete)
+    {
+        if ($otherAthlete == NULL)
+            return FALSE;
+
+        return $otherAthlete->getFullName() == $this->getFullName() && $otherAthlete->getId() == $this->getId() && $otherAthlete->getGender()->getId() == $this->getGender()->getId() && $otherAthlete->getDateAsString() == $this->getDateAsString();
+    }
 }
 

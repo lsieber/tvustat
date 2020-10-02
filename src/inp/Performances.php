@@ -1,31 +1,31 @@
-<?php
-namespace tvustat;
+// <?php
+// namespace tvustat;
 
-class Performances
-{
+// class Performances
+// {
 
-    /**
-     *
-     * @var array
-     */
-    private $performances = array();
+//     /**
+//      *
+//      * @var array
+//      */
+//     private $performances = array();
 
-    /**
-     *
-     * @param Performance $performance
-     */
-    public function addPerformance(Performance $performance)
-    {
-        array_push($this->performances, $performance);
-    }
+//     /**
+//      *
+//      * @param Performance $performance
+//      */
+//     public function addPerformance(Performance $performance)
+//     {
+//         array_push($this->performances, $performance);
+//     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getPerformances()
-    {
-        return $this->performances;
-    }
-}
+//     /**
+//      *
+//      * @return array
+//      */
+//     public function getPerformances()
+//     {
+//         return $this->performances;
+//     }
+// }
 
