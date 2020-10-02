@@ -64,6 +64,7 @@ function loadYear() {
  * *******************************************************
  *************************************************************/
 export function insertPerformance() {
+  
   var performances = document.getElementsByName(INPUT.performanceInputName);
   for (const key in performances) {
     var p = performances[key];
@@ -141,9 +142,7 @@ function insertPerformanceWithData(params, athlete, disziplin) {
     } else if (disziplin["teamTypeID"] !== athlete["teamTypeID"]) {
       alert("The disziplin Team Type is " + disziplin["teamTypeID"] + " but the Athlete " + athlete["fullName"] + " has the type " + athlete["teamTypeID"])
     } else {
-
-      insertToDb.post(params, processPerformanceData, "json")
-
+      insertToDb.post(params, processPerformanceData, "json");
     }
   }
 }
@@ -153,10 +152,8 @@ function processPerformanceData(data) {
   if (data.success == true) {
     output += "</br>" + data[DB.disziplinName] + " " + data[DB.athleteName] + " " + data[DB.performance];
     output += "</br><a onclick=deleteLastPerformance(" + data[DB.performanceID] + ")>" + "löschen </a>";
-
   }
   document.getElementById(INPUT.insertionOutput).innerHTML = output;
-
 
 }
 
