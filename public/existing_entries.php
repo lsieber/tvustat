@@ -1,13 +1,9 @@
     <?php
-    use config\dbAthleteActiveYear;
     use config\dbAthletes;
     use config\dbCompetition;
     use config\dbCompetitionLocations;
     use config\dbCompetitionNames;
     use config\dbPerformance;
-    use config\dbUnsureBirthDates;
-    use tvustat\CompetitionLocation;
-    use tvustat\CompetitionName;
     use tvustat\DBMaintainer;
     use tvustat\DateFormatUtils;
     use tvustat\QuerryOutcome;
@@ -77,6 +73,8 @@
         }
         if (! $athleteIsInDb) {
             $result = new QuerryOutcome("Athlete does not exist", FALSE);
+            $result->putCustomValue("postYear", $year);
+            $result->putCustomValue("postName", $fullName);
             echo json_encode($result->getJSONArray());
         }
     }
@@ -131,7 +129,7 @@
     if ($allCompetitionNames) {
         echo json_encode($db->getAllCompetitionNames());
     }
-    
+
     if ($allCompetitionLocations) {
         echo json_encode($db->getAllCompetitionLocations());
     }
@@ -139,11 +137,11 @@
     if ($allAgeCategories) {
         echo json_encode($db->getAllAgeCategories());
     }
-    
+
     if ($allCategories) {
         echo json_encode($db->getAllCategories());
     }
-    
+
     if ($allOutputCategories) {
         echo json_encode($db->getAllOutputCategories());
     }
@@ -159,7 +157,7 @@
     if ($allYears) {
         echo json_encode($db->getAllYears());
     }
-    
+
     if ($allSources) {
         echo json_encode($db->getAllSources());
     }
@@ -169,7 +167,7 @@
     }
 
     if ($athletesforCategory) {
-        echo json_encode($db->athletesForCategory($_POST["year"],  $_POST["categories"]));
+        echo json_encode($db->athletesForCategory($_POST["year"], $_POST["categories"]));
     }
 
     if ($similarAthletes) {

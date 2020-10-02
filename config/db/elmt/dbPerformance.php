@@ -74,6 +74,7 @@ class dbPerformance extends dbTableDescription
      */
     public static function classToCollumns($performance)
     {
+        $sourceId = is_null($performance->getSource()) ? NULL : $performance->getSource()->getId();
         return array(
             0 => $performance->getId(),
             1 => $performance->getAthlete()->getId(),
@@ -83,7 +84,7 @@ class dbPerformance extends dbTableDescription
             5 => $performance->getWind(),
             6 => $performance->getPlacement(),
             7 => $performance->getManualTiming(),
-            8 => $performance->getSource()->getId(),
+            8 => $sourceId,
             9 => DateFormatUtils::nowForDB()
         );
     }

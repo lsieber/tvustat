@@ -105,6 +105,10 @@ class AddElement extends DbHandler
 
         $perfExists = $this->getByValue->performanceElmt($performance);
         if (!is_null($perfExists)) {
+            if (is_null($perfExists->getDetail()) && !is_null($performance->getDetail())) {
+                $result = $this->performanceDetail($perfExists->getId(), $performance->getDetail());
+                return new QuerryOutcome("Performance Already exists. But the detail was added", FALSE);
+            }
             return new QuerryOutcome("Performance Already exists.", FALSE);
         }
 
@@ -167,7 +171,7 @@ class AddElement extends DbHandler
     {
         if (! AthleteUtils::checkAthleteReadyForInsertion($athlete))
             return new QuerryOutcome("Person " . $athlete->getName() . " needs more details for the DB", false);
-        return ($this->getByValue->athle($athlete) != NULL) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($athlete, $this->getTable(dbAthletes::class));
+        return ($this->getByValue->athlete($athlete->getFullName()) != NULL) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($athlete, $this->getTable(dbAthletes::class));
     }
 
     /**

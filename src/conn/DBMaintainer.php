@@ -355,7 +355,7 @@ class DBMaintainer
         $sql .= " LEFT JOIN " . dbUnsureBirthDates::DBNAME . " ON " . dbUnsureBirthDates::DBNAME . "." . dbUnsureBirthDates::ID . " = " . dbAthletes::DBNAME . "." . dbAthletes::ID;
         
         $sql .= " WHERE " . dbAthletes::FULLNAME . " LIKE '%" . $namepart . "%' ORDER BY " . dbAthletes::FULLNAME;
-        echo $this->getConn()->executeSqlToArray($sql);
+        return $this->getConn()->executeSqlToArray($sql);
     }
 }
 
