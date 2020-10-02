@@ -12,8 +12,10 @@ class HtmlDisziplin
         $disziplinBestListHtml .= "<div class='table-responsiv'><table class='table table-striped'>";
         $disziplinBestListHtml .= self::thead($columnDefinition->bestListHeaders());
         $disziplinBestListHtml .= "<tbody>";
+        $nr = 1;
         foreach ($disziplinBestList->getTopList($top) as $performance) {
-            $disziplinBestListHtml .= self::row($performance, $columnDefinition);
+            $disziplinBestListHtml .= self::row($performance, $columnDefinition, $nr);
+            $nr += 1;
         }
         $disziplinBestListHtml .= "</tbody></table></div> ";
 
