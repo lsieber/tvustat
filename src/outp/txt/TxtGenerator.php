@@ -9,7 +9,7 @@ class TxtGenerator implements BestListOutputGenerator
     private const SEP = "\t ";
 
     private $title;
-
+    
     public function __construct(BestListTitle $title)
     {
         $this->title = $title;
@@ -19,7 +19,7 @@ class TxtGenerator implements BestListOutputGenerator
     {
         $this->createTXT($bestList, $top);
     }
-
+    
     private function createTXT(BestList $bestList, int $top = NULL)
     {
         $title = $this->title->getTxtFileTitle();
@@ -86,7 +86,6 @@ class TxtGenerator implements BestListOutputGenerator
         } else {
             $path = "../data/output/Bestenlisten/andere/" . $title . ".txt";
         }
-
         return $path;
     }
 }

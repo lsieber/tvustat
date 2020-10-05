@@ -44,7 +44,7 @@ $db = new DBMaintainer();
 /**
  * Start Of the imput of values from the POST Variable whith the required tests of the variables
  */
-
+//var_dump($_POST);
 $yearsControl = $_POST["yearsControl"];
 $years = $_POST["years"];
 
@@ -58,7 +58,7 @@ foreach ($categoryIDs as $key => $id) {
 
 $top = $_POST["top"];
 
-$disziplins = (array_key_exists("disziplins", $_POST)) ? $_POST["disziplins"] : array();
+$disziplins = (array_key_exists("disziplins", $_POST)) ? $_POST["disziplins"] : array("all");
 $disziplins = ($disziplins[0] == "all") ? array() : $disziplins;
 
 /*
