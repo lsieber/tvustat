@@ -96,7 +96,7 @@ class OutputSQL
      * @param array $categoryControl
      * @return string
      */
-    private static function athletes($categories, $categoryControl)
+    public static function athletes($categories, $categoryControl)
     {
         $sql = NULL;
         switch ($categoryControl) {

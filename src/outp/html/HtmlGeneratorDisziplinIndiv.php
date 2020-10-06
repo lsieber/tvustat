@@ -22,11 +22,14 @@ class HtmlGeneratorDisziplinIndiv extends HtmlGenerator
 
     private $woDetail;
 
-    public function __construct(ColumnDefinition $withDetail, ColumnDefinition $woDetail, BestListTitle $title)
+    private $woDetailWind;
+
+    public function __construct(ColumnDefinition $withDetail, ColumnDefinition $woDetail, ColumnDefinition $woDetailWind, BestListTitle $title)
     {
         $this->title = $title;
         $this->withDetail = $withDetail;
         $this->woDetail = $woDetail;
+        $this->woDetailWind = $woDetailWind;
     }
 
     /**
@@ -43,7 +46,11 @@ class HtmlGeneratorDisziplinIndiv extends HtmlGenerator
             if (self::hasdetail($disBestList, $top)) {
                 $this->html .= HtmlDisziplin::create($disBestList, $this->withDetail, $top);
             } else {
-                $this->html .= HtmlDisziplin::create($disBestList, $this->woDetail, $top);
+                if ($disBestList->getDisziplin()->getWindMeasured()) {
+                    $this->html .= HtmlDisziplin::create($disBestList, $this->woDetailWind, $top);
+                } else {
+                    $this->html .= HtmlDisziplin::create($disBestList, $this->woDetail, $top);
+                }
             }
         }
         return new HtmlOutput($this->html);

@@ -54,13 +54,9 @@ function processOutputCategoriesResult(data) {
         values.push(Select.createValue(data[key][DB.categoryIDs], data[key][DB.outputCategoryName]));
     }
 
-    // values.push(allMen);
-    // values.push(allWomen);
-    // values.push(all);
-
     Select.create(values, OUT.categoryDiv, OUT.categorySelectId);
-    var valueToSelect = (Math.random() > 0.5) ? DB.defaultMenValue: DB.defaultWomenValue;
-
+    //var valueToSelect = (Math.random() > 0.5) ? DB.defaultMenValue: DB.defaultWomenValue;
+    var valueToSelect = DB.categoryControlAll;
     Select.selectValue(OUT.categorySelectId, valueToSelect);
 }
 

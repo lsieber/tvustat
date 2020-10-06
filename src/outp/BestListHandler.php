@@ -46,7 +46,7 @@ class BestListHandler
     {
         // Athletes
         // Create SQL, Call DB
-//         echo $this->sql;
+        // echo $this->sql;
         $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
 
         // Fill into Best List
@@ -58,8 +58,8 @@ class BestListHandler
         if (! is_null($this->teamSQL)) {
             // TEAMS
             // Create SQL, Call DB
-//             echo $this->teamSQL;
-            
+            // echo $this->teamSQL;
+
             $team_result = $this->db->getConn()->executeSqlToArray($this->teamSQL);
 
             // Fill into Best List
@@ -93,6 +93,8 @@ class BestListHandler
         $columnDefCatDetail = new ColumnDefinitionCatDetailNameLink($categoryUtils);
         // $columnDefDetail = new ColumnDefinitionDetail();
         $columnDefCat = new ColumnDefinitionCategoryNameLink($categoryUtils);
+        $columnDefCatWind = new ColumnDefinitionCatWindNameLink($categoryUtils);
+        // WANT TO INSERT WIND??? then add the line below in the html part and change the column defintion accordingliy
         // $columnDefBasic = new ColumnDefinitionBasic();
 
         if (sizeof($outputs) == 0) {
@@ -102,7 +104,7 @@ class BestListHandler
         foreach ($outputs as $output) {
 
             if ($output == "html") {
-                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
+                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $columnDefCat, $this->title);
                 $html = $htmlGenerator->createOutput($this->bestList, $this->top);
                 echo $html->toString();
             }
@@ -118,9 +120,14 @@ class BestListHandler
                 $txtGenerator = new TxtGenerator($this->title);
                 $txtGenerator->createOutput($this->bestList);
             }
+            
+            if ($output == "txtAsString") {
+                $txtGenerator = new TxtGeneratorAsString($this->title);
+                echo $txtGenerator->createOutput($this->bestList)->toString();
+            }
 
             if ($output == "printHtml") {
-                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
+                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $columnDefCatWind, $this->title);
                 $html = $htmlGenerator->createOutput($this->bestList, $this->top);
                 echo "</br>" . $this->title->getTitle() . "</br>";
                 self::printHTMLCode($html->toString());
