@@ -54,3 +54,5 @@ export const manualTimingRadioName = "manualTiming"
  * TOP Number
  */
 export const topNumberField = "topNumber";
+export const topRadios = "topradios";
+

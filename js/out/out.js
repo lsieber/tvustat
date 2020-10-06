@@ -22,6 +22,8 @@ function onload() {
     createAthleteRadio();
     createTeamRadio();
     createManualTimingRadio();
+    localStorage.bestListLoaded = false;
+
 }
 window.onload = onload
 
@@ -64,9 +66,26 @@ function loadBestList() {
         params, function (html) {
             document.getElementById("bestList").innerHTML = html;
         }, "html");
-
+    
+    if(localStorage.bestListLoaded == "false"){
+        onElmtClickLoadBestList(document.getElementById(OUT.categoryDiv));
+        onElmtClickLoadBestList(document.getElementById(OUT.disziplinDiv));
+        onElmtClickLoadBestList(document.getElementById(OUT.yearDiv));
+        onElmtClickLoadBestList(document.getElementById(OUT.topNumberField));
+        onElmtClickLoadBestList(document.getElementById(OUT.topRadios));
+        onElmtClickLoadBestList(document.getElementById(OUT.manualTimingDiv));
+        onElmtClickLoadBestList(document.getElementById(OUT.athleteResultsDiv));
+        onElmtClickLoadBestList(document.getElementById(OUT.teamResultsDiv));
+    }
+    localStorage.bestListLoaded = true;
 }
 window.loadBestList = loadBestList
+
+function onElmtClickLoadBestList(inp) {
+    inp.addEventListener("change", function (e) {
+        window.loadBestList()
+    });
+}
 
 function openAthlete(athleteID) {
     window.sessionStorage.removeItem("athleteIDResults");
