@@ -4,11 +4,16 @@ import * as STORE from "../config/storageNames.js";
 
 import { getValuesFromStorage, addValueToStorage, addValueToArrayStorage } from "../in/SessionStorageHandler.js";
 import { getAthleteValue } from "./Results.js"
+import { Categories } from "./Categories.js";
+
+const categories = new Categories();
 
 function onload() {
-    onResultsClick(document.getElementById(OUT.athleteResultsDiv));
+    categories.createSelector()
 
-    loadBestList();
+    onResultsClick(document.getElementById(OUT.athleteResultsDiv));
+    onResultsClick(document.getElementById(OUT.categoryDiv))
+    //loadBestList();
 
     $.post("./existing_entries.php", { type: "allAthletes" }, function (data) {
         var athletes = []
@@ -33,6 +38,8 @@ function loadBestList() {
         athleteIDs: athleteIDs,
         keepPerson: getAthleteValue(),
         disziplinId: "all",
+        categories: categories.getSelectedValues(),
+        categoryControl: categories.getCategoryControl(),
         year: "all"
     }
     if (athleteIDs != null) {

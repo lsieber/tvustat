@@ -19,12 +19,13 @@ class AthleteBestList
 
     private $top;
 
-    public function __construct(array $athleteIds, DBMaintainer $db, int $top = 30)
+    public function __construct(array $athleteIds, DBMaintainer $db, string $categoryControl, array $categories, int $top = 30)
     {
         $this->db = $db;
         $this->top = $top;
         $this->sql = SpecialOutputSQL::createAthlete($athleteIds);
-        // echo $this->sql;
+        $this->sql .= " AND ". OutputSQL::athletes($categories, $categoryControl);
+        //echo $this->sql;
         $this->athletes = $db->getById->athletes($athleteIds);
         $this->title = new BestListTitleFromString("Resultate für: " . $this->getAthleteNames());
         $this->bestList = BestList::empty();
@@ -72,7 +73,7 @@ class AthleteBestList
         $categoryUtils = new CategoryUtils($this->db->getConn());
         $columnDefCatDetail = $withName ? new ColumnDefinitionCatDetail($categoryUtils) : new ColumnDefinitionCatDetailNoName($categoryUtils);
         $columnDefCat = $withName ? new ColumnDefinitionCategory($categoryUtils) : new ColumnDefinitionCategoryNoName($categoryUtils);
-        $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $this->title);
+        $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat,$columnDefCatDetail, $this->title);
         $html = $htmlGenerator->createOutput($this->bestList, $this->top);
         echo $html->getHtml();
     }
