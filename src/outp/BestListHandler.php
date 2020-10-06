@@ -94,7 +94,7 @@ class BestListHandler
         // $columnDefDetail = new ColumnDefinitionDetail();
         $columnDefCat = new ColumnDefinitionCategoryNameLink($categoryUtils);
         $columnDefCatWind = new ColumnDefinitionCatWindNameLink($categoryUtils);
-
+        // WANT TO INSERT WIND??? then add the line below in the html part and change the column defintion accordingliy
         // $columnDefBasic = new ColumnDefinitionBasic();
 
         if (sizeof($outputs) == 0) {
@@ -104,7 +104,7 @@ class BestListHandler
         foreach ($outputs as $output) {
 
             if ($output == "html") {
-                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $columnDefCatWind, $this->title);
+                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $columnDefCatDetail, $this->title);
                 $html = $htmlGenerator->createOutput($this->bestList, $this->top);
                 echo $html->toString();
             }
