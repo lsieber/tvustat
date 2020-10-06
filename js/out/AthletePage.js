@@ -52,7 +52,7 @@ function loadBestList() {
 window.loadBestList = loadBestList
 
 function onResultsClick(inp) {
-    inp.addEventListener("click", function (e) {
+    inp.addEventListener("change", function (e) {
         localStorage.keepAthleteResults = getAthleteValue();
         window.loadBestList()
     });

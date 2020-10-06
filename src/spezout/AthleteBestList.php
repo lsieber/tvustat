@@ -2,6 +2,7 @@
 namespace tvustat;
 
 use config\dbPerformance;
+use config\CategoryControl;
 
 class AthleteBestList
 {
@@ -24,7 +25,9 @@ class AthleteBestList
         $this->db = $db;
         $this->top = $top;
         $this->sql = SpecialOutputSQL::createAthlete($athleteIds);
-        $this->sql .= " AND ". OutputSQL::athletes($categories, $categoryControl);
+        if ($categoryControl != CategoryControl::ALL) {
+            $this->sql .= " AND ". OutputSQL::athletes($categories, $categoryControl);
+        }
         //echo $this->sql;
         $this->athletes = $db->getById->athletes($athleteIds);
         $this->title = new BestListTitleFromString("Resultate für: " . $this->getAthleteNames());

@@ -15,7 +15,6 @@ $categories = array();
 foreach ($categoryIDs as $key => $id) {
     $categories[$key] = $db->getConn()->getCategory($id);
 }
-
 $bl = new AthleteBestList($athleteIds, $db, $categoryControl, $categories);
 $bl->callDB();
 $bl->formatBestList($keepPerson, "EANDH"); // TODO
