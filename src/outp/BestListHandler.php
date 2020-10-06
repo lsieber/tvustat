@@ -104,7 +104,7 @@ class BestListHandler
         foreach ($outputs as $output) {
 
             if ($output == "html") {
-                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $columnDefCatDetail, $this->title);
+                $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat, $columnDefCat, $this->title);
                 $html = $htmlGenerator->createOutput($this->bestList, $this->top);
                 echo $html->toString();
             }

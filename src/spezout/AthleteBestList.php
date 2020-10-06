@@ -76,7 +76,7 @@ class AthleteBestList
         $categoryUtils = new CategoryUtils($this->db->getConn());
         $columnDefCatDetail = $withName ? new ColumnDefinitionCatDetail($categoryUtils) : new ColumnDefinitionCatDetailNoName($categoryUtils);
         $columnDefCat = $withName ? new ColumnDefinitionCategory($categoryUtils) : new ColumnDefinitionCategoryNoName($categoryUtils);
-        $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat,$columnDefCatDetail, $this->title);
+        $htmlGenerator = new HtmlGeneratorDisziplinIndiv($columnDefCatDetail, $columnDefCat,$columnDefCat, $this->title);
         $html = $htmlGenerator->createOutput($this->bestList, $this->top);
         echo $html->getHtml();
     }
