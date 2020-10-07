@@ -1,4 +1,6 @@
 <?php
+echo "Start: " . convert(memory_get_usage()) . "\n";
+
 use tvustat\BestListHandler;
 use tvustat\DBMaintainer;
 use tvustat\AgeCategory;
@@ -107,11 +109,18 @@ if ($manualTiming == NULL) {
  * BEST LIST BUILD
  *
  */
-
+echo "<br>Before BLH: " . convert(memory_get_usage()) . "<br>";
 $blh = new BestListHandler($yearsControl, $years, $categoryControl, $categories, $top, $disziplins, $db);
+echo "After BLH: " . convert(memory_get_usage()) . "<br>";
+
 
 $blh->callDB();
+
+echo "After Call DB: " . convert(memory_get_usage()) . "<br>";
+
 $blh->formatBestList($keepAthlete, $keepYearAthlete, $manualTiming);
+
+echo "After Format BL: " . convert(memory_get_usage()) . "<br>";
 
 $outputsArray = array();
 if (! array_key_exists("outputs", $_POST)) {
@@ -126,8 +135,15 @@ if (! array_key_exists("outputs", $_POST)) {
     }
 }
 
+echo "BEFORE PRINT TABLE: " . convert(memory_get_usage()) . "<br>";
+
 $blh->printTable($outputsArray);
+echo "End: " . convert(memory_get_usage()) . "\n";
 
 
-
+function convert($size)
+{
+    $unit=array('b','kb','mb','gb','tb','pb');
+    return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+}
 

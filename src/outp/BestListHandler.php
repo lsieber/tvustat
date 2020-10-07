@@ -2,6 +2,20 @@
 namespace tvustat;
 
 use config\dbPerformance;
+use config\dbDisziplin;
+
+function convert($size)
+{
+    $unit = array(
+        'b',
+        'kb',
+        'mb',
+        'gb',
+        'tb',
+        'pb'
+    );
+    return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
+}
 
 class BestListHandler
 {
@@ -32,6 +46,10 @@ class BestListHandler
      */
     private $title;
 
+    private $isOnlyOneDisziplin;
+
+    private $primitiveBestList = array();
+
     public function __construct(string $yearsControl, array $years, string $categoryControl, array $categories, string $top = Null, array $disziplins, DBMaintainer $db)
     {
         $this->top = $top;
@@ -40,6 +58,8 @@ class BestListHandler
         $this->teamSQL = OutputSQL::createTeam($categoryControl, $categories, $disziplins, $years, $yearsControl);
         $this->title = new BestListTitleBasic($categoryControl, $categories, $yearsControl, $years, $top, $disziplins);
         $this->bestList = BestList::empty();
+        $this->isOnlyOneDisziplin = sizeof($disziplins) == 1;
+        // echo $this->sql;
     }
 
     public function callDB()
@@ -47,13 +67,50 @@ class BestListHandler
         // Athletes
         // Create SQL, Call DB
         // echo $this->sql;
-        $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
+        // $result = $this->db->getConn()->getConn()->query($this->sql);
+        // $dbquery = $this->db->getConn()->getConn()->query($this->sql);
+        // $dbquery->execute();
 
         // Fill into Best List
-        foreach ($array_result as $entry) {
-            $performance = dbPerformance::array2Elmt($entry, $this->db->getConn());
-            $this->bestList->addPerformance($performance);
+        // foreach ($result->fetch_row() as $entry) {
+        echo "before get Conn: " . convert(memory_get_usage()) . "<br>";
+
+        $mysqli = $this->db->getConn()->getConn();
+        echo convert(memory_get_usage()) . "<br>";
+
+        $disziplins = $this->db->getAll->disziplinsClasses();
+
+        $counter = 0;
+        $mod = 2;
+
+        foreach ($disziplins as $disziplin) {
+            $sql = $this->sql . " AND ". dbPerformance::DBNAME .".". dbPerformance::DISZIPLINID ."=".$disziplin->getId();
+            if ($result = $mysqli->query($sql)) {
+
+                while ($row = $result->fetch_assoc()) {
+                    // echo ($row[dbAthletes::FULLNAME]);
+                    // This is only an example, the numbers below will
+                    // differ depending on your system
+                    $performance = dbPerformance::array2Elmt($row, $this->db->getConn());
+                    // array_push($this->primitiveBestList, [$performance->getId(), $performance->getAthlete()->getId(), $performance->getDisziplin()->getId()]);
+                    $this->bestList->addPerformance($performance);
+                    $counter = $counter + 1;
+                    if ($counter % $mod == 0) {
+                        echo "Performance Nr " . $counter . ": " . convert(memory_get_usage()) . "<br>";
+                        $mod = $counter;
+                    }
+                }
+
+                $result->free_result();
+            }
         }
+        echo "after calls".convert(memory_get_usage()) . "\n";
+
+        // while($row = $dbquery->fetch_assoc()) {
+        // //var_dump($row);
+        // $performance = dbPerformance::array2Elmt($row, $this->db->getConn());
+        // $this->bestList->addPerformance($performance);
+        // }
 
         if (! is_null($this->teamSQL)) {
             // TEAMS
@@ -120,7 +177,7 @@ class BestListHandler
                 $txtGenerator = new TxtGenerator($this->title);
                 $txtGenerator->createOutput($this->bestList);
             }
-            
+
             if ($output == "txtAsString") {
                 $txtGenerator = new TxtGeneratorAsString($this->title);
                 echo $txtGenerator->createOutput($this->bestList)->toString();

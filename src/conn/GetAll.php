@@ -96,7 +96,14 @@ class GetAll extends DbHandler
         $sql = "SELECT * From " . dbOutputCategory::DBNAME;
         return $this->conn->executeSqlToArray($sql . " ORDER BY " . dbOutputCategory::ORDER);
     }
-
+    public function disziplinsClasses(){
+        $disziplins = array();
+        foreach( $this->disziplins() as $d){
+            $disziplins[$d[dbDisziplin::getIDString()]] = dbDisziplin::array2Elmt($d, $this->conn);
+        }
+        return $disziplins;
+    }
+    
     public function disziplins()
     {
         $sql = "SELECT * From " . dbDisziplin::DBNAME;

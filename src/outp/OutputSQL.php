@@ -32,6 +32,8 @@ class OutputSQL
         }
         if(sizeof($whereParts) > 0){
             $sql .= " WHERE " . implode(" AND ", $whereParts);
+        } else {
+            $sql .= " WHERE 1";
         }
         return $sql;
     }
@@ -68,6 +70,8 @@ class OutputSQL
                 }
                 if(sizeof($whereParts) > 0){
                     $sql .= " WHERE " . implode(" AND ", $whereParts);
+                }else {
+                    $sql .= " WHERE 1";
                 }
                 return $sql;
         }
