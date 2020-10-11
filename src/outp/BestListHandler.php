@@ -44,9 +44,12 @@ class BestListHandler
 
     public function callDB()
     {
-        // Athletes
-        // Create SQL, Call DB
-        // echo $this->sql;
+        $mysqli = $this->db->getConn()->getConn();
+        
+        if ($result = $mysqli->query($this->sql)) {
+            ;
+        }
+
         $array_result = $this->db->getConn()->executeSqlToArray($this->sql);
 
         // Fill into Best List
