@@ -20,6 +20,7 @@
     $competitionsInYear = ($_POST['type'] == 'competitionsForYears') ? TRUE : FALSE;
     $athletesforCategory = ($_POST['type'] == 'athletesforCategory') ? TRUE : FALSE;
     $similarAthletes = ($_POST['type'] == "similarAthlete") ? TRUE : FALSE;
+    $performancesYearCatComp = ($_POST['type'] == "performancesYearCatComp") ? TRUE : FALSE;
 
     $allCompetitions = ($_POST['type'] == 'allCompetitions') ? TRUE : FALSE;
     $allCompetitionNames = ($_POST['type'] == 'allCompetitionNames') ? TRUE : FALSE;
@@ -105,6 +106,12 @@
             }
         }
         echo json_encode($results);
+    }
+
+    if ($performancesYearCatComp) {
+        $sql = "SELECT competitionnames.competitionName, competitions.competitionDate, EXTRACT(YEAR FROM athletes.date) as age, COUNT(ID) FROM performances INNER JOIN athletes on performances.athleteID = athletes.athleteID INNER JOIN competitions ON performances.competitionID = competitions.competitionID INNER JOIN competitionnames ON competitions.competitionNameID = competitionnames.competitionNameID WHERE EXTRACT(YEAR FROM competitions.competitionDate ) = 2020 GROUP BY performances.competitionID, age";
+        $r = $db->getConn()->executeSqlToArray($sql);
+        echo json_encode($r);
     }
 
     if ($performancesDisAthYear) {
