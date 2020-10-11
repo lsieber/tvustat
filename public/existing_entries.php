@@ -109,9 +109,21 @@
     }
 
     if ($performancesYearCatComp) {
-        $sql = "SELECT competitionnames.competitionName, competitions.competitionDate, EXTRACT(YEAR FROM athletes.date) as age, COUNT(ID) FROM performances INNER JOIN athletes on performances.athleteID = athletes.athleteID INNER JOIN competitions ON performances.competitionID = competitions.competitionID INNER JOIN competitionnames ON competitions.competitionNameID = competitionnames.competitionNameID WHERE EXTRACT(YEAR FROM competitions.competitionDate ) = 2020 GROUP BY performances.competitionID, age";
+        $year = $_POST["year"];
+        $sql = "SELECT competitions.competitionID, competitionnames.competitionName, competitions.competitionDate, EXTRACT(YEAR FROM competitions.competitionDate) - EXTRACT(YEAR FROM athletes.date) as age,(SELECT agecategory.ageCategoryName FROM agecategory WHERE agecategory.minAge <= age and agecategory.maxAge >= age LIMIT 1) as cat, COUNT(ID) FROM performances INNER JOIN athletes on performances.athleteID = athletes.athleteID INNER JOIN competitions ON performances.competitionID = competitions.competitionID INNER JOIN competitionnames ON competitions.competitionNameID = competitionnames.competitionNameID WHERE EXTRACT(YEAR FROM competitions.competitionDate ) = " . $year . " GROUP BY performances.competitionID, cat  ORDER BY cat";
         $r = $db->getConn()->executeSqlToArray($sql);
-        echo json_encode($r);
+        $c = array();
+        foreach ($r as $row) {
+            if (! array_key_exists($row[dbCompetition::ID], $c)) {
+                $c[$row[dbCompetition::ID]] = [
+                    dbCompetitionNames::NAME => $row[dbCompetitionNames::NAME],
+                    dbCompetition::DATE => $row[dbCompetition::DATE], "U10" => 0,"U12" => 0,"U14" => 0,"U16" => 0, "U18" => 0,"U20" => 0,"U23" => 0,"adult" => 0,
+                ];
+            }
+            $c[$row[dbCompetition::ID]][$row["cat"]] = $row["COUNT(ID)"];
+        }
+
+        echo json_encode($c);
     }
 
     if ($performancesDisAthYear) {
