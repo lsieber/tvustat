@@ -32,21 +32,38 @@ class CategoryUtils
      */
     public function categoryOf(Performance $performance)
     {
-        if ($performance->getAthlete()
+        return $this->categoryOfRaw($performance->getAthlete()
             ->getTeamType()
-            ->getId() == 2) {
-                return $performance->getAthlete()->getTeamCategory();
-        }
-        $genderId = $performance->getAthlete()
+            ->getId(), //
+        $performance->getAthlete()
+            ->
+        getTeamCategory(), //
+        $performance->getAthlete()
             ->getGender()
-            ->getId();
-        $age = $this->getAgeOf($performance->getAthlete(), $performance->getCompetition());
+            ->getId(), //
+        $performance->getCompetition()
+            ->getDate(), //
+        $performance->getAthlete()
+            ->getDate());
+    }
+
+//     public function getAgeOf(Athlete $athlete, Competition $competition)
+//     {
+//         return getAgeOfRaw($competition->getDate(), $athlete->getDate());
+//     }
+
+    public function categoryOfRaw(int $teamTypeId, Category $teamCategory, int $genderId, \DateTime $competitionDate, \DateTime $athleteBirthDate)
+    {
+        if ($teamTypeId == 2) {
+            return $teamCategory;
+        }
+        $age = $this->getAgeOfRaw($competitionDate, $athleteBirthDate);
         return $this->sortedCategories[$genderId][$age];
     }
 
-    public function getAgeOf(Athlete $athlete, Competition $competition)
+    public function getAgeOfRaw(\DateTime $competitionDate, \DateTime $athleteBirthDate)
     {
-        return intval(DateFormatUtils::formatDateaAsYear($competition->getDate())) - intval(DateFormatUtils::formatDateaAsYear($athlete->getDate()));
+        return intval(DateFormatUtils::formatDateaAsYear($competitionDate) - intval(DateFormatUtils::formatDateaAsYear($athleteBirthDate)));
     }
 }
 
