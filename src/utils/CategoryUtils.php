@@ -52,7 +52,7 @@ class CategoryUtils
 //         return getAgeOfRaw($competition->getDate(), $athlete->getDate());
 //     }
 
-    public function categoryOfRaw(int $teamTypeId, Category $teamCategory, int $genderId, \DateTime $competitionDate, \DateTime $athleteBirthDate)
+    public function categoryOfRaw(int $teamTypeId, Category $teamCategory = NULL, int $genderId, \DateTime $competitionDate, \DateTime $athleteBirthDate = NULL)
     {
         if ($teamTypeId == 2) {
             return $teamCategory;
