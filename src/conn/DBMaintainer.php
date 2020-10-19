@@ -23,6 +23,8 @@ class DBMaintainer
     private $delete;
 
     public $getbyValues;
+    
+    public $log;
 
     public function __construct()
     {
@@ -35,6 +37,7 @@ class DBMaintainer
         $this->getbyValues = new LoadByValues($this->conn, $this->config);
         $this->getAll = new GetAll($this->conn, $this->config);
         $this->delete = new Delete($this->conn, $this->config);
+        $this->log = new Log($this->conn, $this->config);
     }
 
     /**

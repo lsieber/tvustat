@@ -7,7 +7,7 @@ use tvustat\Category;
 require_once '../vendor/autoload.php';
 
 $db = new DBMaintainer();
-
+$db->log->bestList(); // logs the current Post request into the db
 /**
  * TESTING VALUES
  */
