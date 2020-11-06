@@ -24,3 +24,9 @@ window.performanceStore = performanceStore;
 
 export const selectedAthletesStore = "athleteIDResults"; // storage to store athleteIds which are then displayed on the AThlete Page
 
+export const cFormAllLocations = "cLocations";
+export const cFormAllCompetitions = "cCompetitions";
+export const cFormAllNames = "cNames";
+
+
+

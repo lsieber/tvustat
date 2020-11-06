@@ -22,6 +22,7 @@ use tvustat\WindUtils;
 use tvustat\DBInputUtils;
 use tvustat\PostUtils;
 use tvustat\StringConversionUtils;
+use tvustat\Competition;
 
 require_once '../vendor/autoload.php';
 
@@ -30,6 +31,7 @@ $insert_athlete = ($_POST['type'] == 'athlete') ? TRUE : FALSE;
 $insert_competionName = ($_POST['type'] == 'competitionName') ? TRUE : FALSE;
 $insert_competionLocation = ($_POST['type'] == 'competitionLocation') ? TRUE : FALSE;
 $insert_competion = ($_POST['type'] == 'competition') ? TRUE : FALSE;
+$insert_competitionFromValues = ($_POST['type'] == 'competitionFromValue') ? TRUE : FALSE;
 $insert_performance = ($_POST['type'] == 'performance') ? TRUE : FALSE;
 
 $db = new DBMaintainer();
@@ -160,6 +162,27 @@ if ($insert_competion) {
 
     echo json_encode($db->add->competition($competition)->getJSONArray());
 }
+if ($insert_competitionFromValues) {
+    $name = $_POST[dbCompetitionNames::NAME];
+    if ($db->getbyValues->competitionName($name) == NULL) {
+        $querry = $db->add->competitionName(new CompetitionName($name));
+    }
+    $village = $_POST[dbCompetitionLocations::VILLAGE];
+    $facility = $_POST[dbCompetitionLocations::FACILITY];
+    if ($db->getbyValues->competitionLocation($village) == NULL){
+        $db->add->competitionLocation(new CompetitionLocation($village, $facility));
+    }
+    
+    $competitionName = $db->getbyValues->competitionName($name);
+    $competitionLocation = $db->getbyValues->competitionLocation($village);
+    $date = new DateTime($_POST[dbCompetition::DATE]);
+    
+    $competition = new Competition($competitionName, $competitionLocation, $date);
+    
+    echo json_encode($db->add->competition($competition)->getJSONArray());
+}
+
+
 
 // ******************************************************************************************
 // ******************** Performance Input ***************************************************

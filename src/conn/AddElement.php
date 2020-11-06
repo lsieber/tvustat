@@ -207,6 +207,11 @@ class AddElement extends DbHandler
         return ($this->getByValue->competition($competition->getName()->getCompetitionName(), $competition->getLocation()->getVillage(), $competition->getDate()) != NULL) ? new QuerryOutcome("Value Already exists", false) : $this->addElement($competition, $this->getTable(dbCompetition::class));
     }
 
+    /**
+     * 
+     * @param CompetitionLocation $location
+     * @return \tvustat\QuerryOutcome
+     */
     public function competitionLocation(CompetitionLocation $location)
     {
         if (! CompetitionUtils::checkLocationReadyForInsertion($location)) {

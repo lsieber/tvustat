@@ -2,7 +2,7 @@
  * 
  */
 import { loadBasicData } from "./BasicDefinitions.js"
-import { loadCompetitions, loadCategories, loadDisziplins, loadAthletes } from "./DataLoader.js"
+import { loadCompetitions, loadCategories, loadDisziplins, loadAthletes, loadCompetitionsForForm } from "./DataLoader.js"
 import { InsertToDB } from "../elmt/InsertToDB.js";
 import { ExistingEntries } from "../elmt/ExistingEntries.js";
 import { CalculatePoints } from "../elmt/CalculatePoints.js";
@@ -15,8 +15,11 @@ import * as INPUT from "../config/inputNames.js";
 import * as FILES from "../config/serverFiles.js";
 import * as STORE from "../config/storageNames.js";
 import * as DB from "../config/dbColumnNames.js";
+import { CompetitionForm } from "./CompetitionForm.js";
 
 const athleteForm = new AthleteInputForm(INPUT.athleteFormId);
+const competitionForm = new CompetitionForm(INPUT.competitionFormId);
+
 const insertToDb = new InsertToDB();
 const existingEntries = new ExistingEntries();
 const pointCalculator = new CalculatePoints();
@@ -37,6 +40,7 @@ function onload() {
   loadCategories();
   loadDisziplins();
   // loadAthletes();
+  loadCompetitionsForForm();
   loadSources();
   updateAthleteInput();
   document.getElementById(INPUT.detailDiv).innerHTML = '<input type="text" class="form-control" id=' + INPUT.detailInput + '><label for='+INPUT.detailInput+'>Detail</label>';
@@ -304,7 +308,7 @@ window.time2seconds = time2seconds
 function calcualtePoints(field) {
   pointCalculator.calculate(field);
   var detail = createMultipleDetail();
-  createDetailInputHtm();
+  createDetailInputHtml();
   document.getElementById(INPUT.detailInput).value = detail;
 
 }
@@ -479,3 +483,19 @@ function p(value) {
 function col(value) {
   return '<div class="form-group">' + value + '</div>';
 }
+
+
+/**********************
+ * COMPETITION INPUT
+ */
+
+function updateCompetitionInput() {
+  competitionForm.updateModal();
+}
+window.updateCompetitionInput = updateCompetitionInput
+
+function insertCompetition() {
+  competitionForm.competitionToDb();
+  loadCompetitionsForForm();
+}
+window.insertCompetition = insertCompetition

@@ -63,6 +63,18 @@ export const athleteModalId = "athleteModal";
 export const athleteFormId = "athleteForm";
 export const existingAthletesDiv = "existingAthletes";
 
+
+/**
+ * COMPETITION INPUT MODAL
+ */
+
+export const competitionModalId = "competitionModal";
+export const competitionFormId = "competitionForm";
+export const cFormLocationIdentifier = "cFormLocationIdentifier";
+export const cFormDateIdentifier = "cFormDateIdentifier";
+export const cFormNameIdentifier = "cFormNameIdentifier";
+
+
 /**
  * PERFORMANCE
  */
